@@ -131,7 +131,7 @@ body.revealed .r:nth-child(4){animation-delay:.18s}
 .hint i{display:block;font-family:'Cinzel',serif;font-style:normal;font-size:8.5px;
   letter-spacing:4px;color:rgba(142,80,102,.8);margin-top:7px}
 #ov.open .hint{opacity:0;transition:opacity .7s}
-#fx{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.85}
+#fx{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.82}
 
 /* ── البطاقة ── */
 main{display:flex;justify-content:center;padding:22px 0 40px}
@@ -289,13 +289,23 @@ main{display:flex;justify-content:center;padding:22px 0 40px}
     rgba(240,195,203,0) 66%);
   background-size:240% 100%;background-repeat:no-repeat;background-position:230% 0;
   -webkit-background-clip:text;background-clip:text;
-  animation:sheen 7.5s ease-in-out infinite 1.6s}
-@keyframes sheen{0%{background-position:230% 0}
-  62%,100%{background-position:-130% 0}}
+  animation:sheen 8s linear infinite 1.2s}
+@keyframes sheen{from{background-position:230% 0}
+  to{background-position:-130% 0}}
 
 
 
 /* ═══ شريط التقدّم ═══ */
+.back{position:fixed;bottom:calc(17px + env(safe-area-inset-bottom));inset-inline-start:16px;z-index:75;
+  width:40px;height:40px;border-radius:50%;display:grid;place-items:center;
+  background:var(--paper);border:1px solid rgba(178,100,120,.34);color:var(--wine);
+  box-shadow:0 2px 3px rgba(142,80,102,.12),0 8px 18px -8px rgba(142,80,102,.30);
+  cursor:pointer;padding:0;
+  transition:opacity .5s ease,transform .25s ease,background .2s}
+.back svg{width:19px;height:19px;display:block}
+.back:hover{background:var(--ivory);transform:translateY(-1px)}
+.back:active{transform:translateY(0) scale(.94)}
+body.locked .back{opacity:0;pointer-events:none;transform:scale(.85)}
 #prog{position:fixed;top:0;right:0;height:2.5px;width:0;z-index:80;
   background:linear-gradient(90deg,var(--gold-lt),var(--gold));
   box-shadow:0 0 8px rgba(178,100,120,.6);transition:width .1s linear}
@@ -383,6 +393,7 @@ main{display:flex;justify-content:center;padding:22px 0 40px}
   </div>
 </div>
 <canvas id="fx"></canvas>
+<button class="back" id="back" onclick="closeIt()" aria-label="ارجع إلى الظرف"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
 
 <main>
  <article class="card">
@@ -507,7 +518,7 @@ function pop(n,cx,cy){
       vx:Math.cos(ang)*sp*(.85+Math.random()*.6), vy:Math.sin(ang)*sp,
       rot:Math.random()*6.28, vr:(Math.random()-.5)*.18,
       img:pickImg(), sc:.13+Math.random()*.13,
-      a:0, aMax:.55+Math.random()*.32, life:210+Math.random()*90});
+      a:0, aMax:.30+Math.random()*.20, life:210+Math.random()*90});
   }
 }
 let seed=0;
@@ -548,15 +559,28 @@ function openIt(){
     cv.style.zIndex=80; cv.style.opacity='1';        /* فوق الظرف أثناء الفتح فقط */
     const s=document.querySelector('.seal').getBoundingClientRect();
     const cx=s.left+s.width/2, cy=s.top+s.height/2;
-    pop(26,cx,cy);                                   /* الدفعة الأولى من الختم */
-    setTimeout(()=>pop(20,cx,cy-10),480);            /* دفعة ثانية مع فتح اللسان */
-    setTimeout(()=>pop(16,cx,cy-30),1050);
-    setTimeout(()=>pop(12,cx,cy-60),1750);   /* موجة أخيرة مع خروج البطاقة */
+    pop(14,cx,cy);                                   /* الدفعة الأولى من الختم */
+    setTimeout(()=>pop(10,cx,cy-10),480);            /* دفعة ثانية مع فتح اللسان */
+    setTimeout(()=>pop(8,cx,cy-30),1050);
+    setTimeout(()=>pop(6,cx,cy-60),1750);   /* موجة أخيرة مع خروج البطاقة */
   }
   setTimeout(()=>{ov.classList.add('done');document.body.classList.remove('locked');
     document.body.classList.add('revealed');window.scrollTo(0,1);},4300);
   setTimeout(()=>{ov.style.display='none';busy=false;
-    cv.style.zIndex=1;cv.style.opacity='.85';},5800);
+    cv.style.zIndex=1;cv.style.opacity='.82';},5800);
+}
+
+function closeIt(){
+  const ov=document.getElementById('ov');
+  ov.style.display='';
+  ov.classList.remove('open');        /* يرجع الظرف مقفولًا وهو ما زال مخفيًا */
+  void ov.offsetWidth;                /* إجبار المتصفح على تطبيقه فورًا */
+  ov.classList.remove('done');        /* ثم يظهر بالتلاشي */
+  document.body.classList.add('locked');
+  document.body.classList.remove('revealed');
+  window.scrollTo(0,0);
+  busy=false;
+  cv.style.zIndex=1; cv.style.opacity='.82';
 }
 
 const BASE=new Date('2026-10-09T19:00:00+03:00');
