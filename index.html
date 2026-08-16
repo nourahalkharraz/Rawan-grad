@@ -507,7 +507,7 @@ function drop(){
     sway:Math.random()*6.28, swaySp:.004+Math.random()*.006, swayAmp:.18+Math.random()*.3,
     rot:Math.random()*6.28, vr:(Math.random()-.5)*.012,      /* دوران خفيف */
     img:pickImg(), sc:.10+Math.random()*.09,                 /* قطع أصغر */
-    a:0, aMax:.16+Math.random()*.14});                       /* شفافية أقل بكثير */
+    a:0, aMax:.08+Math.random()*.07});                       /* نصف الوضوح السابق */
 }
 function burst(n){ for(let i=0;i<n;i++) drop(); }
 /* انفجار احتفالي من نقطة الختم لحظة الفتح */
@@ -560,7 +560,7 @@ function openIt(){
   ov.classList.add('open');
   if(navigator.vibrate) navigator.vibrate([25,40,18]);
   if(!RM){
-    cv.style.zIndex=80; cv.style.opacity='1';        /* فوق الظرف أثناء الفتح فقط */
+    cv.style.zIndex=80; cv.style.opacity='.65';      /* فوق الظرف أثناء الفتح فقط */
     const s=document.querySelector('.seal').getBoundingClientRect();
     const cx=s.left+s.width/2, cy=s.top+s.height/2;
     pop(14,cx,cy);                                   /* الدفعة الأولى من الختم */
