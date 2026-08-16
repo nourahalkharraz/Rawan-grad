@@ -513,12 +513,13 @@ function burst(n){ for(let i=0;i<n;i++) drop(); }
 /* انفجار احتفالي من نقطة الختم لحظة الفتح */
 function pop(n,cx,cy){
   for(let i=0;i<n;i++){
-    const ang=-Math.PI/2+(Math.random()-.5)*2.4, sp=3.4+Math.random()*5.6;
+    const ang=-Math.PI/2+(Math.random()-.5)*2.4, sp=2.2+Math.random()*3.8;
     conf.push({k:1, x:cx+(Math.random()-.5)*46, y:cy+(Math.random()-.5)*22,
       vx:Math.cos(ang)*sp*(.85+Math.random()*.6), vy:Math.sin(ang)*sp,
-      rot:Math.random()*6.28, vr:(Math.random()-.5)*.18,
-      img:pickImg(), sc:.13+Math.random()*.13,
-      a:0, aMax:.30+Math.random()*.20, life:210+Math.random()*90});
+      rot:Math.random()*6.28, vr:(Math.random()-.5)*.05,      /* دوران بطيء بدل الدوّامة */
+      sway:Math.random()*6.28, swaySp:.012+Math.random()*.014, swayAmp:.22+Math.random()*.3,
+      img:pickImg(), sc:.10+Math.random()*.10,                /* قطع أصغر */
+      a:0, aMax:.16+Math.random()*.13, life:280+Math.random()*120});
   }
 }
 let seed=0;
@@ -528,10 +529,13 @@ function loop(){
   for(let i=conf.length-1;i>=0;i--){const c=conf[i];
     let fade=1;
     if(c.k===1){                                   /* قطعة انفجار */
-      c.vy+=.115; c.vx*=.99; c.x+=c.vx; c.y+=c.vy; c.rot+=c.vr; c.life--;
-      if(c.a<c.aMax) c.a=Math.min(c.aMax,c.a+.09);
+      c.vy+=.075; if(c.vy>1.45) c.vy=1.45;   /* سرعة سقوط قصوى — ترفرف ولا تنقضّ */
+      c.vx*=.982; c.sway+=c.swaySp;
+      c.x+=c.vx+Math.sin(c.sway)*c.swayAmp;  /* تمايل زي الريشة */
+      c.y+=c.vy; c.rot+=c.vr; c.life--;
+      if(c.a<c.aMax) c.a=Math.min(c.aMax,c.a+.022);   /* تظهر بهدوء بدل ما تقفز */
       if(c.life<=0||c.y>H+60){conf.splice(i,1);continue;}
-      fade=Math.min(1,c.life/45);
+      fade=Math.min(1,c.life/80);
     }else{                                         /* قطعة مطر */
       c.sway+=c.swaySp;
       c.x+=c.vx+Math.sin(c.sway)*c.swayAmp;        /* تمايل يمين ويسار وهي نازلة */
