@@ -46,7 +46,7 @@ body.revealed .r:nth-child(4){animation-delay:.18s}
 .envwrap{display:flex;flex-direction:column;align-items:center;gap:30px}
 .env3d{position:relative;width:min(85vw,322px);aspect-ratio:1/.66;
   
-  filter:drop-shadow(0 26px 40px rgba(140,90,105,.22))}
+  filter:drop-shadow(0 2px 3px rgba(140,90,105,.20)) drop-shadow(0 16px 26px rgba(140,90,105,.17))}
 
 /* ظهر الظرف — أغمق قليلًا ليوحي بالداخل */
 .env-back{position:absolute;inset:0;z-index:2;border-radius:3px;
@@ -105,7 +105,7 @@ body.revealed .r:nth-child(4){animation-delay:.18s}
 #ov.open .flap-liner{opacity:1;transition-delay:.34s}
 
 /* الختم */
-.seal{position:relative;top:11%;width:86px;height:86px;border:0;background:none;cursor:pointer;
+.seal{position:relative;top:58%;width:86px;height:86px;border:0;background:none;cursor:pointer;
   padding:0;z-index:7;filter:drop-shadow(0 5px 11px rgba(142,80,102,.32));
   animation:pulse 3.5s ease-in-out infinite}
 .seal .dball{display:block;width:100%;aspect-ratio:344/343;
@@ -180,11 +180,13 @@ main{display:flex;justify-content:center;padding:22px 0 40px}
   color:var(--wine);margin:12px 0 5px;line-height:1.6}
 .alias{font-weight:300;font-size:11.5px;color:#B79AA6;margin-bottom:20px}
 .mid{font-weight:300;font-size:12.5px;color:var(--wine-tx);line-height:2}
-.grad-wrap{position:relative;margin:18px 0 4px;padding:22px 0}
+.grad-wrap{position:relative;margin:22px 0 6px;padding:26px 0}
 .grad-wrap::before{content:'';position:absolute;left:50%;top:0;transform:translateX(-50%);
   width:170px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
-.grad{font-family:'Aref Ruqaa',serif;font-weight:700;font-size:clamp(33px,9.4vw,41px);
-  color:var(--wine);line-height:1.6}
+.grad-wrap::after{content:'';position:absolute;left:50%;bottom:0;transform:translateX(-50%);
+  width:120px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.75}
+.grad{font-family:'Aref Ruqaa',serif;font-weight:700;font-size:clamp(40px,12vw,54px);
+  color:#7C4459;line-height:1.45}
 .batch{font-family:'Cinzel',serif;font-size:10.5px;letter-spacing:6px;color:var(--gold);margin-top:14px}
 .msg{font-weight:300;font-size:13px;line-height:2.4;color:#8A6675;
   margin:28px 30px 0;text-align:center;position:relative;z-index:2}
@@ -395,7 +397,7 @@ main{display:flex;justify-content:center;padding:22px 0 40px}
   <section class="names">
     <p class="pre r">بكل فخرٍ واعتزاز، وبقلوبٍ مليئةٍ بالفرح</p>
     <p class="pre r" style="margin-top:8px">تتشرف</p>
-    <h2 class="host r">منيرة السالم</h2>
+    <h2 class="host r">منيرة الرشيد</h2>
     <p class="alias r">أم عبدالعزيز السالم</p>
     <p class="mid r">بدعوتكم لحفل تخرج غاليتها</p>
     <div class="grad-wrap r"><h1 class="grad" data-text="سارة السالم">سارة السالم</h1>
