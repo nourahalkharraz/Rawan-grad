@@ -70,7 +70,7 @@ body.revealed .r:nth-child(4){animation-delay:.18s}
   filter:drop-shadow(0 0 .6px rgba(255,255,255,.95)) drop-shadow(0 2px 3px rgba(150,100,118,.18))}
 .env-fold.l{left:0;clip-path:polygon(0 0,100% 50%,0 100%);
   background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='linear' slope='.22'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E") 0 0/150px 150px,linear-gradient(100deg,#FCF4EC,#F2E1D4)}
-.env-fold.r{right:0;clip-path:polygon(100% 0,0 50%,100% 100%);
+.env-fold.rt{right:0;clip-path:polygon(100% 0,0 50%,100% 100%);
   background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='linear' slope='.22'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E") 20px 40px/150px 150px,linear-gradient(260deg,#F8EEE4,#EFDCCE)}
 /* الطيّة السفلية — الجيب الذي يخفي أسفل البطاقة */
 .env-front{position:absolute;left:0;right:0;bottom:0;height:50.4%;z-index:5;filter:drop-shadow(0 -.6px .6px rgba(255,255,255,.9)) drop-shadow(0 -3px 5px rgba(150,100,118,.13));
@@ -365,7 +365,7 @@ main{display:flex;justify-content:center;padding:22px 0 40px}
         <span class="ci-rule" aria-hidden="true"></span>
         <i class="ci-time">٧:٠٠ مساءً</i>
       </div>
-      <div class="env-fold l"></div><div class="env-fold r"></div><div class="env-front"><span class="mouth"></span></div>
+      <div class="env-fold l"></div><div class="env-fold rt"></div><div class="env-front"><span class="mouth"></span></div>
       <div class="env-flap">
         <span class="flap-face"></span>
         <span class="lace lx" aria-hidden="true"></span><span class="lace rx" aria-hidden="true"></span>
