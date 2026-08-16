@@ -176,11 +176,16 @@ main{display:flex;justify-content:center;padding:22px 0 40px}
 /* ── الأسماء ── */
 .names{padding:36px 30px 4px;text-align:center;position:relative;z-index:2}
 .pre{font-weight:300;font-size:13px;color:var(--wine-tx);line-height:2.1}
-.host{font-family:'Aref Ruqaa',serif;font-weight:700;font-size:clamp(23px,6.6vw,27px);
-  color:var(--wine);margin:12px 0 5px;line-height:1.6}
+.host{font-family:'Aref Ruqaa',serif;font-weight:700;font-size:clamp(25px,7.2vw,30px);
+  color:var(--wine);margin:14px 0 5px;line-height:1.6;
+  display:inline-flex;align-items:center;justify-content:center;gap:14px}
+.host::before,.host::after{content:'';width:30px;height:1px;flex:none;
+  background:linear-gradient(90deg,transparent,var(--gold))}
+.host::after{background:linear-gradient(90deg,var(--gold),transparent)}
 .alias{font-weight:300;font-size:11.5px;color:#B79AA6;margin-bottom:20px}
 .mid{font-weight:300;font-size:12.5px;color:var(--wine-tx);line-height:2}
-.grad-wrap{position:relative;margin:22px 0 6px;padding:26px 0}
+.grad-wrap{position:relative;margin:22px 0 6px;padding:26px 0;
+  background:radial-gradient(ellipse 66% 58% at 50% 52%,rgba(240,195,203,.26),transparent 72%)}
 .grad-wrap::before{content:'';position:absolute;left:50%;top:0;transform:translateX(-50%);
   width:170px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
 .grad-wrap::after{content:'';position:absolute;left:50%;bottom:0;transform:translateX(-50%);
@@ -278,13 +283,13 @@ main{display:flex;justify-content:center;padding:22px 0 40px}
   color:transparent;-webkit-text-fill-color:transparent;
   background-image:linear-gradient(100deg,
     rgba(240,195,203,0) 34%,
-    rgba(226,199,140,.26) 45%,
-    rgba(241,220,167,.52) 50%,
-    rgba(226,199,140,.26) 55%,
+    rgba(226,199,140,.34) 45%,
+    rgba(241,220,167,.66) 50%,
+    rgba(226,199,140,.34) 55%,
     rgba(240,195,203,0) 66%);
   background-size:240% 100%;background-repeat:no-repeat;background-position:230% 0;
   -webkit-background-clip:text;background-clip:text;
-  animation:sheen 11s ease-in-out infinite 2.6s}
+  animation:sheen 7.5s ease-in-out infinite 1.6s}
 @keyframes sheen{0%{background-position:230% 0}
   62%,100%{background-position:-130% 0}}
 
