@@ -1,0 +1,1635 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#FBF5FA">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="مِران">
+<meta name="robots" content="noindex,nofollow">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<link rel="icon" href="./icon-192.png">
+<title>مِران</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Almarai:wght@400;700&display=swap">
+<style>
+:root{
+  direction:rtl;
+  color-scheme:light;
+  /* لؤلؤ ملوّن — بلاش وأوبال وليلكي وفيروزي. لا بنّي ولا عاج ميّت. */
+  --ground:#FBF5FA; --panel:#FEFAFD; --panel-2:#F4EAF6;
+  --line:#E9D9EC; --line-soft:#F2E6F2;
+  /* أسطح باستيل — اللون في الخلفيات، والحبر يظل داكنًا ليُقرأ */
+  --lav:#E4D5F1; --lav-deep:#CBB2E4;
+  --mint:#EDF7F2; --sky:#EFF5FB; --blush:#FCF0F6;
+  --ink:#3A2142; --ink-2:#67486E; --ink-3:#78587F;
+  --signal:#A8306B; --signal-tx:#A8306B; --signal-soft:#FBE2EE;  /* وردة متسلّقة */
+  --aqua:#0C6A75;                                                 /* زجاج بحر */
+  --iron:#94809F;                                                 /* حديد مشغول — زخرفة فقط */
+  --leaf:#57A79C;
+  --good:#0D7256; --warn:#B7342F;
+
+  /* صدف حقيقي: وردي ← فيروزي ← ليلكي ← ذهبي ← وردي */
+  /* عرق اللؤلؤ: وردي ← زجاج بحر ← ليلكي ← كريمي ← وردي. بلا ذهب. */
+  --nacre:linear-gradient(104deg,#FBDCEA 0%,#D5EEF1 26%,#E6DBF7 52%,
+                                 #FBEFE9 76%,#F8DDEC 100%);
+  --nacre-deep:linear-gradient(104deg,#E58FB8 0%,#63C6CE 27%,#A98FE0 53%,
+                                      #F3D3C4 77%,#E294C4 100%);
+  --shadow:0 1px 1px rgba(58,33,66,.045),0 10px 26px rgba(58,33,66,.06);
+
+  --f-disp:'Amiri',Georgia,serif;
+  --f-lat:'Cormorant Garamond',Georgia,serif;
+  --f-body:'Almarai',system-ui,sans-serif;
+  --f-num:'Cormorant Garamond',Georgia,serif;
+  --num-feat:lining-nums tabular-nums;   /* أرقام حديثة لا قديمة */
+  --w:640px;
+}
+
+/* ملمس: حبيبات دقيقة + تعريق رخامي منخفض التردّد. خفيف عمدًا — اللون هو البطل. */
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9;
+  opacity:.55;mix-blend-mode:multiply;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23g)' opacity='.035'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='900'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.006 .012' numOctaves='4' seed='7'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='900' height='900' filter='url(%23m)' opacity='.04'/%3E%3C/svg%3E");
+  background-size:140px 140px,900px 900px}
+
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font-family:var(--f-body);
+  font-size:16px;line-height:1.75;-webkit-text-size-adjust:100%}
+.wrap{max-width:var(--w);margin:0 auto;padding:22px 18px 26px}
+.tabs{position:fixed;bottom:0;left:0;right:0;z-index:20;display:flex;
+  background:var(--panel);border-top:1px solid var(--line);
+  padding:0 max(10px,env(safe-area-inset-left)) env(safe-area-inset-bottom);
+  box-shadow:0 -6px 22px rgba(51,37,31,.05)}
+.tabs button{flex:1;padding:11px 6px 13px;background:none;border:0;
+  font-family:var(--f-disp);font-size:15px;font-weight:400;color:var(--ink-3);
+  position:relative;display:flex;flex-direction:column;align-items:center;gap:3px}
+.tab-ico{display:block;width:22px;height:22px}
+.tab-ico svg{width:22px;height:22px;display:block}
+.tabs button[aria-selected="true"]{color:var(--ink);font-weight:700}
+.tabs button[aria-selected="true"]::after{content:'';position:absolute;
+  top:0;left:26%;right:26%;height:2px;background:var(--signal)}
+.tabp{animation:fade .22s ease}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.tabp{animation:none}}
+h1,h2,h3{font-family:var(--f-disp);font-weight:600;text-wrap:balance;line-height:1.35;margin:0}
+button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--signal);outline-offset:3px;border-radius:4px}
+.mono{font-family:var(--f-num);font-variant-numeric:tabular-nums;direction:ltr;display:inline-block}
+.lbl{font-family:var(--f-body);font-size:12.5px;font-weight:400;color:var(--ink-3)}
+
+/* ── شريط الحالة ── */
+.top{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;
+  padding-bottom:14px;border-bottom:1px solid var(--line)}
+.brand h1{font-size:38px;font-weight:700;line-height:1.15}
+.brand p{margin:4px 0 0;color:var(--ink-2);font-size:13.5px;font-weight:400}
+.eyebrow{display:block;font-family:var(--f-lat);font-size:11px;font-weight:400;
+  letter-spacing:.06em;color:var(--ink-3);margin-bottom:7px;
+  font-style:italic;font-size:15px;text-transform:none}
+.streak{text-align:left;flex:none}
+.streak b{display:block;font-family:var(--f-num);font-size:46px;font-weight:400;
+  line-height:1;color:var(--signal-tx);font-variant-numeric:var(--num-feat)}
+.streak span{display:block;font-size:11px;color:var(--ink-2);margin-top:3px}
+
+/* ── مصابيح اليوم ── */
+.lamps{display:flex;gap:7px;margin:16px 0 4px}
+.lamp{flex:1;height:3px;border-radius:2px;background:var(--line-soft);position:relative;
+  transition:background .35s ease}
+.lamp.on{background-image:var(--nacre-deep);background-size:500% 100%}
+.lamp.now{background:var(--ink-3)}
+.daymeta{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:24px}
+.daymeta .lbl{font-size:10px}
+
+/* ── بطاقة تمرين ── */
+.ex,.notes-box,.levers,.plan,.stage{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='620' height='620'%3E%3Cfilter id='v'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.008 .02' numOctaves='4' seed='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='620' height='620' filter='url(%23v)' opacity='.032'/%3E%3C/svg%3E");
+  background-size:620px 620px}
+.ex{background-color:var(--panel);border:1px solid var(--line);border-radius:5px;
+  margin-bottom:12px;overflow:hidden;box-shadow:var(--shadow)}
+.ex.done{background:transparent;box-shadow:none;border-color:var(--line-soft)}
+.ex-hd{display:flex;align-items:center;gap:12px;padding:15px 17px;width:100%;
+  background:none;border:0;text-align:right}
+.ex-ico{flex:none;width:24px;height:24px;color:var(--signal);opacity:.85}
+.ex-ico svg{width:24px;height:24px;display:block}
+.ex.done .ex-ico{opacity:.4}
+.ex-t{flex:1;min-width:0}
+.ex-t h3{font-size:21px;font-weight:700}
+.ex-t p{margin:1px 0 0;font-size:13px;color:var(--ink-3);font-weight:400}
+.trains2{font-size:13.5px;color:var(--ink-2);font-weight:400;margin:13px 0 0;line-height:1.65}
+.trains2 b{color:var(--aqua)}
+.ex-body .swapbtn{display:block;margin-top:14px}
+.cardbar{display:flex;justify-content:space-between;align-items:center;gap:10px;
+  padding:0 17px 13px}
+.swapbtn{background:none;border:0;padding:2px 0;font-size:13px;font-weight:400;
+  color:var(--ink-3);text-decoration:underline;text-underline-offset:3px}
+.swapbtn:hover{color:var(--ink-2)}
+#quick{display:block;width:100%;margin:0 0 20px;padding:17px 18px;border-radius:4px;
+  border:1px solid var(--lav-deep);color:var(--ink);text-align:center;
+  background-image:
+    linear-gradient(180deg,rgba(255,255,255,.75) 0%,rgba(255,255,255,.25) 44%,
+                           rgba(255,255,255,0) 45%),
+    linear-gradient(158deg,#EFE3F8 0%,#E4D5F1 46%,#D9C6EC 100%);
+  font-family:var(--f-disp);font-size:19px;font-weight:700;letter-spacing:0;
+  display:flex;flex-direction:column;gap:3px;line-height:1.25}
+#quick b{font-size:22px;font-weight:700}
+#quick i{font-style:normal;font-family:var(--f-body);font-size:13px;font-weight:400;
+  color:var(--ink-2)}
+#quick:active{transform:translateY(1px)}
+#welcome{font-size:13px;font-weight:400;color:var(--ink-2);line-height:1.65;
+  background:var(--panel);border:1px solid var(--line);border-radius:5px;
+  padding:12px 15px;margin-bottom:14px}
+#welcome b{color:var(--ink);font-weight:400}
+.lvbadge{display:inline-block;margin-right:8px;font-family:var(--f-body);font-size:11px;
+  font-weight:600;padding:2px 8px;border-radius:20px;
+  background:var(--nacre);color:var(--signal-tx);vertical-align:middle;border:1px solid var(--line)}
+.lvupbox{font-size:13px;font-weight:400;line-height:1.6;max-width:30em;margin:0 auto;
+  padding:10px 14px;border-radius:4px;background:var(--panel);border:1px solid var(--line)}
+.lvupbox.up{border-color:var(--good);color:var(--ink)}
+.lvupbox.down{border-color:var(--line);color:var(--ink-2)}
+.lvupbox b{font-family:var(--f-num);color:var(--signal-tx)}
+.ex-sc{flex:none;text-align:left;font-family:var(--f-num);font-variant-numeric:tabular-nums;
+  direction:ltr}
+.ex-sc b{display:block;font-family:var(--f-num);font-size:26px;font-weight:400;color:var(--ink);line-height:1.1}
+.ex-sc span{display:block;font-size:10px;color:var(--ink-3)}
+.ex-body{padding:0 17px 18px;border-top:1px solid var(--line-soft);margin-top:-1px}
+.ex-body p.how{color:var(--ink-2);font-size:14.5px;margin:14px 0 0;font-weight:400}
+
+/* ── المسرح ── */
+.stage{margin-top:14px;min-height:150px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:14px;padding:20px 0;
+  background:var(--panel-2);border-radius:4px;text-align:center}
+.big{font-family:var(--f-disp);font-size:clamp(40px,13.5vw,66px);font-weight:700;line-height:1.1}
+.big.num{font-family:var(--f-num);font-weight:400;font-size:clamp(48px,16vw,76px)}
+.hud{display:flex;gap:20px;justify-content:center;width:100%;margin-top:12px}
+.hud div{text-align:center}
+.hud b{display:block;font-family:var(--f-num);font-size:19px;font-weight:600;
+  font-variant-numeric:tabular-nums;line-height:1.2}
+
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:9px;width:100%;max-width:330px}
+.opt{padding:13px 8px;border:1px solid var(--line);border-radius:4px;background:var(--panel);
+  font-size:16px;font-family:var(--f-disp);transition:transform .08s ease,border-color .15s}
+.opt:active{transform:scale(.97)}
+.opt.hit{border-color:var(--good);background:var(--good);color:var(--panel)}
+.opt.miss{border-color:var(--warn);background:var(--warn);color:var(--panel)}
+
+.grid{display:grid;grid-template-columns:repeat(3,58px);grid-template-rows:repeat(3,58px);
+  gap:7px;justify-content:center}
+.cell{border:1px solid var(--line);border-radius:6px;background:var(--panel);
+  transition:background .12s ease}
+.cell.lit{background:var(--signal);border-color:var(--signal)}
+
+.field{display:flex;gap:8px;width:100%;max-width:340px}
+input[type=text]{flex:1;min-width:0;font-family:var(--f-body);font-size:16px;padding:11px 13px;
+  border:1px solid var(--line);border-radius:4px;background:var(--panel);color:var(--ink)}
+input.num{font-family:var(--f-num);font-size:19px;text-align:center;letter-spacing:.3em;direction:ltr}
+
+.btn{padding:12px 24px;border:1px solid var(--lav-deep);border-radius:4px;
+  background-image:linear-gradient(180deg,rgba(255,255,255,.7),rgba(255,255,255,0) 46%),
+    linear-gradient(158deg,#EFE3F8,#DCC9EE);color:var(--ink);
+  font-family:var(--f-disp);font-size:17px;font-weight:700}
+.btn.ghost{background:none;color:var(--ink);border-color:var(--line)}
+.btn.sm{padding:8px 15px;font-size:13.5px}
+.btn:active{transform:translateY(1px)}
+
+.wordlist{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:100%;
+  padding:0 10px}
+.chip{font-size:14px;padding:4px 11px;border-radius:20px;background:var(--panel);
+  border:1px solid var(--line);font-weight:400}
+
+.runbar{display:flex;gap:16px;justify-content:center;align-items:center;
+  width:100%;margin-top:6px;padding-top:12px;border-top:1px solid var(--line-soft)}
+.runbtn{background:none;border:0;padding:4px 2px;font-size:13px;font-weight:400;
+  color:var(--ink-3);text-decoration:underline;text-underline-offset:3px}
+.runbtn:hover{color:var(--ink-2)}
+.verdict{font-family:var(--f-disp);font-size:19px;font-weight:600}
+.verdict.g{color:var(--good)} .verdict.w{color:var(--warn)}
+.verdict.soft{color:var(--ink-3);font-size:14px;font-weight:400}
+.note{font-size:13.5px;color:var(--ink-2);font-weight:400;max-width:34em;margin:0 auto}
+.pb{font-size:12px;color:var(--signal-tx);font-family:var(--f-num);direction:ltr}
+
+/* ── التقرير ── */
+.program{margin-top:0;padding-top:0}
+.prog-hd{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
+.prog-bar{position:relative;height:9px;border-radius:5px;background:var(--lav);overflow:hidden}
+.prog-bar>#progFill{height:100%;background:var(--nacre-deep);width:0;transition:width .5s ease}
+.prog-mark{position:absolute;top:-3px;bottom:-3px;right:23.33%;width:1px;background:var(--ink-3)}
+.prog-phase{margin:9px 0 0;font-size:13.5px;font-weight:400;color:var(--ink-2);line-height:1.65}
+.prog-phase b{color:var(--ink);font-weight:400}
+.plan{margin-top:16px;background:var(--sky);border:1px solid var(--line);border-radius:5px;
+  padding:13px 16px;box-shadow:var(--shadow)}
+.plan label{display:block;margin-bottom:7px}
+.plan input{width:100%;font-family:var(--f-body);font-size:14px;padding:10px 12px;
+  border:1px solid var(--line);border-radius:4px;background:var(--panel-2);color:var(--ink)}
+.report{margin-top:30px;padding-top:20px;border-top:1px solid var(--line-soft)}
+.report>p.intro{font-size:13.5px;color:var(--ink-3);font-weight:400;margin:6px 0 18px;
+  max-width:38em}
+.pillar{display:grid;grid-template-columns:1fr auto;gap:4px 14px;align-items:center;
+  padding:18px 0;border-bottom:1px solid var(--line-soft)}
+.pillar:last-of-type{border-bottom:0}
+.pillar h4{margin:0;font-family:var(--f-disp);font-size:15px;font-weight:600}
+.pillar .sub{grid-column:1;font-size:13px;color:var(--ink-3);font-weight:400}
+.pillar .rt{grid-row:1/3;grid-column:2;display:flex;align-items:center;gap:11px}
+.spark{display:flex;gap:2px;align-items:flex-end;height:26px;width:66px}
+.spark i{flex:1;background:var(--line);border-radius:1px;min-height:2px}
+.spark i.last{background:var(--nacre-deep)}
+.verd{font-family:var(--f-disp);font-size:13px;font-weight:600;white-space:nowrap;
+  min-width:64px;text-align:left}
+.verd.up{color:var(--good)} .verd.down{color:var(--warn)} .verd.flat{color:var(--ink-3)}
+.verd small{display:block;font-family:var(--f-num);font-size:10px;font-weight:400;
+  color:var(--ink-3);direction:ltr}
+
+.notes-box{margin-top:26px;background:var(--blush);border:1px solid var(--line);
+  border-radius:5px;padding:20px 21px;box-shadow:var(--shadow)}
+.notes-box h4{margin:0 0 10px;font-family:var(--f-disp);font-size:15px}
+.notes-box ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:9px}
+.notes-box li{font-size:14.5px;font-weight:400;color:var(--ink-2);line-height:1.65;
+  padding-right:15px;position:relative}
+.notes-box li::before{content:'';position:absolute;right:0;top:9px;width:5px;height:5px;
+  border-radius:50%;background:var(--signal)}
+.notes-box li b{color:var(--ink);font-weight:400}
+
+details.tips{margin-top:11px;border:1px solid var(--line);border-radius:5px;
+  background:var(--panel);overflow:hidden}
+details.tips>summary{padding:12px 16px;cursor:pointer;font-family:var(--f-disp);
+  font-size:14px;font-weight:600;list-style:none;display:flex;justify-content:space-between;
+  align-items:center;gap:10px}
+details.tips>summary::-webkit-details-marker{display:none}
+details.tips>summary::after{content:'+';font-family:var(--f-num);color:var(--ink-3);font-size:15px}
+details.tips[open]>summary::after{content:'−'}
+details.tips .in{padding:0 16px 15px;border-top:1px solid var(--line-soft)}
+details.tips .in p{margin:11px 0 0;font-size:14.5px;font-weight:400;color:var(--ink-2);
+  line-height:1.7}
+details.tips .in p b{color:var(--ink);font-weight:400}
+details.tips .in .lbl{margin-top:13px;display:block}
+
+.levers{margin-top:24px;background:var(--mint);border:1px solid var(--line);
+  border-radius:5px;padding:14px 16px;box-shadow:var(--shadow)}
+.lv-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:9px}
+.lv-row .lbl{flex:none;min-width:74px}
+.lv-note{margin:10px 0 0;font-size:13px;font-weight:400;color:var(--ink-3);line-height:1.6}
+.lv-note b{color:var(--ink-2);font-weight:400}
+.tag{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.tag button{padding:6px 13px;border:1px solid var(--line);border-radius:20px;
+  background:var(--panel);font-size:13.5px;font-weight:400}
+.tag button.on{background:var(--nacre);border-color:var(--signal);color:var(--ink)}
+
+/* ── الأثر ── */
+.rule{display:flex;align-items:center;gap:18px;margin:38px 0 6px}
+.rule::before,.rule::after{content:'';flex:1;height:1px;
+  background:linear-gradient(90deg,transparent,var(--iron),transparent)}
+.rule svg{width:76px;height:22px;flex:none;color:var(--iron)}
+.trace{margin-top:30px;padding-top:20px;border-top:1px solid var(--line-soft)}
+.trace-hd{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
+.bars{display:flex;gap:5px;align-items:flex-end;height:52px}
+.bar{flex:1;background:var(--line-soft);border-radius:3px 3px 0 0;min-height:4px;
+  position:relative;transition:height .4s ease}
+.bar.has{background-image:var(--nacre-deep);background-size:1400% 100%}
+.bar.today{outline:1px solid var(--ink-3);outline-offset:1px}
+.bar-x{display:flex;gap:5px;margin-top:6px}
+.bar-x span{flex:1;text-align:center;font-family:var(--f-num);font-size:9px;color:var(--ink-3)}
+
+.log{margin-top:26px}
+.log h3{font-size:15px;margin-bottom:8px}
+.log-item{border-right:2px solid var(--signal-soft);padding:2px 12px 2px 0;margin-bottom:12px}
+.log-item .lbl{display:block;margin-bottom:2px}
+.log-item p{margin:0;font-size:13.5px;font-weight:400;color:var(--ink-2)}
+
+footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--line-soft);
+  font-size:13px;color:var(--ink-2);font-weight:400;line-height:1.85}
+.sync{display:inline-flex;align-items:center;gap:5px}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--ink-3)}
+.dot.ok{background:var(--good)}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media (max-width:420px){.wrap{padding:18px 13px 60px}.brand h1{font-size:25px}}
+</style>
+<style>body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--f-body)}img{max-width:100%}</style>
+</head>
+<body>
+<div class="wrap" style="padding-bottom:88px">
+
+  <section class="tabp" id="tab-today">
+  <header class="top">
+    <div class="brand">
+      <h1>مِران</h1>
+    </div>
+    <div class="streak">
+      <b id="streakN">0</b>
+      <span id="streakL">يوم متتابع</span>
+    </div>
+  </header>
+
+  <div class="lamps" id="lamps"></div>
+  <div class="daymeta">
+    <span class="lbl" id="dateLbl">—</span>
+    <span class="lbl" id="progLbl">0 / 5</span>
+  </div>
+
+  <p id="welcome" hidden></p>
+  <button type="button" id="quick" hidden></button>
+
+  <main id="list"></main>
+
+  <div class="rule"><svg viewBox="0 0 76 22" aria-hidden="true">
+    <g fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round">
+      <path d="M38 2.5v17"/>
+      <path d="M38 11c-2.6 0-4.4-1.6-4.4-3.6 0-1.7 1.3-2.9 2.9-2.9 1.4 0 2.4 1 2.4 2.3 0 1.1-.8 1.9-1.8 1.9"/>
+      <path d="M38 11c2.6 0 4.4-1.6 4.4-3.6 0-1.7-1.3-2.9-2.9-2.9-1.4 0-2.4 1-2.4 2.3 0 1.1.8 1.9 1.8 1.9"/>
+      <path d="M38 13.5c-3.6 0-6.2 2.2-6.2 5M38 13.5c3.6 0 6.2 2.2 6.2 5"/>
+      <path d="M25 19.5h26"/>
+    </g>
+    <circle cx="38" cy="2.2" r="1.5" fill="currentColor"/>
+  </svg></div>
+
+  </section>
+
+  <section class="tabp" id="tab-progress" hidden>
+  <section class="report">
+    <h3>مؤشر أدائج</h3>
+    <p class="intro">المقارنة مع <b>نفسج</b> — خط الأساس هو أول محاولاتج في كل تمرين. ما فيه
+      مقارنة بغيرج ولا درجة ذكاء؛ هذي التمارين ما تقيس الذكاء، تقيس أداءج فيها هي.
+      وما أقول «تحسّن» أو «تراجع» إلا لو الفرق أكبر من تذبذبج اليومي الطبيعي.</p>
+    <div id="pillars"></div>
+
+    <div class="notes-box" id="notesBox" hidden>
+      <h4>ملاحظات من بياناتج</h4>
+      <ul id="notesList"></ul>
+    </div>
+
+  </section>
+
+  <section class="trace">
+    <div class="trace-hd">
+      <h3>آخر أربعطعش يوم</h3>
+      <span class="lbl" id="traceSum">—</span>
+    </div>
+    <div class="bars" id="bars"></div>
+    <div class="bar-x" id="barsX"></div>
+  </section>
+
+  <section class="log" id="log" hidden>
+    <h3>روابطج المحفوظة</h3>
+    <div id="logItems"></div>
+  </section>
+
+  </section>
+
+  <section class="tabp" id="tab-program" hidden>
+  <section class="program">
+    <div class="prog-hd">
+      <h3>برنامج ٣٠ يوم</h3>
+      <span class="lbl" id="progDay">—</span>
+    </div>
+    <div class="prog-bar"><div id="progFill"></div><div class="prog-mark"></div></div>
+    <p class="prog-phase" id="progPhase">—</p>
+    <div class="plan">
+      <label class="lbl" for="planIn">خطة «لو… إذن…»</label>
+      <input type="text" id="planIn" placeholder="لو خلصت قهوة الصبح، إذن أفتح مِران">
+      <p class="lv-note">اكتبيها مرة وحدة. ربط النية بموقف محدد (نية التنفيذ) من أقوى ما جُرّب
+        لتحويل نيّة لفعل — ومُختبَر على ADHD تحديدًا.</p>
+    </div>
+  </section>
+
+
+  <section class="report" style="border:0;margin-top:26px;padding-top:0">
+    <div class="levers">
+      <div class="lv-row">
+        <span class="lbl">نومج أمس</span>
+        <div class="tag" id="tagRow">
+          <button type="button" data-s="good">زين</button>
+          <button type="button" data-s="mid">متوسط</button>
+          <button type="button" data-s="bad">قليل</button>
+        </div>
+      </div>
+      <div class="lv-row">
+        <span class="lbl">اليوم سويتي</span>
+        <div class="tag" id="actRow">
+          <button type="button" data-a="move">حركة ٢٠ دقيقة</button>
+          <button type="button" data-a="light">ضوء صباح</button>
+          <button type="button" data-a="caf">كافيين</button>
+        </div>
+      </div>
+      <p class="lv-note">هذي مو زينة ولا مكافأة — هذي <b>تجربة على نفسج</b>. وسّميها كل يوم،
+        وبعد أسبوعين الصفحة تحسب لج أي وحدة فيها ترفع درجاتج فعلًا وبكم بالمية.</p>
+    </div>
+    <div id="tips"></div>
+  </section>
+  </section>
+
+  <footer>
+    <span class="sync"><span class="dot" id="syncDot"></span><span id="syncTx">يُحفظ على هذا الجهاز</span></span><br>
+    التمارين هذي تحسّن أداءج <em>فيها هي</em> بشكل واضح، لكن انتقال الفايدة للحياة اليومية ضعيف في الأبحاث.
+    الأقوى دليلًا لـ ADHD يظل: نوم كافي، حركة جسدية، ونظام خارجي يشيل الحمل عن الذاكرة.
+    خذيها كإحماء ممتع ومنظّم لليوم، مو كعلاج.
+  </footer>
+</div>
+
+<nav class="tabs" role="tablist">
+  <button type="button" role="tab" data-t="today"    aria-selected="true">اليوم</button>
+  <button type="button" role="tab" data-t="progress" aria-selected="false">تقدّمي</button>
+  <button type="button" role="tab" data-t="program"  aria-selected="false">برنامجي</button>
+</nav>
+
+<script>
+(function(){
+'use strict';
+const $=s=>document.querySelector(s), el=(t,c,x)=>{const n=document.createElement(t);
+  if(c)n.className=c; if(x!==undefined)n.textContent=x; return n;};
+const RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+/* ═══ التاريخ والعشوائية المرتبطة باليوم ═══ */
+const pad=n=>String(n).padStart(2,'0');
+const keyOf=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const TODAY=keyOf(new Date());
+const AR_DAYS=['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+const AR_MONTHS=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+
+function seeded(str){                       /* mulberry32 من نص */
+  let h=1779033703^str.length;
+  for(let i=0;i<str.length;i++){h=Math.imul(h^str.charCodeAt(i),3432918353);h=h<<13|h>>>19;}
+  let a=h>>>0;
+  return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);
+    t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};
+}
+const rnd=n=>Math.floor(Math.random()*n);
+const shuffle=(a,r)=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor((r?r():Math.random())*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+
+/* ═══ الحالة ═══ */
+const LS='miran.v1';
+let S={days:{},notes:{},hist:{},sleep:{},level:{},set:{},lvRule:null,
+       acts:{},plan:'',start:null};
+let db=null;
+
+function loadLocal(){
+  try{const raw=localStorage.getItem(LS); if(raw){const o=JSON.parse(raw);
+    if(o&&typeof o==='object'){S.days=o.days||{};S.notes=o.notes||{};
+      S.hist=o.hist||{};S.sleep=o.sleep||{};S.level=o.level||{};
+      S.set=o.set||{};S.lvRule=o.lvRule||null;
+      S.acts=o.acts||{};S.plan=o.plan||'';S.start=o.start||null;}}}catch(e){}
+  seedHist();
+}
+function saveLocal(){ try{localStorage.setItem(LS,JSON.stringify(S));}catch(e){} }
+function merge(remote){
+  if(!remote||typeof remote!=='object') return;
+  const rd=remote.days||{}, rn=remote.notes||{}, rh=remote.hist||{}, rs=remote.sleep||{};
+  for(const k in rd){
+    if(!S.days[k]) S.days[k]=rd[k];
+    else for(const id in rd[k]) if(!S.days[k][id]) S.days[k][id]=rd[k][id];
+  }
+  for(const k in rn) if(!S.notes[k]) S.notes[k]=rn[k];
+  for(const k in rs) if(!S.sleep[k]) S.sleep[k]=rs[k];
+  const rl=remote.level||{};
+  for(const k in rl) S.level[k]=Math.max(S.level[k]||1, rl[k]||1);
+  const rst=remote.set||{};
+  for(const k in rst) if(!S.set[k]) S.set[k]=rst[k];
+  if(remote.lvRule&&!S.lvRule) S.lvRule=remote.lvRule;
+  const ra=remote.acts||{};
+  for(const k in ra) S.acts[k]=Object.assign({},ra[k],S.acts[k]||{});
+  if(remote.plan&&!S.plan) S.plan=remote.plan;
+  if(remote.start&&(!S.start||remote.start<S.start)) S.start=remote.start;
+  /* السجل: ادمجي المحاولات ونقّي المكرر بالطابع الزمني */
+  for(const id in rh){
+    const mine=S.hist[id]||[], seen=new Set(mine.map(a=>a.ts));
+    S.hist[id]=mine.concat((rh[id]||[]).filter(a=>a&&!seen.has(a.ts)))
+      .sort((a,b)=>a.ts-b.ts).slice(-200);
+  }
+}
+
+/* لو السجل فاضي وفيه أيام قديمة، ابنيه منها مرة وحدة */
+function seedHist(){
+  if(Object.keys(S.hist).length) return;
+  const out={};
+  Object.keys(S.days).sort().forEach(d=>{
+    const rec=S.days[d];
+    for(const id in rec){ const r=rec[id];
+      if(!r||r.noScore||typeof r.score!=='number') continue;
+      (out[id]=out[id]||[]).push({d:d,s:r.score,ts:r.ts||Date.parse(d+'T12:00:00')||0}); }
+  });
+  S.hist=out;
+}
+async function push(){
+  saveLocal();
+  if(!db) return;
+  try{ await db.doc('progress/main').set(
+    {days:S.days,notes:S.notes,hist:S.hist,sleep:S.sleep,level:S.level,
+     set:S.set,lvRule:S.lvRule,acts:S.acts,plan:S.plan,start:S.start,
+     at:Date.now()}); }catch(e){}
+}
+
+
+/* ═══ علامات خطّية — رسم واحد لكل تمرين، يحلّ محلّ الرقم الترتيبي ═══
+   كلها 24×24، خطوط شعرية، تأخذ لونها من currentColor. */
+const SVG=(d,extra)=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" '+
+  'stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+d+
+  (extra||'')+'</svg>';
+const GLYPH={
+  /* تعارض: دائرتان متداخلتان — الكلمة واللون */
+  stroop : SVG('<circle cx="9.5" cy="12" r="5.5"/><circle cx="14.5" cy="12" r="5.5"/>'),
+  /* يقظة: صفّ نقاط، وحدة بس مضيئة */
+  cpt    : SVG('<circle cx="4.5" cy="12" r="1"/><circle cx="9" cy="12" r="1"/>'+
+               '<circle cx="14" cy="12" r="3.2" fill="currentColor" stroke="none"/>'+
+               '<circle cx="19.5" cy="12" r="1"/>'),
+  /* تسلسل معكوس: ثلاث نقاط وقوس راجع فوقها */
+  span   : SVG('<circle cx="6" cy="16" r="1.3"/><circle cx="12" cy="16" r="1.3"/>'+
+               '<circle cx="18" cy="16" r="1.3"/><path d="M18 11.5C18 7 6 7 6 11.5"/>'+
+               '<path d="M6 11.5l-1.6-1.8M6 11.5l1.8-1.6"/>'),
+  /* شبكة: تسع خانات وحدة مملوءة */
+  nback  : SVG('<rect x="3.5" y="3.5" width="5" height="5" rx="1"/>'+
+               '<rect x="9.5" y="3.5" width="5" height="5" rx="1"/>'+
+               '<rect x="15.5" y="3.5" width="5" height="5" rx="1"/>'+
+               '<rect x="3.5" y="9.5" width="5" height="5" rx="1"/>'+
+               '<rect x="9.5" y="9.5" width="5" height="5" rx="1" fill="currentColor"/>'+
+               '<rect x="15.5" y="9.5" width="5" height="5" rx="1"/>'+
+               '<rect x="3.5" y="15.5" width="5" height="5" rx="1"/>'+
+               '<rect x="9.5" y="15.5" width="5" height="5" rx="1"/>'+
+               '<rect x="15.5" y="15.5" width="5" height="5" rx="1"/>'),
+  /* حساب: زائد وناقص */
+  math   : SVG('<path d="M12 4.5v7M8.5 8h7"/><path d="M8.5 17.5h7"/>'),
+  /* طلاقة: غصن يتفرّع */
+  fluency: SVG('<path d="M12 20V7"/><path d="M12 12c0-3 3-4.5 5.5-4.5"/>'+
+               '<path d="M12 15c0-2.6-2.6-4-4.8-4"/><circle cx="12" cy="4.6" r="1.6"/>'),
+  /* ربط: نقطتان بعيدتان وقوس بينهما */
+  remote : SVG('<circle cx="5.5" cy="15" r="2.2"/><circle cx="18.5" cy="15" r="2.2"/>'+
+               '<path d="M5.5 12.8C5.5 6.5 18.5 6.5 18.5 12.8"/>')
+};
+/* أيقونات الأقسام الثلاثة */
+const TABICON={
+  today   : SVG('<circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2'+
+                'M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6L17 7M7 17l-1.4 1.4"/>'),
+  progress: SVG('<path d="M4 18l5-5 3.5 3L20 8"/><path d="M15.5 8H20v4.5"/>'),
+  program : SVG('<rect x="3.5" y="5" width="17" height="15.5" rx="2"/>'+
+                '<path d="M3.5 9.5h17M8 3.5v3M16 3.5v3"/>'+
+                '<circle cx="12" cy="15" r="1.5" fill="currentColor" stroke="none"/>')
+};
+
+/* ═══ التمارين ═══ */
+/* كل تمرين: run(stage, finish) — يرسم داخل stage وينادي finish({score,unit,detail}) */
+
+const COLORS=[
+  {name:'أحمر', hex:'#D34C42'},
+  {name:'أخضر', hex:'#3E8E63'},
+  {name:'أزرق', hex:'#3A6FB0'},
+  {name:'برتقالي', hex:'#D98A25'},
+  {name:'بنفسجي', hex:'#7B5EA7'},
+  {name:'وردي',   hex:'#C7538C'}
+];
+
+function timerBar(stage,secs,onEnd){
+  const hud=el('div','hud');
+  const t=el('div'); t.appendChild(el('span','lbl','الوقت'));
+  const tb=el('b'); tb.textContent=secs; t.appendChild(tb);
+  hud.appendChild(t);
+  stage.appendChild(hud);
+  let left=secs;
+  const iv=setInterval(()=>{ left--; tb.textContent=left;
+    if(left<=0){clearInterval(iv); onEnd();} },1000);
+  return {stop:()=>clearInterval(iv), hud};
+}
+
+const EX={
+
+/* ── ستروب: اضغطي لون الحبر لا الكلمة ── */
+stroop:{
+  trains:'<b>كفّ الاستجابة التلقائية</b> — قدرتج توقفين أول جواب ينط على بالج وتختارين الصح بدله.',
+  name:'ستروب', pillar:'تركيز وكفّ',
+  how:'بتشوفين اسم لون مكتوب بلون ثاني. اضغطي على <b>لون الحبر</b>، لا الكلمة المكتوبة. ثلاثين ثانية.',
+  unit:'إجابة صحيحة',
+  lv:{n:[4,4,4,5,5,6], inc:[.60,.70,.78,.85,.90,.95], dl:[0,0,0,1400,1150,950]},
+  run(stage,finish,L){
+    L=Math.min(6,Math.max(1,Math.round(L)||1));
+    let ok=0,tot=0,rts=[],t0=0,live=true,dead=null;
+    const NC=this.lv.n[L-1], INC=this.lv.inc[L-1], DL=this.lv.dl[L-1];
+    const PAL=COLORS.slice(0,NC);
+    const word=el('div','big'); stage.appendChild(word);
+    const opts=el('div','opts'); stage.appendChild(opts);
+    const timer=timerBar(stage,30,()=>{live=false;
+      finish({score:ok,detail:rts.length?Math.round(rts.reduce((a,b)=>a+b,0)/rts.length)+' ms متوسط':'—'});});
+    let ink=null;
+    PAL.forEach(c=>{const b=el('button','opt',c.name);
+      b.onclick=()=>{ if(!live||!ink) return; tot++;
+        clearTimeout(dead);
+        const good=c.name===ink.name;
+        if(good){ok++;rts.push(performance.now()-t0);}
+        b.classList.add(good?'hit':'miss');
+        setTimeout(()=>{b.classList.remove('hit','miss'); if(live) next();},160);
+      };
+      opts.appendChild(b);});
+    function next(){
+      const w=PAL[rnd(NC)];
+      let c=PAL[rnd(NC)];
+      if(Math.random()<INC) while(c.name===w.name) c=PAL[rnd(NC)];
+      ink=c; word.textContent=w.name; word.style.color=c.hex; t0=performance.now();
+      clearTimeout(dead);
+      if(DL) dead=setTimeout(()=>{ if(!live) return;      /* فوّتي المهلة = محسوبة غلط */
+        word.style.opacity='.25';
+        setTimeout(()=>{word.style.opacity=''; if(live) next();},150); },DL);
+    }
+    next();
+    return ()=>{live=false;clearTimeout(dead);timer.stop();};
+  }
+},
+
+/* ── حارس الإشارة: انتباه مستمر ── */
+cpt:{
+  trains:'<b>الانتباه المستمر</b> — الثبات على مهمة مملة بدون ما تسرحين ولا تستعجلين وتضغطين على فاضي.',
+  name:'حارس الإشارة', pillar:'انتباه مستمر',
+  how:'حروف بتمر وحدة وحدة بسرعة. اضغطي <b>فقط</b> لما يطلع الحرف الهدف، وتجاهلي الباقي. الصعوبة في إنج ما تضغطين على غيره.',
+  unit:'صافي الإصابات',
+  lv:{isi:[1000,900,820,720,640,560], rate:[.32,.28,.25,.22,.19,.16], n:[36,40,44,48,52,58]},
+  run(stage,finish,L){
+    L=Math.min(6,Math.max(1,Math.round(L)||1));
+    const ISI=this.lv.isi[L-1], RATE=this.lv.rate[L-1], TRIALS=this.lv.n[L-1];
+    const LETTERS='ب ت ث ج ح خ د ر ز س ش ص ط ع ف ق ل م ن ه'.split(' ');
+    const target=LETTERS[rnd(LETTERS.length)];
+    const tip=el('div','note'); tip.innerHTML='الهدف: <b style="font-size:20px">'+target+'</b>';
+    stage.appendChild(tip);
+    const box=el('div','big','—'); stage.appendChild(box);
+    const btn=el('button','btn','هذا هو'); stage.appendChild(btn);
+    const hud=el('div','hud');
+    const mk=(l)=>{const d=el('div');d.appendChild(el('span','lbl',l));const b=el('b','', '0');d.appendChild(b);hud.appendChild(d);return b;};
+    const hEl=mk('إصابة'), fEl=mk('خطأ'), nEl=mk('باقي');
+    stage.appendChild(hud);
+    let hits=0,fa=0,i=0,armed=false,live=true;
+    const seq=[]; for(let k=0;k<TRIALS;k++){
+      seq.push(Math.random()<RATE?target:LETTERS.filter(x=>x!==target)[rnd(LETTERS.length-1)]);}
+    btn.onclick=()=>{ if(!live) return;
+      if(armed){hits++;armed=false;hEl.textContent=hits;box.style.color='var(--good)';}
+      else{fa++;fEl.textContent=fa;box.style.color='var(--warn)';}
+      setTimeout(()=>{box.style.color='';},140); };
+    let iv=setInterval(()=>{
+      if(i>=TRIALS){ live=false; clearInterval(iv);
+        finish({score:Math.max(0,hits-fa),detail:hits+' إصابة · '+fa+' ضغطة غلط'}); return; }
+      const ch=seq[i++]; box.textContent=ch; armed=(ch===target);
+      nEl.textContent=TRIALS-i;
+      setTimeout(()=>{ if(live&&box.textContent===ch) box.textContent='·'; },ISI*.58);
+    },ISI);
+    return ()=>{live=false;clearInterval(iv);};
+  }
+},
+
+/* ── مدى الأرقام معكوسًا ── */
+span:{
+  trains:'<b>الذاكرة العاملة اللفظية</b> — تحملين معلومة وتشتغلين عليها بنفس الوقت، مو بس تحفظينها.',
+  name:'مدى الأرقام معكوسًا', pillar:'ذاكرة عاملة',
+  how:'بتشوفين أرقام وحد وحد. لما تخلص، اكتبيها <b>بالمقلوب</b> — من آخر رقم لأوله. كل جولة تزيد رقم.',
+  unit:'أطول سلسلة',
+  lv:{start:[3,3,3,4,4,5], pace:[800,720,660,600,540,480]},
+  run(stage,finish,L){
+    L=Math.min(6,Math.max(1,Math.round(L)||1));
+    const PACE=this.lv.pace[L-1];
+    let len=this.lv.start[L-1],best=0,fails=0,live=true;
+    const box=el('div','big num','—'); stage.appendChild(box);
+    const info=el('div','note'); stage.appendChild(info);
+    const field=el('div','field'); field.style.display='none';
+    const inp=el('input'); inp.type='text'; inp.className='num'; inp.inputMode='numeric';
+    inp.autocomplete='off'; inp.setAttribute('aria-label','اكتبي الأرقام بالمقلوب');
+    const go=el('button','btn sm','تأكيد');
+    field.appendChild(inp); field.appendChild(go); stage.appendChild(field);
+    let digits=[];
+    function show(){
+      info.textContent='سلسلة من '+len+' أرقام — احفظيها';
+      field.style.display='none'; box.textContent='—';
+      digits=[]; for(let k=0;k<len;k++) digits.push(rnd(10));
+      let i=0;
+      const iv=setInterval(()=>{
+        if(!live){clearInterval(iv);return;}
+        if(i>=digits.length){ clearInterval(iv); box.textContent='؟';
+          info.textContent='اكتبيها بالمقلوب';
+          field.style.display='flex'; inp.value=''; inp.focus(); return; }
+        box.textContent=digits[i++];
+        setTimeout(()=>{ if(live&&box.textContent!=='؟') box.textContent='·'; },PACE*.6);
+      },PACE);
+    }
+    function submit(){
+      if(!live||field.style.display==='none') return;
+      const want=digits.slice().reverse().join('');
+      const got=(inp.value||'').replace(/\D/g,'');
+      if(got===want){ best=Math.max(best,len); len++; fails=0;
+        info.textContent='صح 🎯'; }
+      else { fails++; info.textContent='كان لازم: '+want; }
+      if(fails>=2){ live=false;
+        finish({score:best,detail:best?('وصلتي '+best+' أرقام'):'ما ثبتت سلسلة'}); return; }
+      setTimeout(()=>{ if(live) show(); },1100);
+    }
+    go.onclick=submit;
+    inp.addEventListener('keydown',e=>{ if(e.key==='Enter') submit(); });
+    show();
+    return ()=>{live=false;};
+  }
+},
+
+/* ── n-back بصري ── */
+nback:{
+  trains:'<b>تحديث الذاكرة العاملة</b> — تبدّلين المحفوظ باستمرار وترمين القديم، بدل ما تكدّسين.',
+  name:'الخانة اللي قبل',
+  nameFor:L=>L<2?'الخانة اللي قبل':(L<5?'الخانة قبل خانتين':'الخانة قبل ثلاث'),
+  pillar:'ذاكرة عاملة',
+  how:'مربع يضوي في الشبكة. اضغطي «مطابق» لما يضوي في نفس مكان <b>اللي قبله مباشرة</b> — '+
+      'وكل ما ترقّين تبعد المسافة: خانتين في م٢، وثلاث في م٥. أصعب تمرين هني، لا تتوقعين درجة عالية.',
+  unit:'صافي الإصابات',
+  lv:{n:[1,2,2,2,3,3], pace:[2400,2100,1900,1700,1900,1650], t:[20,24,26,28,30,32]},
+  run(stage,finish,L){
+    L=Math.min(6,Math.max(1,Math.round(L)||1));
+    const N=this.lv.n[L-1], PACE=this.lv.pace[L-1], TRIALS=this.lv.t[L-1];
+    const grid=el('div','grid'); const cells=[];
+    for(let k=0;k<9;k++){const c=el('div','cell');cells.push(c);grid.appendChild(c);}
+    stage.appendChild(grid);
+    const btn=el('button','btn','مطابق'); stage.appendChild(btn);
+    const hud=el('div','hud');
+    const mk=l=>{const d=el('div');d.appendChild(el('span','lbl',l));const b=el('b','','0');d.appendChild(b);hud.appendChild(d);return b;};
+    const hEl=mk('إصابة'), fEl=mk('خطأ'), nEl=mk('باقي');
+    stage.appendChild(hud);
+    const seq=[];
+    for(let k=0;k<TRIALS;k++){
+      if(k>=N&&Math.random()<.3) seq.push(seq[k-N]); else seq.push(rnd(9)); }
+    let i=0,hits=0,fa=0,answered=false,live=true;
+    btn.onclick=()=>{ if(!live||answered||i===0) return; answered=true;
+      const isM=(i>=N+1)&&seq[i-1]===seq[i-1-N];
+      if(isM){hits++;hEl.textContent=hits;btn.style.borderColor='var(--good)';}
+      else{fa++;fEl.textContent=fa;btn.style.borderColor='var(--warn)';}
+      setTimeout(()=>{btn.style.borderColor='';},180); };
+    const iv=setInterval(()=>{
+      if(!live){clearInterval(iv);return;}
+      if(i>=TRIALS){ live=false; clearInterval(iv);
+        finish({score:Math.max(0,hits-fa),detail:hits+' إصابة · '+fa+' ضغطة غلط'}); return; }
+      cells.forEach(c=>c.classList.remove('lit'));
+      const p=seq[i]; cells[p].classList.add('lit'); i++; answered=false;
+      nEl.textContent=TRIALS-i;
+      setTimeout(()=>{ if(live) cells[p].classList.remove('lit'); },PACE*.32);
+    },PACE);
+    return ()=>{live=false;clearInterval(iv);};
+  }
+},
+
+/* ── حساب سريع ── */
+math:{
+  trains:'<b>السرعة والأتمتة</b> — كم عملية تسوينها بدون ما تفكرين فيها، وهذا يفرّغ ذاكرتج للأهم.',
+  name:'حساب سريع', pillar:'سرعة ذهنية',
+  how:'مسائل ورا بعض. جاوبي بأسرع ما تقدرين. تبدأ بجمع وطرح بس، وكل ما ترقّين يدخل نوع جديد: نتائج سالبة (م٣) ← ضرب (م٤) ← قسمة (م٥) ← مسائل مركّبة (م٦). ستين ثانية.',
+  unit:'إجابة صحيحة',
+  lv:{ /* 0:+  1:−  2:×  3:ثلاثة حدود  4:÷  5:ضرب ثم طرح */
+     kinds:[[0,1],[0,1],[0,1],[0,1,2],[0,1,2,4],[0,1,2,3,4,5]],
+     neg:  [0,0,1,1,1,1],          /* النتائج السالبة تبدأ من م٣ */
+     big:  [0,1,1,1,1,1]},
+  run(stage,finish,L){
+    L=Math.min(6,Math.max(1,Math.round(L)||1));
+    let ok=0,live=true,ans=0;
+    const KINDS=this.lv.kinds[L-1], NEG=this.lv.neg[L-1], BIG=this.lv.big[L-1];
+    const q=el('div','big num','—'); stage.appendChild(q);
+    const field=el('div','field');
+    /* زر السالب: لوحة الأرقام على الجوال ما فيها إشارة ناقص */
+    const neg=el('button','btn sm','−'); neg.type='button'; neg.title='إشارة سالب';
+    neg.style.flex='none'; neg.style.fontFamily='var(--f-num)';
+    const inp=el('input'); inp.type='text'; inp.className='num'; inp.inputMode='numeric';
+    inp.autocomplete='off'; inp.setAttribute('aria-label','الجواب');
+    neg.onclick=()=>{ if(!live) return;
+      inp.value = inp.value.charAt(0)==='-' ? inp.value.slice(1) : '-'+inp.value;
+      inp.focus(); check(); };
+    field.appendChild(inp); field.appendChild(neg); stage.appendChild(field);
+    const fb=el('div','verdict',''); stage.appendChild(fb);
+    const timer=timerBar(stage,60,()=>{live=false;finish({score:ok,detail:ok+' في الدقيقة'});});
+    function next(){
+      const kind=KINDS[rnd(KINDS.length)];
+      const R=BIG?90:35;
+      let a,b,c,txt;
+      if(kind===0){a=2+rnd(R);b=2+rnd(R);ans=a+b;txt=a+' + '+b;}
+      else if(kind===1){
+        if(NEG){ a=12+rnd(R+30); b=2+rnd(R+30); }   /* من م٣: الناتج ممكن يطلع سالب */
+        else   { a=12+rnd(R+20); b=2+rnd(a-2); }    /* قبلها: الناتج موجب دايمًا */
+        ans=a-b; txt=a+' − '+b; }
+      else if(kind===2){a=3+rnd(BIG?13:10);b=3+rnd(BIG?13:10);ans=a*b;txt=a+' × '+b;}
+      else if(kind===3){                         /* ثلاثة حدود */
+        a=10+rnd(60);b=5+rnd(40);c=5+rnd(40);ans=a+b-c;txt=a+' + '+b+' − '+c; }
+      else if(kind===4){                         /* قسمة بلا باقي */
+        b=2+rnd(11); ans=2+rnd(14); a=b*ans; txt=a+' ÷ '+b; }
+      else{                                      /* ضرب ثم طرح */
+        a=3+rnd(12);b=3+rnd(9);c=5+rnd(60);ans=a*b-c;txt=a+' × '+b+' − '+c; }
+      q.textContent=txt; inp.value='';
+    }
+    function check(){
+      if(!live) return;
+      let v=inp.value.replace(/[^\d-]/g,'');
+      if(v.indexOf('-')>0) v=v.replace(/-/g,'');   /* الناقص في البداية فقط */
+      if(v!==inp.value) inp.value=v;
+      if(v===''||v==='-') return;                 /* ناقص لحاله انتظار، مو غلط */
+      if(Number(v)===ans){ ok++; fb.textContent='✓'; fb.className='verdict g';
+        setTimeout(()=>{fb.textContent='';},260); next(); return; }
+      /* غلط فقط لما يكتمل عدد الخانات — نقارن الأرقام بلا الإشارة */
+      if(v.replace('-','').length>=String(Math.abs(ans)).length){
+        fb.textContent='مرة ثانية'; fb.className='verdict soft';
+        setTimeout(()=>{fb.textContent='';},420); inp.value=''; }
+    }
+    inp.addEventListener('input',check);
+    next(); setTimeout(()=>inp.focus(),50);
+    return ()=>{live=false;timer.stop();};
+  }
+},
+
+/* ── اشتقاق: طلاقة لفظية ── */
+fluency:{
+  trains:'<b>الطلاقة اللفظية والاسترجاع الموجّه</b> — سحب كلمات من ذاكرتج تحت قيدين بنفس الوقت.',
+  name:'اشتقاق', pillar:'طلاقة لفظية',
+  how:'فئة وحرف. اكتبي أكبر عدد كلمات تنطبق عليهم، وحدة وحدة و«إدخال» بينهم. دقيقة كاملة — لا تتوقفين تفكرين، اكتبي.',
+  unit:'كلمة',
+  lv:{sec:[60,60,60,55,50,45]},
+  run(stage,finish,L){
+    L=Math.min(6,Math.max(1,Math.round(L)||1));
+    const SEC=this.lv.sec[L-1];
+    const CATS=[
+      {c:'أشياء في المطبخ'},{c:'حيوانات'},{c:'مِهَن'},{c:'أشياء تلبسينها'},
+      {c:'أشياء في السيارة'},{c:'أكلات'},{c:'أشياء لونها أبيض'},{c:'أشياء في الحديقة'},
+      {c:'أدوات تستخدمينها في الشغل'},{c:'أشياء تنشاف في السوق'}];
+    const LETS='ب ت ح خ د ر س ش ص ط ع ف ق ك ل م ن ه'.split(' ');
+    const cat=CATS[rnd(CATS.length)].c, letter=LETS[rnd(LETS.length)];
+    const head=el('div','big'); head.style.fontSize='24px';
+    head.innerHTML=cat+' <span style="color:var(--signal-tx)">تبدأ بحرف «'+letter+'»</span>';
+    stage.appendChild(head);
+    const field=el('div','field');
+    const inp=el('input'); inp.type='text'; inp.autocomplete='off';
+    inp.placeholder='اكتبي كلمة واضغطي إدخال'; inp.setAttribute('aria-label','كلمة');
+    field.appendChild(inp); stage.appendChild(field);
+    const list=el('div','wordlist'); stage.appendChild(list);
+    const words=[];
+    const timer=timerBar(stage,SEC,()=>{live=false;inp.disabled=true;
+      finish({score:words.length,detail:words.length?words.slice(0,6).join(' · ')+(words.length>6?' …':''):'—'});});
+    let live=true;
+    inp.addEventListener('keydown',e=>{
+      if(e.key!=='Enter'||!live) return;
+      const w=inp.value.trim();
+      inp.value='';
+      if(!w||words.includes(w)) return;
+      words.push(w); list.appendChild(el('span','chip',w));
+    });
+    setTimeout(()=>inp.focus(),50);
+    return ()=>{live=false;timer.stop();};
+  }
+},
+
+/* ── ربط بعيد: إبداع، بدون درجة ── */
+remote:{
+  trains:'<b>الربط البعيد والمرونة الذهنية</b> — الخروج من أول مسار تاخذه فكرتج.',
+  name:'ربط بعيد', pillar:'ربط وإبداع',
+  how:'كلمتين ما لهم علاقة ببعض. اكتبي جملة وحدة تربطهم ربط يقنع. ما فيه صح وغلط هني — الفايدة في إنج تجبرين مخج يمشي بين شيئين بعيدين.',
+  unit:'مكتوب',
+  lv:{three:[0,0,0,1,1,1]},
+  run(stage,finish,L){
+    L=Math.min(6,Math.max(1,Math.round(L)||1));
+    const A=['مِظلّة','ساعة رملية','مفتاح','مرآة','سُلّم','خيط','فانوس','بذرة','جسر','مِقص','بوصلة','قفل'];
+    const B=['ذاكرة','صداقة','خوف','عادة','وقت','ثقة','فوضى','بداية','صمت','قرار','غيرة','راحة'];
+    const C=['مطر','زجاج','عسل','حبل','ظل','مرساة','شمعة','ريشة'];
+    const a=A[rnd(A.length)], b=B[rnd(B.length)];
+    const third=this.lv.three[L-1]?C[rnd(C.length)]:null;
+    const head=el('div','big'); head.style.fontSize=third?'22px':'26px';
+    head.innerHTML='<span>'+a+'</span> <span style="color:var(--ink-3)">↔</span> <span>'+b+'</span>'
+      +(third?' <span style="color:var(--ink-3)">↔</span> <span>'+third+'</span>':'');
+    stage.appendChild(head);
+    const field=el('div','field');
+    const inp=el('input'); inp.type='text'; inp.autocomplete='off';
+    inp.placeholder=third?('اربطي الثلاثة في جملة وحدة…'):('الـ'+a+' مثل الـ'+b+' لأن…'); inp.setAttribute('aria-label','اكتبي الرابط');
+    const go=el('button','btn sm','حفظ');
+    field.appendChild(inp); field.appendChild(go); stage.appendChild(field);
+    const hint=el('div','note','جملة وحدة تكفي.'); stage.appendChild(hint);
+    function submit(){
+      const t=inp.value.trim();
+      if(t.length<4){ hint.textContent='اكتبي جملة أطول شوي.'; return; }
+      const pair=a+' ↔ '+b+(third?' ↔ '+third:'');
+      S.notes[TODAY]={pair:pair, text:t};
+      finish({score:1,detail:pair,noScore:true});
+    }
+    go.onclick=submit;
+    inp.addEventListener('keydown',e=>{if(e.key==='Enter')submit();});
+    setTimeout(()=>inp.focus(),50);
+    return ()=>{};
+  }
+}
+};
+
+/* ═══ المستويات ═══
+   الترقية: محاولتين ورا بعض توصل الهدف. النزول: ثلاث محاولات تحت نص الهدف —
+   عشان ما تعلقين في مستوى يحبطج. الأهداف تنزل مع ارتفاع المستوى لأن التمرين يصعب. */
+const MAX_LV=6;
+const MIN_TRIES=5;   /* ما ترقّين قبل ٥ محاولات على المستوى، مهما كانت درجاتج */
+const TARGETS={
+  stroop :[18,18,18,17,17,17],
+  cpt    :[ 8, 8, 8, 7, 7, 7],
+  span   :[ 5, 5, 6, 6, 7, 7],
+  nback  :[ 4, 4, 5, 5, 4, 5],
+  math   :[16,18,18,16,15,14],
+  fluency:[ 9,10,10,10,10,10]
+};
+const LV=id=>Math.min(MAX_LV,Math.max(1,S.level[id]||1));
+const targetOf=id=>TARGETS[id]?TARGETS[id][LV(id)-1]:null;
+const nameOf=id=>EX[id].nameFor?EX[id].nameFor(LV(id)):EX[id].name;
+/* الوقت مكتوب على كل بطاقة: تقدير المدة أصعب شي مع ADHD، فما نخليها مفاجأة */
+function durOf(id){
+  const L=LV(id)-1, x=EX[id].lv||{};
+  let sec = id==='stroop'?30 : id==='math'?60
+    : id==='cpt'?Math.round(x.isi[L]*x.n[L]/1000)
+    : id==='nback'?Math.round(x.pace[L]*x.t[L]/1000)
+    : id==='fluency'?x.sec[L] : id==='span'?75 : 45;
+  if(sec<90) return sec+' ثانية';
+  const m=Math.round(sec/30)/2;
+  return m===1?'دقيقة':m===1.5?'دقيقة ونص':m===2?'دقيقتين':
+         (m%1?Math.floor(m)+' ونص دقيقة':m+' دقايق');
+}
+
+/* يرجّع 'up' أو 'down' أو null */
+function gradeLevel(id){
+  const T=TARGETS[id]; if(!T) {                     /* بلا درجة: ترقية كل ٣ مرات */
+    const n=(S.hist[id]||[]).length;
+    const want=1+Math.floor(((S.days&&0)||n)/3);
+    return null; }
+  const lv=LV(id);
+  const at=(S.hist[id]||[]).filter(a=>(a.lv||1)===lv).map(a=>a.s);
+  const t=T[lv-1];
+  if(at.length>=MIN_TRIES&&lv<MAX_LV&&at.slice(-3).every(v=>v>=t)) return 'up';
+  if(at.length>=6&&lv>1&&at.slice(-4).every(v=>v<t*0.5)) return 'down';
+  return null;
+}
+function applyLevel(id){
+  const g=gradeLevel(id); if(!g) return null;
+  const was=LV(id);
+  S.level[id]=g==='up'?was+1:was-1;
+  return {dir:g,from:was,to:S.level[id]};
+}
+
+/* القاعدة القديمة كانت ترقّي بعد محاولتين، فقفزت مستويات ما أتقنتيها.
+   نعيد تشغيل سجلّج كامل بالقاعدة الجديدة — ما نحذف ولا محاولة. */
+function recomputeLevels(){
+  if(S.lvRule==='v2') return;
+  Object.keys(TARGETS).forEach(id=>{
+    const all=(S.hist[id]||[]).filter(a=>typeof a.s==='number')
+                              .sort((a,b)=>(a.ts||0)-(b.ts||0));
+    let lv=1, at=[];
+    all.forEach(a=>{
+      a.lv=lv; at.push(a.s);
+      const t=TARGETS[id][lv-1];
+      if(at.length>=MIN_TRIES&&lv<MAX_LV&&at.slice(-3).every(v=>v>=t)){ lv++; at=[]; }
+    });
+    S.hist[id]=all;
+    S.level[id]=lv;
+  });
+  S.lvRule='v2';
+}
+
+/* ═══ اختيار مجموعة اليوم: وحد من كل ركن + بديل دوّار ═══ */
+const PILLARS={focus:['stroop','cpt'],memory:['span','nback'],speed:['math'],lang:['fluency','remote']};
+function todaySet(){
+  const r=seeded(TODAY);
+  const pick=arr=>arr[Math.floor(r()*arr.length)];
+  const set=[pick(PILLARS.focus),pick(PILLARS.memory),pick(PILLARS.speed),pick(PILLARS.lang)];
+  const rest=Object.keys(EX).filter(k=>!set.includes(k));
+  /* الخانة الخامسة تروح لأضعف مهارة أو أقلها ممارسة — تدريب مقصود لا عشوائي */
+  let weak=null, worst=Infinity;
+  rest.forEach(id=>{
+    const h=(S.hist&&S.hist[id])||[];
+    const t=(TARGETS[id]||[])[ (S.level&&S.level[id]||1)-1 ];
+    if(h.length<3||!t){ if(h.length<worst){worst=h.length;weak=id;} return; }
+    const ratio=med(h.slice(-3).map(a=>a.s))/t;
+    if(ratio<worst){ worst=ratio; weak=id; }
+  });
+  set.push(weak||pick(rest));
+  return shuffle(set,r);
+}
+function getSet(){
+  const saved=S.set[TODAY];
+  if(saved&&saved.length===5&&saved.every(k=>EX[k])) return saved.slice();
+  const fresh=todaySet(); S.set[TODAY]=fresh.slice(); return fresh;
+}
+let SET=getSet();
+
+/* ═══ الرسم ═══ */
+let activeStop=null;
+
+function dayRec(){ return S.days[TODAY]||(S.days[TODAY]={}); }
+function doneCount(k){ const d=S.days[k]; return d?Object.keys(d).length:0; }
+
+/* السلسلة تسامح يوم واحد فايت. يومين ورا بعض هم اللي يكسرون.
+   السبب: كسر السلسلة من غلطة وحدة هو أكثر سبب يخلي الناس تترك التطبيق نهائيًا. */
+function streak(){
+  let n=0,gap=0; const d=new Date();
+  if(doneCount(keyOf(d))===0) d.setDate(d.getDate()-1);
+  for(let i=0;i<400;i++){
+    if(doneCount(keyOf(d))>0){ n++; gap=0; }
+    else { gap++; if(gap>=2) break; }
+    d.setDate(d.getDate()-1);
+  }
+  return n;
+}
+/* كم يوم صار من آخر مرة اشتغلتي فيها */
+function daysAway(){
+  const d=new Date();
+  for(let i=0;i<60;i++){ if(doneCount(keyOf(d))>0) return i; d.setDate(d.getDate()-1); }
+  return -1;
+}
+function weekCount(){
+  let n=0; const d=new Date();
+  for(let i=0;i<7;i++){ if(doneCount(keyOf(d))>0) n++; d.setDate(d.getDate()-1); }
+  return n;
+}
+function personalBest(id){
+  let b=null;
+  for(const k in S.days){ const r=S.days[k][id];
+    if(r&&typeof r.score==='number'&&(b===null||r.score>b)) b=r.score; }
+  return b;
+}
+
+function renderHead(){
+  const d=new Date();
+  $('#dateLbl').textContent=AR_DAYS[d.getDay()]+' · '+d.getDate()+' '+AR_MONTHS[d.getMonth()];
+  const n=streak();
+  $('#streakN').textContent=n;
+  $('#streakL').textContent=n===0?'ابدئي اليوم':(n===1?'يوم':'أيام متتابعة');
+  const done=Object.keys(S.days[TODAY]||{}).filter(id=>SET.includes(id)).length;
+  $('#progLbl').textContent = done===0 ? 'الهدف اليوم: تمرين واحد'
+    : (done===1 ? 'وصلتي هدف اليوم ✓ · والباقي بونص'
+                : 'خلصتي '+done+' من ٥ · هدفج كان ١');
+
+  /* رسالة الرجوع بعد غياب — بلا لوم أبدًا */
+  const away=daysAway(), msg=$('#welcome');
+  if(away>=2&&done===0){
+    msg.hidden=false;
+    msg.innerHTML='رجعتي بعد <b>'+away+'</b> أيام. ما ضاع شي — مستوياتج وأرقامج مكانها. '+
+      'سوّي تمرين واحد بس اليوم وهذا يكفي.';
+  } else msg.hidden=true;      /* لا تكرّري سطر الهدف — هو فوق أصلًا */
+
+  const qs=$('#quick'), nx=SET.find(k=>!(S.days[TODAY]||{})[k]);
+  if(nx){ qs.hidden=false;
+    qs.innerHTML='<b>'+(done===0?'ابدئي':'التالي')+'</b>'+
+      '<i>'+nameOf(nx)+' · '+durOf(nx)+'</i>';
+    qs.onclick=()=>{ const i=SET.indexOf(nx), h=document.querySelectorAll('.ex-hd')[i];
+      if(h.parentElement.querySelector('.ex-body').hidden) h.click();
+      h.scrollIntoView({behavior:RM?'auto':'smooth',block:'center'});
+      const go=[...h.parentElement.querySelectorAll('button')]
+        .find(b=>b.textContent.trim()==='ابدئي');
+      if(go) setTimeout(()=>go.click(),RM?0:340); };
+  } else { qs.hidden=false;
+    qs.innerHTML='<b>خلصتي اليوم</b><i>وقفي وارتاحي</i>'; qs.onclick=null; }
+  const lamps=$('#lamps'); lamps.textContent='';
+  SET.forEach((id,i)=>{ const l=el('div','lamp');
+    l.style.backgroundPositionX=(i/4*100)+'%';
+    if(S.days[TODAY]&&S.days[TODAY][id]) l.classList.add('on'); lamps.appendChild(l); });
+}
+
+function renderList(){
+  const list=$('#list'); list.textContent='';
+  SET.forEach((id,i)=>{
+    const ex=EX[id], rec=(S.days[TODAY]||{})[id];
+    const card=el('section','ex'+(rec?' done':''));
+    const hd=el('button','ex-hd'); hd.type='button';
+    const g=el('span','ex-ico'); g.innerHTML=GLYPH[id]||''; hd.appendChild(g);
+    const t=el('div','ex-t');
+    const h=el('h3','',nameOf(id));
+    if(LV(id)>1){ const bd=el('span','lvbadge','م'+LV(id)); h.appendChild(bd); }
+    t.appendChild(h);
+    const sub=el('p','');
+    sub.textContent=ex.pillar+(rec?'':' · '+durOf(id));
+    t.appendChild(sub); hd.appendChild(t);
+    if(rec){
+      const sc=el('div','ex-sc');
+      if(rec.noScore){ const b=el('b','','✓'); sc.appendChild(b); sc.appendChild(el('span','','خلصتيه')); }
+      else{ sc.appendChild(el('b','',String(rec.score))); sc.appendChild(el('span','',ex.unit)); }
+      hd.appendChild(sc);
+    }
+    card.appendChild(hd);
+
+    const body=el('div','ex-body'); body.hidden=true; card.appendChild(body);
+    hd.onclick=()=>{
+      if(!body.hidden){ closeBody(body); return; }
+      document.querySelectorAll('.ex-body').forEach(b=>{ if(!b.hidden) closeBody(b); });
+      openBody(body,id,rec);
+    };
+    list.appendChild(card);
+  });
+}
+function closeBody(body){
+  if(activeStop){activeStop();activeStop=null;}
+  body.hidden=true; body.textContent='';
+}
+function openBody(body,id,rec){
+  const ex=EX[id];
+  body.hidden=false; body.textContent='';
+  const tr=el('p','trains2'); tr.innerHTML='يدرّب: '+ex.trains; body.appendChild(tr);
+  const how=el('p','how'); how.innerHTML=ex.how; body.appendChild(how);
+  if(!rec){
+    const sw=el('button','swapbtn','ما ودّي هذا · بدّليه'); sw.type='button';
+    sw.onclick=async()=>{ const i=SET.indexOf(id);
+      const alt=Object.keys(EX).filter(k=>!SET.includes(k));
+      if(!alt.length||i<0) return;
+      SET[i]=alt[Math.floor(Math.random()*alt.length)];
+      S.set[TODAY]=SET.slice(); renderAll(); await push(); };
+    body.appendChild(sw);
+  }
+  const pb=personalBest(id);
+  if(pb!==null&&!rec){ const p=el('div','pb'); p.textContent='أفضل نتيجة لج: '+pb;
+    p.style.marginTop='6px'; body.appendChild(p); }
+  const stage=el('div','stage'); body.appendChild(stage);
+  if(rec){
+    stage.appendChild(el('div','verdict g',rec.noScore?'خلصتيه اليوم':(rec.score+' '+ex.unit)));
+    if(rec.detail) stage.appendChild(el('div','note',rec.detail));
+    if(id==='remote'&&S.notes[TODAY]) stage.appendChild(el('div','note','«'+S.notes[TODAY].text+'»'));
+    const again=el('button','btn ghost sm','سويه مرة ثانية');
+    again.onclick=()=>{ stage.textContent=''; start(stage,id,body); };
+    stage.appendChild(again);
+    return;
+  }
+  const go=el('button','btn','ابدئي');
+  go.onclick=()=>{ stage.textContent=''; start(stage,id,body); };
+  stage.appendChild(go);
+}
+function start(stage,id,body){
+  if(activeStop){activeStop();activeStop=null;}
+  const ex=EX[id];
+  const lvAt=LV(id);
+  activeStop=ex.run(stage,async res=>{
+    activeStop=null;
+    const prev=(S.days[TODAY]||{})[id];
+    const keep=(!prev||res.noScore||res.score>=prev.score)?res:prev;
+    dayRec()[id]={score:keep.score,detail:keep.detail,noScore:!!keep.noScore,ts:Date.now()};
+    if(!res.noScore&&typeof res.score==='number'){          /* كل محاولة تدخل السجل */
+      (S.hist[id]=S.hist[id]||[]).push({d:TODAY,s:res.score,ts:Date.now(),lv:lvAt});
+      if(S.hist[id].length>200) S.hist[id]=S.hist[id].slice(-200);
+    }
+    const moved=res.noScore?null:applyLevel(id);
+    stage.textContent='';
+    const head=el('div','verdict g');
+    head.textContent=res.noScore?'محفوظ ✓':(res.score+' '+ex.unit);
+    stage.appendChild(head);
+    if(res.detail) stage.appendChild(el('div','note',res.detail));
+    if(moved){
+      const m=el('div','lvupbox '+(moved.dir==='up'?'up':'down'));
+      m.innerHTML = moved.dir==='up'
+        ? 'ترقيتي للمستوى <b>'+moved.to+'</b> — التمرين بيصير أصعب من الجولة الجاية.'
+        : 'نزّلتج للمستوى <b>'+moved.to+'</b> عشان ترجعين تبنين ثقة، مو عقاب.';
+      stage.appendChild(m);
+    } else if(!res.noScore&&targetOf(id)!==null&&LV(id)<MAX_LV){
+      const t=targetOf(id);
+      const at=(S.hist[id]||[]).filter(a=>(a.lv||1)===LV(id)).map(a=>a.s);
+
+      const at2=(S.hist[id]||[]).filter(a=>(a.lv||1)===LV(id));
+      const left=Math.max(0,MIN_TRIES-at2.length);
+      stage.appendChild(el('div','note', left
+        ? ('للترقية: باقي '+left+' محاولة على هالمستوى قبل ما يُفتح الترقّي — '+
+           'عشان تتمكنين منه، مو تعدينه.')
+        : ('للترقية: '+t+' أو أكثر في ٣ محاولات ورا بعض. آخر ٣: '+
+           at2.slice(-3).map(a=>a.s).join(' · '))));
+    }
+    const pb=personalBest(id);
+    if(!res.noScore&&pb!==null&&res.score>=pb&&res.score>0)
+      stage.appendChild(el('div','pb','أفضل نتيجة لج حتى الحين'));
+    const row=el('div','field'); row.style.justifyContent='center'; row.style.maxWidth='none';
+    const again=el('button','btn ghost sm','مرة ثانية');
+    again.onclick=()=>{ stage.textContent=''; start(stage,id,body); };
+    const nx=el('button','btn sm','التالي');
+    nx.onclick=()=>{
+      const i=SET.indexOf(id);
+      const next=SET.slice(i+1).concat(SET.slice(0,i)).find(k=>!(S.days[TODAY]||{})[k]);
+      renderAll();
+      if(next){ const cards=document.querySelectorAll('.ex-hd');
+        cards[SET.indexOf(next)].click();
+        cards[SET.indexOf(next)].scrollIntoView({behavior:RM?'auto':'smooth',block:'center'}); }
+    };
+    row.appendChild(again); row.appendChild(nx);
+    stage.appendChild(row);
+    renderHead(); renderReport(); renderTrace(); renderLog();
+    await push();
+  },lvAt);
+
+  /* لو ما لحقتي البداية أو ضاع منج الخيط — ارجعي بضغطة، بلا ما تنتظرين النهاية */
+  const bar=el('div','runbar');
+  const rs=el('button','runbtn','أعيدي من البداية'); rs.type='button';
+  rs.onclick=()=>{ if(activeStop){activeStop();activeStop=null;}
+    stage.textContent=''; start(stage,id,body); };
+  const qt=el('button','runbtn','خروج'); qt.type='button';
+  qt.onclick=()=>{ if(activeStop){activeStop();activeStop=null;}
+    openBody(body,id,(S.days[TODAY]||{})[id]); };
+  bar.appendChild(rs); bar.appendChild(qt);
+  stage.appendChild(bar);
+}
+
+/* ═══ الإحصاء: مقارنة مع خط أساسج أنتِ ═══
+   القاعدة: ما نقول «تحسّن» أو «تراجع» إلا لو الفرق تجاوز تذبذبج الطبيعي.
+   عتبة الضجيج = نصف الانحراف المعياري لمحاولاتج، أو 8% من خط الأساس — أيهم أكبر. */
+const PILLAR_DEF=[
+  {k:'focus', name:'التركيز والكفّ',   ids:['stroop','cpt'],   tip:'focus'},
+  {k:'memory',name:'الذاكرة العاملة',  ids:['span','nback'],   tip:'memory'},
+  {k:'speed', name:'السرعة الذهنية',   ids:['math'],           tip:'speed'},
+  {k:'lang',  name:'الطلاقة والربط',   ids:['fluency'],        tip:'lang'}
+];
+const MIN_N=5;                                  /* أقل عدد محاولات قبل أي حكم */
+
+const med=a=>{ if(!a.length) return 0; const b=a.slice().sort((x,y)=>x-y),m=b.length>>1;
+  return b.length%2?b[m]:(b[m-1]+b[m])/2; };
+const mean=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:0;
+const sd=a=>{ if(a.length<2) return 0; const m=mean(a);
+  return Math.sqrt(a.reduce((t,v)=>t+(v-m)*(v-m),0)/(a.length-1)); };
+
+function exStat(id){
+  /* المقارنة داخل نفس المستوى فقط — الدرجات عبر المستويات مو قابلة للمقارنة */
+  const lv=LV(id);
+  const all=(S.hist[id]||[]).filter(a=>typeof a.s==='number');
+  const h=all.filter(a=>(a.lv||1)===lv);
+  const n=h.length;
+  if(n<MIN_N) return {id,n,ready:false,lv,total:all.length,scores:h.map(a=>a.s)};
+  const sc=h.map(a=>a.s);
+  const base=med(sc.slice(0,Math.min(5,Math.floor(n/2))));   /* خط الأساس */
+  const now=med(sc.slice(-3));                                /* آخر ثلاث */
+  const noise=Math.max(sd(sc)*0.5, Math.abs(base)*0.08, 0.5);
+  const diff=now-base;
+  const pct=base?Math.round((diff/base)*100):0;
+  let dir='flat';
+  if(diff>noise) dir='up'; else if(diff<-noise) dir='down';
+  return {id,n,ready:true,lv,total:all.length,scores:sc,base,now,diff,pct,dir,noise,
+          cv:mean(sc)?sd(sc)/mean(sc):0};
+}
+
+function pillarStat(P){
+  const parts=P.ids.map(exStat).filter(x=>x.ready);
+  const all=P.ids.map(exStat);
+  const n=all.reduce((t,x)=>t+x.n,0);
+  if(!parts.length) return {P,ready:false,n,need:MIN_N*P.ids.length};
+  const pct=Math.round(mean(parts.map(x=>x.pct)));
+  const ups=parts.filter(x=>x.dir==='up').length, dns=parts.filter(x=>x.dir==='down').length;
+  const dir=ups>dns?'up':(dns>ups?'down':'flat');
+  /* شرارة: آخر عشر محاولات من التمرين الأكثر بيانات في الركن */
+  const lead=parts.slice().sort((a,b)=>b.n-a.n)[0];
+  return {P,ready:true,n,pct,dir,parts,spark:lead.scores.slice(-10),leadId:lead.id};
+}
+
+const VERD={up:'تحسّن',down:'تراجع',flat:'ثابت'};
+
+function renderReport(){
+  const box=$('#pillars'); box.textContent='';
+  PILLAR_DEF.forEach(P=>{
+    const st=pillarStat(P);
+    const row=el('div','pillar');
+    row.appendChild(el('h4','',P.name));
+    const sub=el('div','sub');
+    const lvSet=[...new Set(P.ids.filter(id=>TARGETS[id]).map(id=>LV(id)))];
+    const lvs=lvSet.map(v=>'م'+v).join('–');   /* مستوى واحد يُكتب مرة وحدة */
+    sub.textContent=st.ready
+      ? (st.n+' محاولة'+(lvs?' · مستوى '+lvs:''))
+      : ((lvs?'مستوى '+lvs+' — ':'')+'باقي '+Math.max(1,st.need-st.n)+' محاولة على هذا المستوى');
+    row.appendChild(sub);
+    const rt=el('div','rt');
+    if(st.ready){
+      const sp=el('div','spark');
+      const mx=Math.max.apply(null,st.spark.concat([1]));
+      st.spark.forEach((v,i)=>{ const b=el('i');
+        b.style.height=Math.max(2,(v/mx)*26)+'px';
+        if(i===st.spark.length-1) b.className='last';
+        b.title=String(v); sp.appendChild(b); });
+      rt.appendChild(sp);
+      const v=el('div','verd '+st.dir);
+      v.appendChild(document.createTextNode(VERD[st.dir]));
+      const sm=el('small','',(st.pct>0?'+':'')+st.pct+'%'); v.appendChild(sm);
+      rt.appendChild(v);
+    } else {
+      const v=el('div','verd flat','—'); rt.appendChild(v);
+    }
+    row.appendChild(rt);
+    box.appendChild(row);
+  });
+  renderTag(); renderNotes(); renderTips();
+}
+
+/* ── الروافع اليومية ── */
+function renderTag(){
+  const cur=S.sleep[TODAY]||null;
+  document.querySelectorAll('#tagRow button').forEach(b=>{
+    b.classList.toggle('on',b.dataset.s===cur);
+    b.onclick=async()=>{ S.sleep[TODAY]=(S.sleep[TODAY]===b.dataset.s)?undefined:b.dataset.s;
+      if(!S.sleep[TODAY]) delete S.sleep[TODAY];
+      renderTag(); renderNotes(); await push(); };
+  });
+  const a=S.acts[TODAY]||{};
+  document.querySelectorAll('#actRow button').forEach(b=>{
+    b.classList.toggle('on',!!a[b.dataset.a]);
+    b.onclick=async()=>{ const cur2=S.acts[TODAY]||(S.acts[TODAY]={});
+      cur2[b.dataset.a]=!cur2[b.dataset.a];
+      renderTag(); renderNotes(); await push(); };
+  });
+}
+
+/* درجة اليوم منسوبة لخط أساس كل تمرين — عشان نجمع تمارين مختلفة بمقياس واحد */
+function dayIndex(dk){
+  const vals=[];
+  Object.keys(S.hist).forEach(id=>{
+    const st=exStat(id); if(!st.base) return;
+    (S.hist[id]||[]).forEach(a=>{ if(a.d===dk&&(a.lv||1)===st.lv) vals.push(a.s/st.base); });
+  });
+  return vals.length?mean(vals):null;
+}
+/* أثر رافعة: متوسط الأيام اللي فيها مقابل اللي بدونها */
+function leverEffect(has){
+  const on=[],off=[];
+  Object.keys(S.days).forEach(dk=>{
+    const v=dayIndex(dk); if(v===null) return;
+    const h=has(dk); if(h===null) return;
+    (h?on:off).push(v);
+  });
+  if(on.length<3||off.length<3) return {ready:false,on:on.length,off:off.length};
+  const g=mean(on), b=mean(off);
+  return {ready:true,on:on.length,off:off.length,pct:Math.round(((g-b)/b)*100)};
+}
+
+/* ── ملاحظات مولّدة من بياناتج فقط ── */
+function renderNotes(){
+  const out=[], stats=Object.keys(EX).filter(k=>k!=='remote').map(exStat).filter(x=>x.ready);
+  const box=$('#notesBox'), list=$('#notesList');
+
+  const justLeveled=Object.keys(TARGETS).filter(id=>{
+    const st=exStat(id); return st.total>=MIN_N&&st.n<MIN_N&&LV(id)>1; });
+
+  if(stats.length<2){
+    list.textContent=''; box.hidden=false;
+    const li=el('li'); const totalTries=Object.keys(EX).reduce((t,k)=>t+(S.hist[k]||[]).length,0);
+    li.innerHTML='لسه بدري على الملاحظات — سجّلتي <b>'+totalTries+'</b> محاولة. '+
+      'أحتاج خمس محاولات على الأقل في تمرينين عشان أميّز التحسّن الحقيقي عن التذبذب اليومي.';
+    list.appendChild(li);
+    if(justLeveled.length){ const l2=el('li');
+      l2.innerHTML='ترقيتي في <b>'+justLeveled.map(nameOf).join('، ')+'</b>، والتمرين صار أصعب — '+
+        'فبديت خط أساس جديد. الدرجات قبل وبعد الترقية ما تنقارن، وأي مقارنة بينهم تكون مضللة.';
+      list.appendChild(l2); }
+    return;
+  }
+
+  const nm=nameOf;
+  const up=stats.filter(x=>x.dir==='up').sort((a,b)=>b.pct-a.pct);
+  const dn=stats.filter(x=>x.dir==='down').sort((a,b)=>a.pct-b.pct);
+
+  if(up.length) out.push('أوضح تقدّم لج في <b>'+nm(up[0].id)+'</b> — من '+
+    Math.round(up[0].base)+' لـ '+Math.round(up[0].now)+' ('+(up[0].pct>0?'+':'')+up[0].pct+'%). '+
+    'هذا فوق تذبذبج الطبيعي، فهو تحسّن حقيقي مو صدفة.');
+
+  if(dn.length) out.push('<b>'+nm(dn[0].id)+'</b> نازل '+Math.abs(dn[0].pct)+'% عن خط أساسج. '+
+    'قبل ما تقلقين: التراجع في هالتمارين غالبًا سببه نوم أو وقت اليوم أو ملل، مو فقدان قدرة. '+
+    'جرّبيه صباحًا بعد ليلة نوم زينة وشوفي إذا رجع.');
+
+  if(!up.length&&!dn.length) out.push('كل مهاراتج <b>ثابتة</b> ضمن تذبذبج الطبيعي — ولا وحدة تحرّكت '+
+    'حركة تتجاوز الضجيج. هذا طبيعي في البداية؛ التحسّن في هالتمارين يبين بعد ٢-٣ أسابيع من الانتظام.');
+
+  /* الأكثر تذبذبًا */
+  if(justLeveled.length) out.push('ترقيتي في <b>'+justLeveled.map(nameOf).join('، ')+'</b> — '+
+    'التمرين صار أصعب فبديت خط أساس جديد. توقّعي أرقام أقل شوي، وهذا مو تراجع.');
+
+  const noisy=stats.slice().sort((a,b)=>b.cv-a.cv)[0];
+  if(noisy&&noisy.cv>0.28) out.push('<b>'+nm(noisy.id)+'</b> أكثر تمرين متذبذب عندج — درجاتج فيه '+
+    'تروح وتجي بشكل واسع. التذبذب نفسه معلومة: التمارين اللي تعتمد على الانتباه المستمر '+
+    'هي أول من يتأثر بقلة النوم والتشتت، فخذيها كمقياس لحالتج اليوم مو لقدرتج.');
+
+  /* ── أثر الروافع الأربع على درجاتج ── */
+  const LEVERS=[
+    {k:'sleep', n:'النوم الزين',   has:dk=>S.sleep[dk]==='good'?true:(S.sleep[dk]==='bad'?false:null),
+     why:'أثر ليلة نوم وحدة عندج أكبر من أثر أسابيع تدريب — والانتباه المستمر أول من يتأثر.'},
+    {k:'move',  n:'الحركة',        has:dk=>S.acts[dk]?!!S.acts[dk].move:null,
+     why:'التمرين الهوائي يرفع الأداء التنفيذي لساعة-ساعتين بعده. جرّبي تسوين مِران بعد المشي.'},
+    {k:'light', n:'ضوء الصباح',    has:dk=>S.acts[dk]?!!S.acts[dk].light:null,
+     why:'الضوء الصباحي يقدّم ساعتج البيولوجية، وتأخّر النوم شائع مع ADHD.'},
+    {k:'caf',   n:'الكافيين',      has:dk=>S.acts[dk]?!!S.acts[dk].caf:null,
+     why:'يرفع اليقظة على المدى القصير، بس لو أخّر نومج فالخسارة أكبر من المكسب.'}
+  ];
+  const found=[];
+  LEVERS.forEach(L=>{ const e=leverEffect(L.has);
+    if(e.ready&&Math.abs(e.pct)>=8) found.push({L,e}); });
+  found.sort((a,b)=>Math.abs(b.e.pct)-Math.abs(a.e.pct));
+  if(found.length){
+    const f=found[0];
+    out.push('<b>'+f.L.n+'</b>: في الأيام اللي فيها، درجاتج '+(f.e.pct>0?'أعلى':'أقل')+
+      ' بـ <b>'+Math.abs(f.e.pct)+'%</b> ('+f.e.on+' يوم مقابل '+f.e.off+'). '+f.L.why);
+    if(found[1]) out.push('<b>'+found[1].L.n+'</b>: فرق '+
+      (found[1].e.pct>0?'+':'')+found[1].e.pct+'% في درجاتج.');
+  } else {
+    const tagged=Object.keys(S.acts).length+Object.keys(S.sleep).length;
+    out.push('وسّمي <b>النوم والحركة وضوء الصباح والكافيين</b> كل يوم من الأزرار فوق '+
+      '(وسّمتي '+tagged+' مرة لين الحين). بعد أسبوعين بقدر أقول لج أي وحدة منهم ترفع '+
+      'درجاتج فعلًا وبكم — وهذي الأرقام اللي رح تحرّك مخج خلال شهر، مو التمارين لحالها.');
+  }
+
+  /* الانتظام */
+  const days14=(()=>{let n=0;for(let i=0;i<14;i++){const d=new Date();d.setDate(d.getDate()-i);
+    if(doneCount(keyOf(d))>0)n++;}return n;})();
+  if(days14>=10) out.push('اشتغلتي <b>'+days14+'</b> يوم من آخر أربعطعش. الانتظام هذا هو اللي '+
+    'يخلي الأرقام فوق تعني شي — بدونه المقارنة تكون بين حالات مزاجية مو بين مستويات.');
+  else if(days14<=4&&days14>0) out.push('اشتغلتي <b>'+days14+'</b> أيام من آخر أربعطعش. '+
+    'مع تباعد كذا، الفروقات اللي فوق أغلبها تذبذب مو تطوّر. يوم واحد قصير أنفع من جلسة طويلة كل أسبوع.');
+
+  list.textContent=''; box.hidden=false;
+  out.slice(0,5).forEach(t=>{ const li=el('li'); li.innerHTML=t; list.appendChild(li); });
+}
+
+/* ── طرق التقوية ── */
+const EVID={t:'الدراسات اللي بُني عليها هذا كله',b:[
+ ['ما لا تفعله تمارين المخ',
+  '<b>Owen وزملاؤه، Nature ٢٠١٠</b> — ١١٤٣٠ مشارك، ٦ أسابيع تدريب ذهني. تحسّنوا في التمارين '+
+  'المُدرَّبة، وما انتقل الأثر لمهام غير مُدرَّبة. و<b>Melby-Lervåg وHulme ٢٠١٣</b> ثم '+
+  '<b>مع Redick ٢٠١٦</b>: تدريب الذاكرة العاملة يعطي انتقالًا قريبًا فقط، لا انتقال بعيد. '+
+  'و<b>Simons وزملاؤه ٢٠١٦</b> (مراجعة شاملة): الأدلة ما تدعم تحسّن الأداء في الحياة اليومية. '+
+  'لهذا التمارين هني <b>ليست</b> خطة تطوير المخ — هي المقياس والإحماء.'],
+ ['النوم — أقوى رافعة عندج',
+  '<b>Van Dongen وزملاؤه، Sleep ٢٠٠٣</b>: تقليل النوم يراكم عجزًا في الانتباه المستمر يوم بعد يوم، '+
+  'و<b>الإحساس بالنعاس يستقر بينما الأداء يستمر بالنزول</b> — يعني تحسّين نفسج بخير وأنتِ لا. '+
+  'و<b>Lim وDinges، Psychological Bulletin ٢٠١٠</b>: الانتباه المستمر أكثر وظيفة تتضرر. '+
+  'لهذا حطيت وسم النوم، ولهذا أسبوعج الثاني كامل للنوم.'],
+ ['الحركة الهوائية',
+  '<b>Verburgh وزملاؤه، Br J Sports Med ٢٠١٤</b>: جرعة واحدة من التمرين الهوائي تحسّن الوظائف '+
+  'التنفيذية بعدها مباشرة. و<b>Cerrillo-Urbina وزملاؤه ٢٠١٥</b>: التمرين البدني يحسّن الانتباه '+
+  'والكفّ لدى الأطفال المصابين بـ ADHD. لهذا أسبوع الحركة، ولهذا أقول سوّيها <b>قبل</b> الجلسة.'],
+ ['الضوء والساعة البيولوجية',
+  'تأخّر طور النوم شائع مع ADHD، والضوء الصباحي يقدّم الساعة البيولوجية. '+
+  '<b>Fargason وزملاؤه ٢٠١٧</b> وجدوا تحسّنًا في الأعراض مع العلاج بالضوء الساطع. '+
+  'لهذا وسم «ضوء صباح».'],
+ ['نية التنفيذ (لو… إذن…)',
+  '<b>Gollwitzer وSheeran ٢٠٠٦</b>: تحليل تجميعي على ٩٤ دراسة، أثر متوسط-كبير في تحويل النية '+
+  'لفعل. و<b>Gawrilow وGollwitzer ٢٠٠٨</b> اختبروها على أطفال ADHD وتحسّن الكفّ لديهم. '+
+  'لهذا خانة الخطة فوق — ما هي زينة.'],
+ ['لماذا الصعوبة مضبوطة كذا',
+  '<b>Wilson وزملاؤه، Nature Communications ٢٠١٩</b> — «قاعدة الـ ٨٥٪»: التعلّم يكون أسرع لما '+
+  'تكون نسبة نجاحج قريبة من ٨٥٪، لا أسهل ولا أصعب. لهذا الترقية تحتاج إتقانًا (٥ محاولات) '+
+  'والنزول موجود — عشان تبقين في المنطقة اللي تتعلّمين فيها.'],
+ ['الحمل الخارجي بدل الداخلي',
+  'نموذج <b>Barkley ١٩٩٧</b> يضع ADHD كاضطراب في الكفّ والوظائف التنفيذية، لا في الانتباه وحده. '+
+  'العملي فيه: الدعامات الخارجية (ورقة، تذكير، خطة مكتوبة) أنفع من محاولة تقوية الداخل. '+
+  'لهذا الصفحة تحفظ كل شي عنج بدل ما تطلب منج تتذكرين.'],
+ ['حدود هذا كله',
+  'هذي نتائج على مجموعات، والفروق الفردية كبيرة — لهذا الصفحة تقيس <b>أثرها عليج أنتِ</b> بدل ما '+
+  'تفترضه. ولا شي هني بديل عن استشارة طبية؛ لو تفكرين في علاج لـ ADHD فهذا قرار مع طبيب.']]};
+
+const WHY={t:'ليش الصفحة مصمّمة كذا',b:[
+ ['الهدف تمرين واحد',
+  'أصعب خطوة مع ADHD هي <b>البداية</b>، مو الاستمرار. هدف «خمسة» يخلي فتح الصفحة قرار كبير، '+
+  'وهدف «واحد» يخليه أصغر من إنج تترددين. وأغلب الأيام بتكملين أكثر من واحد — بس لأنج بديتي، '+
+  'مو لأنج مجبرة.'],
+ ['السلسلة تسامح يوم',
+  'كسر السلسلة من يوم واحد فايت هو أكثر سبب يخلي الناس تترك التطبيق نهائيًا — تحس إن الشي '+
+  'انخرب فتوقف. هني يوم واحد ما يكسر شي، ويومين ورا بعض بس هم اللي يصفّرون العدّاد. '+
+  'وما راح تشوفين ولا رسالة لوم لو غبتي.'],
+ ['الوقت مكتوب على كل بطاقة',
+  'تقدير الوقت من أصعب الأشياء مع ADHD. «٣٠ ثانية» مكتوبة قدامج تخلي القرار سهل، '+
+  'بعكس تمرين مجهول المدة — هذا لحاله يأجّل البداية.'],
+ ['زر «ما ودّي هذا · بدّليه»',
+  'الإحساس بالإجبار يولّد مقاومة، والاختيار يذوّبها. لما تقدرين تبدّلين أي تمرين، '+
+  'الخمسة اللي تسوينها تصير <b>اختيارج</b> مو قائمة مفروضة عليج.'],
+ ['ما ترقّين قبل ٥ محاولات',
+  'الترقية السريعة ترميج في مستوى أصعب من قدرتج الحالية، والفشل المتكرر أسرع طريق للترك. '+
+  'الخمس محاولات تخليج تحسّين إنج <b>أتقنتي</b> المستوى قبل ما تطلعين، وهذا الإحساس بالكفاءة '+
+  'هو الوقود الحقيقي للاستمرار.'],
+ ['ما فيه صوت أحمر للخطأ',
+  'الخطأ يقول «مرة ثانية» بلون هادي، مو ✕ أحمر. الحساسية للنقد شائعة مع ADHD، '+
+  'والتغذية الراجعة القاسية في تمرين اختياري تخلي الترك أسهل من المحاولة.'],
+ ['التمارين قصيرة ومحدودة',
+  'كل تمرين بين ٣٠ و٩٠ ثانية، وبعد الخمسة تقول لج الصفحة «وقفي وارتاحي». '+
+  'الاندفاع الزايد في يوم واحد يورث نفور بعده بأيام — الاستمرار أهم من الجرعة.'],
+ ['كل شي محفوظ',
+  'ما فيه شي تحتاجين تتذكرينه أو تسجّلينه بنفسج: المستوى، خط الأساس، الأرقام، الجُمل اللي كتبتيها — '+
+  'كلها محفوظة. تفريغ الحمل عن ذاكرتج هو نفس المبدأ اللي تنصح فيه الصفحة في قسم الذاكرة.']]};
+
+const TIPS={
+ focus:{t:'كيف تقوّين التركيز والكفّ',b:[
+  ['داخل التمرين','في ستروب، لا تقرين الكلمة أصلًا — ثبّتي عينج على أول حرف بس وخذي اللون. القراءة عندج أوتوماتيكية، فالحيلة إنج ما تعطينها فرصة تشتغل.'],
+  ['في حارس الإشارة','خطأ الضغط الزايد أغلى من الفوّتة. لو حسّيتي إيدج تسبق عينج، بطّي عمدًا — الدقة ترجع أسرع من السرعة.'],
+  ['خارج الشاشة','الكفّ مورد محدود ويخلص. بدل ما تدرّبين مقاومة المشتتات، شيلي المشتت: الجوال في غرفة ثانية وقت الشغل، وتبويب واحد مفتوح. تقليل الحاجة للكفّ أنجح من تقويته.'],
+  ['الأهم','قلة النوم تضرب الكفّ أكثر من أي مهارة ثانية. لو ليلتج كانت قصيرة، توقّعي أرقام أقل وهذا طبيعي — مو تراجع.']]},
+
+ memory:{t:'كيف تقوّين الذاكرة العاملة',b:[
+  ['في مدى الأرقام','قطّعيها: ٧-٤-٢-٩-١ خزّنيها «٧٤ · ٢٩١». مخج يشيل ٣-٤ وحدات مهما كانت كبيرة، فكبّري الوحدة بدل ما تزيدين عددها.'],
+  ['في الخانة قبل خانتين','لا تحاولين تحفظين كل الشبكة. احفظي موقعين بس وحدّثيهم — «اللي قبل» و«اللي قبله». التمرين هو الرمي مو الحفظ.'],
+  ['خارج الشاشة','الأدلة على انتقال تدريب الذاكرة العاملة للحياة اليومية ضعيفة. اللي ينفع فعلًا: اكتبي بدل ما تحفظين. الورقة والقائمة أرخص بكثير من ذاكرتج العاملة، وهذي مو مجاملة — هذي الاستراتيجية الأقوى دليلًا مع ADHD.'],
+  ['ملاحظة','الخانة قبل خانتين أصعب تمرين هني. درجة ٣ أو ٤ نتيجة عادية تمامًا، ولا تقارنينها بالتمارين الثانية.']]},
+
+ speed:{t:'كيف تقوّين السرعة الذهنية',b:[
+  ['الأتمتة','السرعة ما تجي من التفكير الأسرع، تجي من إلغاء التفكير. جدول الضرب المحفوظ ظهر عن قلب يفرّغ ذاكرتج العاملة للمسألة نفسها.'],
+  ['في التمرين','لا تصلّحين الغلط بالرجوع — امسحي وابدئي. الرجوع يكلّفج وقت أكثر من إعادة الحساب.'],
+  ['الظروف','السرعة أكثر مقياس يتأثر بالكافيين ووقت اليوم. لو تبين مقارنة عادلة بين الأيام، سويها بنفس الوقت تقريبًا كل يوم.']]},
+
+ lang:{t:'كيف تقوّين الطلاقة والربط',b:[
+  ['في الاشتقاق','لا تدورين كلمات عشوائية — امشي في عناقيد. «المطبخ» → الأواني كلها، بعدين الأجهزة، بعدين البهارات. الدماغ يسحب من مجموعة أسرع ما يسحب من فراغ.'],
+  ['لا تتوقفين','أسوأ شي في الطلاقة هو التوقف للتقييم. اكتبي حتى لو حسّيتي الكلمة ضعيفة — التصفية تجي بعدين.'],
+  ['في الربط البعيد','اسألي عن <b>الوظيفة</b> مو الشكل: وش يسوي المفتاح؟ يفتح شي مقفل. وش تسوي الثقة؟ نفس الشي. الربط عن طريق الوظيفة يطلع أسرع وأقوى من الربط عن طريق الصورة.'],
+  ['لشغلج','هذا أقرب تمرين لشغلج كمصممة — الربط بين شيئين بعيدين هو نفسه اللي يطلّع الفكرة الإبداعية. اللي تكتبينه هني محفوظ، ارجعي له لما تحتاجين شرارة.']]}
+};
+
+function renderTips(){
+  const wrap=$('#tips');
+  if(wrap.dataset.built) return;                 /* اكتبيها مرة وحدة */
+  wrap.dataset.built='1';
+  [EVID,WHY].concat(PILLAR_DEF.map(P=>TIPS[P.tip])).forEach(T=>{
+    if(!T) return;
+    const d=el('details','tips');
+    const sm=el('summary','',T.t); d.appendChild(sm);
+    const inr=el('div','in');
+    T.b.forEach(pair=>{
+      inr.appendChild(el('span','lbl',pair[0]));
+      const pp=el('p'); pp.innerHTML=pair[1]; inr.appendChild(pp);
+    });
+    d.appendChild(inr); wrap.appendChild(d);
+  });
+}
+
+function renderTrace(){
+  const bars=$('#bars'), xs=$('#barsX');
+  bars.textContent=''; xs.textContent='';
+  let tot=0;
+  for(let i=13;i>=0;i--){
+    const d=new Date(); d.setDate(d.getDate()-i);
+    const k=keyOf(d), n=doneCount(k); tot+=n;
+    const b=el('div','bar'+(n?' has':'')+(k===TODAY?' today':''));
+    b.style.height=Math.max(4,(n/5)*52)+'px';
+    b.style.backgroundPositionX=((13-i)/13*100).toFixed(1)+'%';   /* شريحة من موجة واحدة */
+    b.title=k+' — '+n+' من 5';
+    bars.appendChild(b);
+    xs.appendChild(el('span','',i%3===1||i===0?String(d.getDate()):''));
+  }
+  $('#traceSum').textContent=tot+' تمرين';
+}
+
+function renderLog(){
+  const keys=Object.keys(S.notes).sort().reverse().slice(0,5);
+  const log=$('#log'), items=$('#logItems');
+  if(!keys.length){ log.hidden=true; return; }
+  log.hidden=false; items.textContent='';
+  keys.forEach(k=>{ const n=S.notes[k]; if(!n) return;
+    const it=el('div','log-item');
+    it.appendChild(el('span','lbl',n.pair));
+    it.appendChild(el('p','',n.text));
+    items.appendChild(it); });
+}
+
+function renderProgram(){
+  if(!S.start&&Object.keys(S.days).length) S.start=Object.keys(S.days).sort()[0];
+  const start=S.start;
+  let day=1;
+  if(start){ day=Math.floor((Date.parse(TODAY)-Date.parse(start))/864e5)+1; }
+  day=Math.max(1,Math.min(60,day));
+  $('#progDay').textContent='اليوم '+day+' من 30';
+  $('#progFill').style.width=Math.min(100,(day/30)*100)+'%';
+  const ph=$('#progPhase');
+  if(!start) ph.innerHTML='<b>ما بدأ بعد.</b> أول تمرين تسوينه يبدأ العد.';
+  else if(day<=7) ph.innerHTML='<b>أسبوع خط الأساس (١-٧).</b> لا تغيّرين شي في حياتج بعد — '+
+    'بس سوّي التمارين ووسّمي الروافع. بدون خط أساس ما فيه طريقة تعرفين إذا الشي اللي بعده نفع.';
+  else if(day<=14) ph.innerHTML='<b>أسبوع النوم (٨-١٤).</b> رافعة وحدة بس: ثبّتي وقت النوم '+
+    'وزيديه نص ساعة. غيّري شي واحد عشان تعرفين مين اللي أثّر.';
+  else if(day<=21) ph.innerHTML='<b>أسبوع الحركة (١٥-٢١).</b> أضيفي ٢٠ دقيقة مشي سريع، '+
+    'ويفضّل <b>قبل</b> جلسة مِران بشوي.';
+  else if(day<=30) ph.innerHTML='<b>أسبوع الضوء والتثبيت (٢٢-٣٠).</b> ضوء طبيعي خلال ساعة '+
+    'من استيقاظج، مع استمرار النوم والحركة. وشوفي التقرير تحت — أي رافعة نفعت معج أنتِ.';
+  else ph.innerHTML='<b>خلّصتي الثلاثين.</b> شوفي أي رافعة رفعت درجاتج أكثر، وثبّتيها.';
+  const pi=$('#planIn');
+  if(pi&&document.activeElement!==pi) pi.value=S.plan||'';
+  if(pi&&!pi.dataset.b){ pi.dataset.b='1';
+    pi.addEventListener('change',async()=>{ S.plan=pi.value.trim(); await push(); }); }
+}
+function renderAll(){ renderHead(); renderList(); renderProgram(); renderReport();
+  renderTrace(); renderLog(); }
+
+/* ═══ الأقسام ═══
+   يفتح دايمًا على «اليوم» — قرار أقل كل صباح. */
+function showTab(t){
+  ['today','progress','program'].forEach(k=>{
+    const panel=document.getElementById('tab-'+k);
+    if(panel) panel.hidden=(k!==t);
+  });
+  document.querySelectorAll('.tabs button').forEach(b=>
+    b.setAttribute('aria-selected', String(b.dataset.t===t)));
+  scrollTo({top:0,behavior:RM?'auto':'smooth'});
+}
+document.querySelectorAll('.tabs button').forEach(b=>{
+  const ic=document.createElement('span');
+  ic.className='tab-ico'; ic.innerHTML=TABICON[b.dataset.t]||'';
+  b.insertBefore(ic,b.firstChild);
+  b.onclick=()=>showTab(b.dataset.t);
+});
+
+/* ═══ الإقلاع ═══ */
+loadLocal();
+recomputeLevels();   /* أعيدي ضبط المستويات بالقاعدة الجديدة */
+saveLocal();
+renderAll();
+
+(async function(){
+  try{
+    if(!window.claude||!claude.use) return;
+    const d=await claude.use('db');
+    if(!d) return;
+    db=d;
+    const snap=await db.doc('progress/main').get();
+    if(snap&&snap.exists){ const d=snap.data(); if(d) merge(d); }
+    recomputeLevels();
+    SET=getSet();
+    saveLocal();
+    renderAll();
+    $('#syncDot').classList.add('ok');
+    $('#syncTx').textContent='محفوظ ومتزامن على أجهزتج';
+    await push();   /* ارفعي أي تقدّم كان محفوظ على هذا الجهاز فقط */
+  }catch(e){}
+})();
+})();
+</script>
+<script>
+if('serviceWorker' in navigator && location.protocol==='https:' && window.top===window){
+  addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+}
+</script>
+</body>
+</html>
