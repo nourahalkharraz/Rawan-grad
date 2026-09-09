@@ -1627,6 +1627,7 @@ renderAll();
 })();
 </script>
 <script>
+/* تشتغل بدون إنترنت بعد أول فتحة. لا تعمل داخل إطار (نسخة الآرتِفاكت). */
 const LOCAL=['localhost','127.0.0.1'].includes(location.hostname);
 if('serviceWorker' in navigator && (location.protocol==='https:'||LOCAL) && window.top===window){
   addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
