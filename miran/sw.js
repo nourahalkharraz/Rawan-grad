@@ -3,7 +3,8 @@
    والأصول الثابتة من المخزون أولًا (عشان السرعة). وبدون إنترنت: كل شي من المخزون. */
 const CACHE = 'miran';
 const CORE = ['./','./index.html','./manifest.webmanifest',
-              './icon-192.png','./icon-512.png','./apple-touch-icon.png'];
+              './icon-192.png','./icon-512.png','./icon-maskable.png',
+              './apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE)
@@ -29,8 +30,11 @@ self.addEventListener('fetch', e => {
     e.respondWith(
       fetch(e.request)
         .then(res => {
-          const copy = res.clone();
-          caches.open(CACHE).then(c => c.put('./index.html', copy)).catch(()=>{});
+          /* لا تخزّني ردًّا فاشلًا مكان الصفحة — بيصير هو نسخة «بدون إنترنت» */
+          if (res && res.ok) {
+            const copy = res.clone();
+            caches.open(CACHE).then(c => c.put('./index.html', copy)).catch(()=>{});
+          }
           return res;
         })
         .catch(() => caches.match('./index.html').then(hit => hit || caches.match('./')))

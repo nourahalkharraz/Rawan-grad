@@ -182,6 +182,18 @@ button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer}
 input[type=text]{flex:1;min-width:0;font-family:var(--f-body);font-size:16px;padding:11px 13px;
   border:1px solid var(--line);border-radius:4px;background:var(--panel);color:var(--ink)}
 input.num{font-family:var(--f-num);font-size:19px;text-align:center;letter-spacing:.3em;direction:ltr}
+.btn.need{border-color:var(--signal);color:var(--signal-tx);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--signal) 18%,transparent)}
+.lead{text-align:center;padding:30px 0 26px}
+.lead b{display:block;font-family:var(--f-num);font-size:62px;font-weight:400;
+  line-height:1;color:var(--signal-tx);font-variant-numeric:var(--num-feat);
+  animation:leadpop .5s ease}
+.lead span{display:block;margin-top:8px;font-size:13px;font-weight:400;color:var(--ink-3)}
+@keyframes leadpop{from{opacity:.25;transform:scale(.9)}to{opacity:1;transform:none}}
+#bkArea{display:block;width:100%;box-sizing:border-box;margin-top:10px;
+  font-family:var(--f-num);font-size:12px;direction:ltr;text-align:left;
+  border:1px solid var(--line);border-radius:4px;padding:9px 10px;
+  background:var(--panel);color:var(--ink-2);resize:vertical}
 
 .btn{padding:12px 24px;border:1px solid var(--lav-deep);border-radius:4px;
   background-image:linear-gradient(180deg,rgba(255,255,255,.7),rgba(255,255,255,0) 46%),
@@ -303,7 +315,7 @@ footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--line-soft);
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 @media (max-width:420px){.wrap{padding:18px 13px 60px}.brand h1{font-size:25px}}
 </style>
-<style>body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--f-body)}img{max-width:100%}</style>
+<style>body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--f-body)}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
 <body>
 <div class="wrap" style="padding-bottom:88px">
@@ -322,7 +334,7 @@ footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--line-soft);
   <div class="lamps" id="lamps"></div>
   <div class="daymeta">
     <span class="lbl" id="dateLbl">—</span>
-    <span class="lbl" id="progLbl">0 / 5</span>
+    <span class="lbl" id="progLbl">—</span>
   </div>
 
   <p id="welcome" hidden></p>
@@ -413,6 +425,22 @@ footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--line-soft);
         وبعد أسبوعين الصفحة تحسب لج أي وحدة فيها ترفع درجاتج فعلًا وبكم بالمية.</p>
     </div>
     <div id="tips"></div>
+
+    <details class="tips">
+      <summary>نسخة احتياطية</summary>
+      <div class="in">
+        <p>بياناتج محفوظة على هذا المتصفح وحده. لو مسحتي بيانات سفاري أو انتقلتي لجهاز
+          ثاني، تروح. انسخيها كل أسبوع واحفظيها في ملاحظاتج — سطر واحد يكفي.</p>
+        <div class="field" style="max-width:none;margin-top:12px">
+          <button type="button" class="btn sm" id="bkCopy">انسخي بياناتج</button>
+          <button type="button" class="btn ghost sm" id="bkOpen">استرجاع</button>
+        </div>
+        <textarea id="bkArea" hidden rows="4" aria-label="نصّ النسخة"></textarea>
+        <button type="button" class="btn sm" id="bkPut" hidden
+          style="margin-top:8px">استرجعي</button>
+        <p class="note" id="bkMsg"></p>
+      </div>
+    </details>
   </section>
   </section>
 
@@ -440,7 +468,7 @@ const RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
 /* ═══ التاريخ والعشوائية المرتبطة باليوم ═══ */
 const pad=n=>String(n).padStart(2,'0');
 const keyOf=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
-const TODAY=keyOf(new Date());
+let TODAY=keyOf(new Date());
 const AR_DAYS=['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
 const AR_MONTHS=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
 
@@ -804,7 +832,7 @@ math:{
         b=2+rnd(11); ans=2+rnd(14); a=b*ans; txt=a+' ÷ '+b; }
       else{                                      /* ضرب ثم طرح */
         a=3+rnd(12);b=3+rnd(9);c=5+rnd(60);ans=a*b-c;txt=a+' × '+b+' − '+c; }
-      q.textContent=txt; inp.value='';
+      q.textContent=txt; inp.value=''; fb.textContent=''; neg.classList.remove('need');
     }
     function check(){
       if(!live) return;
@@ -813,9 +841,18 @@ math:{
       if(v!==inp.value) inp.value=v;
       if(v===''||v==='-') return;                 /* ناقص لحاله انتظار، مو غلط */
       if(Number(v)===ans){ ok++; fb.textContent='✓'; fb.className='verdict g';
+        neg.classList.remove('need');
         setTimeout(()=>{fb.textContent='';},260); next(); return; }
-      /* غلط فقط لما يكتمل عدد الخانات — نقارن الأرقام بلا الإشارة */
-      if(v.replace('-','').length>=String(Math.abs(ans)).length){
+      const digits=v.replace('-',''), want=String(Math.abs(ans));
+      /* الأرقام كلها صح والإشارة وحدها هي الفرق: ما نمسح ولا نحسبها غلط */
+      if(digits===want){
+        fb.textContent = ans<0 ? 'ناقصج إشارة −' : 'شيلي إشارة −';
+        fb.className='verdict soft';
+        if(ans<0) neg.classList.add('need');
+        return; }
+      neg.classList.remove('need');
+      /* غلط فقط لما يكتمل عدد الخانات */
+      if(digits.length>=want.length){
         fb.textContent='مرة ثانية'; fb.className='verdict soft';
         setTimeout(()=>{fb.textContent='';},420); inp.value=''; }
     }
@@ -849,15 +886,20 @@ fluency:{
     inp.placeholder='اكتبي كلمة واضغطي إدخال'; inp.setAttribute('aria-label','كلمة');
     field.appendChild(inp); stage.appendChild(field);
     const list=el('div','wordlist'); stage.appendChild(list);
+    const hint=el('div','note','وحدة وحدة و«إدخال» بينهم.'); stage.appendChild(hint);
     const words=[];
+    const fits=w=>w.charAt(0)===letter||w.replace(/^ال/,'').charAt(0)===letter;
     const timer=timerBar(stage,SEC,()=>{live=false;inp.disabled=true;
       finish({score:words.length,detail:words.length?words.slice(0,6).join(' · ')+(words.length>6?' …':''):'—'});});
     let live=true;
     inp.addEventListener('keydown',e=>{
       if(e.key!=='Enter'||!live) return;
       const w=inp.value.trim();
-      inp.value='';
-      if(!w||words.includes(w)) return;
+      if(!w) return;
+      if(words.includes(w)){ inp.value=''; hint.textContent='هذي كتبتيها قبل.'; return; }
+      if(!fits(w)){ hint.textContent='لازم تبدأ بحرف «'+letter+'» — عدّليها أو جيبي غيرها.';
+        return; }                                  /* نخلّيها بالخانة عشان تعدّلينها */
+      inp.value=''; hint.textContent='وحدة وحدة و«إدخال» بينهم.';
       words.push(w); list.appendChild(el('span','chip',w));
     });
     setTimeout(()=>inp.focus(),50);
@@ -919,6 +961,12 @@ const TARGETS={
   fluency:[ 9,10,10,10,10,10]
 };
 const LV=id=>Math.min(MAX_LV,Math.max(1,S.level[id]||1));
+/* «ربط بعيد» ما له درجة، فما ينطبق عليه سلّم الأهداف.
+   مستواه يتقدّم بالمواظبة: كل خمس مرّات خطوة — عشان الحدّ الثالث يطلع فعلًا. */
+function remoteLevel(){
+  const t=Object.keys(S.days).filter(k=>S.days[k]&&S.days[k].remote).length;
+  S.level.remote=Math.min(MAX_LV,1+Math.floor(t/5));
+}
 const targetOf=id=>TARGETS[id]?TARGETS[id][LV(id)-1]:null;
 const nameOf=id=>EX[id].nameFor?EX[id].nameFor(LV(id)):EX[id].name;
 /* الوقت مكتوب على كل بطاقة: تقدير المدة أصعب شي مع ADHD، فما نخليها مفاجأة */
@@ -1139,8 +1187,26 @@ function openBody(body,id,rec){
   go.onclick=()=>{ stage.textContent=''; start(stage,id,body); };
   stage.appendChild(go);
 }
+/* البداية المفاجئة تاكل أول ثانيتين، وهي أغلى ثواني في تمرينٍ من ثلاثين ثانية.
+   «ربط بعيد» ما له مؤقّت فيبدأ على طول. */
+const NOLEAD={remote:1};
 function start(stage,id,body){
   if(activeStop){activeStop();activeStop=null;}
+  if(NOLEAD[id]) return begin(stage,id,body);
+  stage.textContent='';
+  const c=el('div','lead'); const num=el('b','',''); const cap=el('span','','استعدّي');
+  c.appendChild(num); c.appendChild(cap); stage.appendChild(c);
+  let n=3; num.textContent=n;
+  let iv=setInterval(()=>{
+    n--;
+    if(n>0){ num.textContent=n;
+      num.style.animation='none'; void num.offsetWidth; num.style.animation=''; return; }
+    clearInterval(iv); activeStop=null; begin(stage,id,body);
+  },700);
+  activeStop=()=>{ clearInterval(iv); };
+}
+function begin(stage,id,body){
+  stage.textContent='';               /* اشيلي العدّة قبل ما يرسم التمرين نفسه */
   const ex=EX[id];
   const lvAt=LV(id);
   activeStop=ex.run(stage,async res=>{
@@ -1148,13 +1214,14 @@ function start(stage,id,body){
     const prev=(S.days[TODAY]||{})[id];
     const keep=(!prev||res.noScore||res.score>=prev.score)?res:prev;
     dayRec()[id]={score:keep.score,detail:keep.detail,noScore:!!keep.noScore,ts:Date.now()};
+    if(id==='remote') remoteLevel();
     if(!res.noScore&&typeof res.score==='number'){          /* كل محاولة تدخل السجل */
       (S.hist[id]=S.hist[id]||[]).push({d:TODAY,s:res.score,ts:Date.now(),lv:lvAt});
       if(S.hist[id].length>200) S.hist[id]=S.hist[id].slice(-200);
     }
     const moved=res.noScore?null:applyLevel(id);
     stage.textContent='';
-    const head=el('div','verdict g');
+    const head=el('div','verdict g fin');   /* «fin» = نهاية تمرينٍ فعليّة، تُميّزها طبقة الحديقة */
     head.textContent=res.noScore?'محفوظ ✓':(res.score+' '+ex.unit);
     stage.appendChild(head);
     if(res.detail) stage.appendChild(el('div','note',res.detail));
@@ -1611,9 +1678,62 @@ document.querySelectorAll('.tabs button').forEach(b=>{
 /* ═══ الإقلاع ═══ */
 loadLocal();
 recomputeLevels();   /* أعيدي ضبط المستويات بالقاعدة الجديدة */
+remoteLevel();
 SET=getSet();        /* بعد التحميل، عشان الخانة الخامسة تعرف أضعف مهارة فعلًا */
 saveLocal();
 renderAll();
+
+/* الصفحة تقعد مفتوحة على الجوال أيام. لو عدّى منتصف الليل وهي مفتوحة،
+   كانت محاولة اليوم الجديد تنكتب في يوم أمس. نجدّد اليوم بهدوء —
+   إلا إذا كانت في نصّ تمرين، فما نقطع عليها. */
+function refreshDay(){
+  const k=keyOf(new Date());
+  if(k===TODAY||activeStop) return;
+  TODAY=k; SET=getSet(); saveLocal(); renderAll();
+}
+document.addEventListener('visibilitychange',()=>{ if(!document.hidden) refreshDay(); });
+addEventListener('focus',refreshDay);
+setInterval(refreshDay,60000);
+
+/* ═══ النسخة الاحتياطية ═══
+   كل شي محفوظ على هذا المتصفح وحده. سفاري يمسح بيانات المواقع اللي ما تُفتح،
+   فلازم يكون فيه طريق تطلع فيه بياناتها وترجّعها. */
+function backupText(){
+  return JSON.stringify({v:1,at:Date.now(),days:S.days,notes:S.notes,hist:S.hist,
+    sleep:S.sleep,level:S.level,set:S.set,lvRule:S.lvRule,acts:S.acts,
+    plan:S.plan,start:S.start});
+}
+(function(){
+  const msg=$('#bkMsg'), area=$('#bkArea'), copyB=$('#bkCopy'), openB=$('#bkOpen'),
+        putB=$('#bkPut');
+  if(!msg) return;
+  const say=t=>{ msg.textContent=t; };
+  copyB.onclick=async()=>{
+    const t=backupText();
+    try{ await navigator.clipboard.writeText(t);
+         say('انتسخت. الصقيها في ملاحظاتج واحفظيها.'); }
+    catch(e){ area.hidden=false; area.value=t; area.focus(); area.select();
+              say('انسخيها من هني يدويًّا.'); }
+  };
+  openB.onclick=()=>{
+    area.hidden=!area.hidden; area.value=''; putB.hidden=area.hidden;
+    if(!area.hidden){ area.placeholder='الصقي النسخة هني'; area.focus();
+      say('الصقي النسخة وبعدين «استرجعي». ما ينمسح شي — يتضاف اللي ناقص بس.'); }
+    else say('');
+  };
+  putB.onclick=async()=>{
+    let o=null;
+    try{ o=JSON.parse(area.value.trim()); }catch(e){ say('النصّ مو نسخة صحيحة.'); return; }
+    if(!o||typeof o!=='object'||!o.days){ say('النصّ مو نسخة صحيحة.'); return; }
+    const before=Object.keys(S.days).length;
+    merge(o); recomputeLevels(); remoteLevel(); SET=getSet(); saveLocal(); renderAll();
+    await push();
+    const add=Object.keys(S.days).length-before;
+    area.hidden=true; putB.hidden=true; area.value='';
+    say(add>0?('رجّعنا '+add+' يوم جديد. الباقي كان عندج أصلًا.')
+             :'كل اللي بالنسخة كان عندج أصلًا — ما ضاع شي.');
+  };
+})();
 
 (async function(){
   try{
@@ -1624,6 +1744,7 @@ renderAll();
     const snap=await db.doc('progress/main').get();
     if(snap&&snap.exists){ const d=snap.data(); if(d) merge(d); }
     recomputeLevels();
+    remoteLevel();
     SET=getSet();
     saveLocal();
     renderAll();
@@ -1648,7 +1769,7 @@ renderAll();
   --line:#E6D7BF; --line-soft:#F0E7D8;
   --lav:#F0E2D0; --lav-deep:#D6BC94;
   --mint:#EFF3E7; --sky:#EFF2ED; --blush:#FBEBE5;
-  --ink:#33241C; --ink-2:#6A5241; --ink-3:#8D7660;
+  --ink:#33241C; --ink-2:#6A5241; --ink-3:#7A6250;
   --signal:#A81B26; --signal-tx:#9C1822; --signal-soft:#F6DCD6;
   --aqua:#2F6B45; --iron:#B0904F; --leaf:#2F6B45;
   --good:#2F6B45; --warn:#A81B26;
@@ -1690,7 +1811,7 @@ body::before{z-index:-1 !important;mix-blend-mode:normal !important;opacity:.4 !
 @media (max-width:420px){.band.wide{margin:-18px -13px 15px;width:calc(100% + 26px)}}
 
 .top{border-bottom:1px solid var(--gold);align-items:center;padding-bottom:13px}
-.brand h1{font-size:32px;letter-spacing:.01em}
+.brand h1{font-size:32px}
 .streak b{font-size:42px;color:var(--signal-tx)}
 .streak span{color:var(--ink-3)}
 
@@ -1937,8 +2058,9 @@ input[type=text]{min-height:46px}
 
   /* ── ٥) لحظة الإنجاز ── */
   var box=$('#moment'), mi=$('#m-img'), mc=$('#m-cap'), timer=null, goTimer=null;
+  var hasBox=!!(box&&mi&&mc);
   function hide(){
-    if(!box.classList.contains('on')) return;
+    if(!hasBox||!box.classList.contains('on')) return;
     box.classList.add('out');
     clearTimeout(goTimer);
     goTimer=setTimeout(function(){
@@ -1946,11 +2068,12 @@ input[type=text]{min-height:46px}
     },380);
   }
   function show(kind,text,ms){
+    if(!hasBox) return;
     mi.src=IMG[kind]; mc.textContent=text;
     box.classList.remove('out'); box.hidden=false; box.classList.add('on');
     clearTimeout(timer); timer=setTimeout(hide,ms);
   }
-  box.addEventListener('click',hide);
+  if(hasBox) box.addEventListener('click',hide);
   addEventListener('keydown',function(e){ if(e.key==='Escape') hide(); });
 
   function state(){ try{ return JSON.parse(localStorage.getItem('miran.v1'))||{}; }
@@ -1977,8 +2100,7 @@ input[type=text]{min-height:46px}
       var ns=recs[i].addedNodes;
       for(var j=0;j<ns.length;j++){
         var n=ns[j];
-        if(n.nodeType!==1 || !n.classList || !n.classList.contains('verdict')) continue;
-        if(n.classList.contains('soft')) continue;         /* «مرة ثانية» ليست إنجازًا */
+        if(n.nodeType!==1 || !n.classList || !n.classList.contains('fin')) continue;
         if(Date.now()-lastAt<1500) return;
         lastAt=Date.now();
         setTimeout(function(){
