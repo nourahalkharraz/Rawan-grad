@@ -232,6 +232,21 @@ details.tips.tut>summary{font-size:13.5px;color:var(--signal-tx)}
   display:flex;align-items:center;justify-content:center;color:var(--signal-tx)}
 .tutlist li p{margin:0!important;font-size:14px;line-height:1.7;color:var(--ink-2)}
 .tutlist li p b{color:var(--ink);font-weight:700}
+.snap-q{font-family:var(--f-disp);font-size:20px;font-weight:700;line-height:1.6;
+  max-width:22em;padding:0 6px}
+.snap-wrap{width:100%;max-width:330px;height:6px;border-radius:4px;
+  background:var(--line-soft);overflow:hidden;direction:ltr}
+.snap-bar{height:100%;width:100%;border-radius:4px;background:var(--signal);
+  transition:width 1s linear}
+.snap-tags{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;max-width:340px}
+.snap-tags button{padding:9px 14px;border:1px solid var(--line);border-radius:20px;
+  background:var(--panel);font-size:13.5px;font-weight:400;min-height:40px}
+.snap-tags button:active{background-image:var(--nacre)}
+.tutex-q{font-family:var(--f-disp);font-size:17px;font-weight:700;line-height:1.6;
+  margin-bottom:10px}
+.tutchips{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.tutchips .chip.on{background-image:var(--nacre);border-color:var(--gold);
+  color:var(--signal-tx)}
 .tutex{margin-top:10px;padding:13px 12px;border-radius:5px;background:var(--panel-2);
   border:1px solid var(--line-soft);text-align:center}
 .tutex .note{margin:0;font-size:13.5px;line-height:1.7}
@@ -651,7 +666,7 @@ const shuffle=(a,r)=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.flo
 /* ═══ الحالة ═══ */
 const LS='miran.v1';
 let S={days:{},notes:{},hist:{},sleep:{},level:{},set:{},lvRule:null,
-       acts:{},plan:'',start:null,tasks:[]};
+       acts:{},plan:'',start:null,tasks:[],paths:{}};
 let db=null;
 
 function loadLocal(){
@@ -666,6 +681,7 @@ function loadLocal(){
       S.set=o.set||{};S.lvRule=o.lvRule||null;
       S.acts=o.acts||{};S.plan=o.plan||'';S.start=o.start||null;
       S.tasks=Array.isArray(o.tasks)?o.tasks:[];
+      S.paths=(o.paths&&typeof o.paths==='object')?o.paths:{};
     }
   }catch(e){
     /* نصّ محفوظ ما انقرأ. لا نكتب فوقه حالةً فاضية — نحفظه جنبًا
@@ -693,6 +709,9 @@ function merge(remote){
   for(const k in ra) S.acts[k]=Object.assign({},ra[k],S.acts[k]||{});
   if(remote.plan&&!S.plan) S.plan=remote.plan;
   if(remote.start&&(!S.start||remote.start<S.start)) S.start=remote.start;
+  /* المسارات: عدّادات — نأخذ الأكبر عشان الدمج ما ينقص عدًّا */
+  const rp=remote.paths||{};
+  for(const k in rp) S.paths[k]=Math.max(S.paths[k]||0, rp[k]||0);
   /* المؤجّلات: اتّحاد بالمعرّف، والنسخة الأحدث تفوز */
   if(Array.isArray(remote.tasks)){
     const byId={}; S.tasks.forEach(t=>{ if(t&&t.id) byId[t.id]=t; });
@@ -726,6 +745,7 @@ function hasAny(){
   if(Object.keys(S.days).length) return true;
   for(const id in S.hist) if((S.hist[id]||[]).length) return true;
   if((S.tasks||[]).length) return true;
+  if(Object.keys(S.paths||{}).length) return true;
   if(Object.keys(S.sleep).length||Object.keys(S.acts).length) return true;
   return !!S.plan;
 }
@@ -739,7 +759,7 @@ async function push(){
   try{ await db.doc('progress/main').set(
     {days:S.days,notes:S.notes,hist:S.hist,sleep:S.sleep,level:S.level,
      set:S.set,lvRule:S.lvRule,acts:S.acts,plan:S.plan,start:S.start,
-     tasks:S.tasks,at:Date.now()}); }catch(e){}
+     tasks:S.tasks,paths:S.paths,at:Date.now()}); }catch(e){}
 }
 
 
@@ -774,6 +794,10 @@ const GLYPH={
   /* طلاقة: غصن يتفرّع */
   fluency: SVG('<path d="M12 20V7"/><path d="M12 12c0-3 3-4.5 5.5-4.5"/>'+
                '<path d="M12 15c0-2.6-2.6-4-4.8-4"/><circle cx="12" cy="4.6" r="1.6"/>'),
+  /* قرار: مسارٌ يتفرّع، وواحدٌ منها مُتّخَذ */
+  snap   : SVG('<path d="M12 21V13"/><path d="M12 13L5 6"/><path d="M12 13l7-7"/>'+
+               '<circle cx="19" cy="5.5" r="2.2" fill="currentColor"/>'+
+               '<circle cx="5" cy="5.5" r="2.2"/>'),
   /* ربط: نقطتان بعيدتان وقوس بينهما */
   remote : SVG('<circle cx="5.5" cy="15" r="2.2"/><circle cx="18.5" cy="15" r="2.2"/>'+
                '<path d="M5.5 12.8C5.5 6.5 18.5 6.5 18.5 12.8"/>')
@@ -791,6 +815,54 @@ const TABICON={
 
 /* ═══ التمارين ═══ */
 /* كل تمرين: run(stage, finish) — يرسم داخل stage وينادي finish({score,unit,detail}) */
+
+
+/* ═══ بنك المواقف ═══
+   ثلاثة أشرطة: واضحة، ثم غامضة تحتمل قراءتين، ثم متضاربة ما فيها خيار نظيف. */
+const SCEN=[[
+ 'الدكتور قدّم موعد التسليم لبكرة، وأنتِ ما بدأتي.',
+ 'صاحبتج تتّصل تبكي، وعندج اجتماع بعد خمس دقايق.',
+ 'وصلتي المطار ولقيتي بطاقتج مو معج.',
+ 'أمّج تبيج تروحين معها، وعندج اختبار بعد يومين.',
+ 'جهازج طفى وأنتِ في نصّ عرضٍ قدّام ناس.',
+ 'زميلتج نسبت شغلج لنفسها قدّام المشرف.',
+ 'طلع لج موعد مقابلة بكرة الصبح وما جهّزتي.',
+ 'أخوج الصغير كسر شي غالي وطلب منج ما تقولين.',
+ 'المطعم غلط في طلبج وأنتِ مستعجلة.',
+ 'أحد سألج سؤال قدّام الكل وأنتِ ما تعرفين الجواب.',
+ 'صاحبتج طلبت منج فلوس وما تقدرين.',
+ 'انقطع النت وأنتِ في نصّ اختبار أونلاين.'
+],[
+ 'رسالة من صاحبتج تحتمل معنيين، وقعدتي تلفّين فيها.',
+ 'المشرف قال «نتكلّم بعدين» وما قال في شنو.',
+ 'دُعيتي لشي ما تبين تروحينه، والرفض يجرح.',
+ 'لاحظتي إن أحد يتجنّبج من أسبوع بلا سبب واضح.',
+ 'عُرض عليج شغل يعجبج، بس وقته يضرب دراستج.',
+ 'أهلج قرّروا شي يخصّج بدون ما يسألونج.',
+ 'أحد انتقدج قدّام ناس بطريقةٍ تبان مزحة.',
+ 'صاحبتج تشتكي من نفس الشي كل مرّة وتبي رأيج.',
+ 'طلبوا منج تقودين مجموعة وما تحسّين نفسج جاهزة.',
+ 'اكتشفتي غلطًا في شغلٍ سلّمتيه من أسبوع.',
+ 'شخص تثقين فيه قال عنج شي ما عجبج.',
+ 'عندج فرصة، بس لازم تردّين خلال ساعة.'
+],[
+ 'لازم تختارين بين وعدٍ قطعتيه وفرصةٍ ما تتكرّر.',
+ 'أحدٌ قريب غلط عليج، وينتظر تكملين كأن ما صار شي.',
+ 'عرفتي معلومة تخصّ صاحبتج وهي ما تعرفها.',
+ 'طُلب منج شي يخالف قناعتج، والاعتذار مو سهل.',
+ 'تراكمت ثلاث أشياء كلها اليوم وكلها مهمّة.',
+ 'قرارج بيزعل طرفًا مهما اخترتي.',
+ 'أحدٌ يعتمد عليج، وما عدتِ تقدرين تكملين.',
+ 'اللي كنتي متأكّدة منه طلع غلطًا قدّام الكل.',
+ 'عليج تعتذرين وأنتِ تحسّين إنج مو غلطانة تمامًا.',
+ 'أهلج يبون شي وأنتِ تبين عكسه، وما فيه وسط واضح.',
+ 'صار موقف محرج والكل ساكت ينتظر أحدًا يتكلّم.',
+ 'لازم تقولين «لا» لأحدٍ يصعب عليج ترفضينه.'
+]];
+/* المسارات: مفرداتٌ للقرار. تسميةُ المسار بعد كلّ موقف هي اللي تبني المكتبة. */
+const PATHS=[['ask','أسأل وأستوضح'],['act','أتصرّف وأصحّح بعدين'],
+             ['wait','أأجّل بوعي وأحدّد وقت'],['no','أقول لا وأنسحب'],
+             ['help','أطلب مساعدة']];
 
 const COLORS=[
   {name:'أحمر', hex:'#D34C42'},
@@ -1146,6 +1218,93 @@ fluency:{
   }
 },
 
+
+/* ── قرار سريع: الارتجال في المسار الصح ── */
+snap:{
+  trains:'<b>القرار تحت المفاجأة</b> — إنج تتحرّكين قبل ما يكتمل الوضوح، وتعرفين أيّ مسارٍ أخذتي.',
+  name:'قرار سريع', pillar:'قرار وارتجال',
+  how:'يطلع لج موقف، وشريطٌ ينقص. اكتبي <b>أول تصرّف</b> بجملة قصيرة قبل ما يخلص — '+
+      'مو الحلّ الكامل، أول حركة. وبعدها سمّي المسار اللي أخذتيه. '+
+      'الدرجة عدد المواقف اللي قرّرتي فيها، مو صحّة القرار — ما فيه صحٌّ واحد هني.',
+  unit:'قرار',
+  lv:{n:[4,4,5,5,5,6], sec:[25,22,18,15,13,11], band:[0,0,1,1,2,2]},
+  run(stage,finish,L){
+    L=Math.min(6,Math.max(1,Math.round(L)||1));
+    const N=this.lv.n[L-1], SEC=this.lv.sec[L-1], B=this.lv.band[L-1];
+    const pool = B===0 ? SCEN[0] : (B===1 ? SCEN[0].concat(SCEN[1]) : SCEN[1].concat(SCEN[2]));
+    const list = shuffle(pool).slice(0,N);
+    let i=0, ok=0, live=true, iv=null, t0=0;
+    const secs=[], missed=[];
+    const q=el('div','snap-q'); stage.appendChild(q);
+    const wrap=el('div','snap-wrap'), bar=el('div','snap-bar');
+    wrap.appendChild(bar); stage.appendChild(wrap);
+    const field=el('div','field');
+    const inp=el('input'); inp.type='text'; inp.autocomplete='off';
+    inp.placeholder='أول تصرّف — جملة قصيرة';
+    inp.setAttribute('aria-label','أول تصرّف');
+    const go=el('button','btn sm','قرّرت'); go.type='button';
+    field.appendChild(inp); field.appendChild(go); stage.appendChild(field);
+    const tags=el('div','snap-tags'); tags.hidden=true; stage.appendChild(tags);
+    const hint=el('div','note'); stage.appendChild(hint);
+    const hud=el('div','hud');
+    const mk=l=>{const d=el('div');d.appendChild(el('span','lbl',l));
+      const b=el('b','','0');d.appendChild(b);hud.appendChild(d);return b;};
+    const okEl=mk('قرارات'), nEl=mk('باقي');
+    stage.appendChild(hud);
+    nEl.textContent=N;
+    const stopClock=()=>{ if(iv){clearInterval(iv);iv=null;} };
+    const paint=left=>{ bar.style.width=Math.max(0,left/SEC*100)+'%'; };
+
+    function show(){
+      if(i>=N){ live=false; stopClock();
+        finish({score:ok, missed:missed, detail: secs.length
+          ? ('متوسط القرار '+Math.round(secs.reduce((a,b)=>a+b,0)/secs.length)+' ثانية')
+          : 'ما قرّرتي في ولا موقف'});
+        return; }
+      q.textContent=list[i];
+      tags.hidden=true; tags.textContent='';
+      field.style.display='flex'; inp.value='';
+      hint.textContent='قرّري قبل ما يخلص الشريط. المطلوب تتحرّكين، مو تتأكّدين.';
+      let left=SEC; paint(left); t0=Date.now();
+      stopClock();
+      iv=setInterval(()=>{
+        if(!live){ stopClock(); return; }
+        left--; paint(left);
+        if(left<=0){ stopClock();
+          missed.push({q:list[i], right:'ما قرّرتي في الوقت'});
+          hint.textContent='راح الوقت. الجاي.';
+          field.style.display='none';
+          i++; nEl.textContent=N-i;
+          setTimeout(()=>{ if(live) show(); },900);
+        }
+      },1000);
+      setTimeout(()=>{ if(live) inp.focus(); },40);
+    }
+    function commit(){
+      if(!live||field.style.display==='none') return;
+      const v=inp.value.trim();
+      if(v.length<3){ hint.textContent='جملة قصيرة تكفي — بس قرّري.'; return; }
+      stopClock();
+      secs.push(Math.max(1,Math.round((Date.now()-t0)/1000)));
+      ok++; okEl.textContent=ok;
+      field.style.display='none';
+      hint.textContent='وش المسار اللي أخذتيه؟';
+      tags.hidden=false; tags.textContent='';
+      PATHS.forEach(function(pth){
+        const b=el('button','',pth[1]); b.type='button';
+        b.onclick=()=>{ if(!live) return;
+          S.paths[pth[0]]=(S.paths[pth[0]]||0)+1;
+          i++; nEl.textContent=N-i; show(); };
+        tags.appendChild(b);
+      });
+    }
+    go.onclick=commit;
+    inp.addEventListener('keydown',e=>{ if(e.key==='Enter') commit(); });
+    show();
+    return ()=>{ live=false; stopClock(); };
+  }
+},
+
 /* ── ربط بعيد: إبداع، بدون درجة ── */
 remote:{
   trains:'<b>الربط البعيد والمرونة الذهنية</b> — الخروج من أول مسار تاخذه فكرتج.',
@@ -1197,7 +1356,8 @@ const TARGETS={
   span   :[ 5, 5, 6, 6, 7, 7],
   nback  :[ 4, 4, 5, 5, 4, 5],
   math   :[16,15,15,14,12,10],
-  fluency:[ 9,10,10,10,10,10]
+  fluency:[ 9,10,10,10,10,10],
+  snap   :[ 3, 3, 4, 4, 4, 5]
 };
 const LV=id=>Math.min(MAX_LV,Math.max(1,S.level[id]||1));
 /* «ربط بعيد» ما له درجة، فما ينطبق عليه سلّم الأهداف.
@@ -1214,7 +1374,8 @@ function durOf(id){
   let sec = id==='stroop'?30 : id==='math'?60
     : id==='cpt'?Math.round(x.isi[L]*x.n[L]/1000)
     : id==='nback'?Math.round(x.pace[L]*x.t[L]/1000)
-    : id==='fluency'?x.sec[L] : id==='span'?75 : 45;
+    : id==='fluency'?x.sec[L] : id==='snap'?Math.round(x.n[L]*(x.sec[L]+6))
+    : id==='span'?75 : 45;
   if(sec<90) return sec+' ثانية';
   const m=Math.round(sec/30)/2;
   return m===1?'دقيقة':m===1.5?'دقيقة ونص':m===2?'دقيقتين':
@@ -1262,7 +1423,8 @@ function recomputeLevels(){
 }
 
 /* ═══ اختيار مجموعة اليوم: وحد من كل ركن + بديل دوّار ═══ */
-const PILLARS={focus:['stroop','cpt'],memory:['span','nback'],speed:['math'],lang:['fluency','remote']};
+const PILLARS={focus:['stroop','cpt'],memory:['span','nback'],speed:['math'],
+               lang:['fluency','remote','snap']};
 function todaySet(){
   const r=seeded(TODAY);
   const pick=arr=>arr[Math.floor(r()*arr.length)];
@@ -1523,6 +1685,24 @@ const TUT={
     {t:'لا تتوقفين تفكرين. امشي في عناقيد: الأواني كلها، بعدين الأجهزة، بعدين البهارات.'}
    ];
  },
+ snap(){
+   const q=el('div','tutex-q','المشرف قال «نتكلّم بعدين» وما قال في شنو.');
+   const wrap=el('div','snap-wrap'); const bar=el('div','snap-bar');
+   bar.style.width='45%'; wrap.appendChild(bar);
+   const box=el('div'); box.appendChild(q); box.appendChild(wrap);
+   const t=el('div','tutchips');
+   ['أسأل وأستوضح','أتصرّف وأصحّح بعدين','أأجّل بوعي وأحدّد وقت'].forEach(function(x,k){
+     const c=el('span','chip',x); if(k===0) c.classList.add('on'); t.appendChild(c); });
+   return [
+    {t:'يطلع موقف، ومعه شريطٌ ينقص:', node:tex(box)},
+    {t:'اكتبي <b>أول تصرّف</b> قبل ما يخلص الشريط — مو الحلّ الكامل، أول حركة. '+
+       'مثلًا: «أرسل له وأسأله في شنو؟».'},
+    {t:'وبعدها سمّي المسار اللي أخذتيه:', node:tex(t)},
+    {t:'درجتج <b>عدد المواقف اللي قرّرتي فيها</b>، مو صحّة القرار. '+
+       'ما فيه صحٌّ واحد هني — المُدرَّب هو إنج تتحرّكين قبل ما يكتمل الوضوح.'},
+    {t:'وأيّ موقفٍ يخلص وقته بلا قرار ينحسب «فاتج» — وهذا هو التجمّد اللي نشتغل عليه.'}
+   ];
+ },
  remote(){
    const a=el('div','tutbig','مفتاح ↔ ثقة'); a.style.fontSize='24px';
    const b=el('div','note','«الثقة مثل المفتاح — تفتح أبواب كانت مقفلة، وتنكسر لو لويتيها بالعافية.»');
@@ -1681,7 +1861,8 @@ const PILLAR_DEF=[
   {k:'focus', name:'التركيز والكفّ',   ids:['stroop','cpt'],   tip:'focus'},
   {k:'memory',name:'الذاكرة العاملة',  ids:['span','nback'],   tip:'memory'},
   {k:'speed', name:'السرعة الذهنية',   ids:['math'],           tip:'speed'},
-  {k:'lang',  name:'الطلاقة والربط',   ids:['fluency'],        tip:'lang'}
+  {k:'lang',  name:'الطلاقة والربط',   ids:['fluency'],        tip:'lang'},
+  {k:'decide',name:'القرار والارتجال',  ids:['snap'],           tip:'decide'}
 ];
 const MIN_N=5;                                  /* أقل عدد محاولات قبل أي حكم */
 
@@ -1820,6 +2001,22 @@ function leverEffect(has){
 }
 
 /* ── ملاحظات مولّدة من بياناتج فقط ── */
+/* المسارات: وصفٌ لا حكم — ما فيه مسارٌ صح وآخر غلط.
+   ما يعتمد على درجات التمارين، فيظهر حتى قبل ما تجهز الإحصاءات. */
+function pathsNote(){
+  const pk=Object.keys(S.paths||{}).filter(k=>S.paths[k]>0);
+  if(!pk.length) return null;
+  const tot=pk.reduce((a,k)=>a+S.paths[k],0);
+  if(tot<8) return null;
+  const NM={}; PATHS.forEach(x=>{ NM[x[0]]=x[1]; });
+  pk.sort((a,b)=>S.paths[b]-S.paths[a]);
+  const top=pk[0], never=PATHS.map(x=>x[0]).filter(k=>!S.paths[k]);
+  return 'في المواقف المفاجئة، أكثر مسارٍ تاخذينه <b>'+NM[top]+'</b> '+
+    '('+S.paths[top]+' من '+tot+'). ما فيه مسارٌ صح وآخر غلط — بس معرفتج بأيّهم '+
+    'تميلين له هي أول خطوة تختارينه بوعي.'+
+    (never.length?(' وما جرّبتي بعد: <b>'+never.map(k=>NM[k]).join('، ')+'</b>.'):'');
+}
+
 function renderNotes(){
   const out=[], stats=Object.keys(EX).filter(k=>k!=='remote').map(exStat).filter(x=>x.ready);
   const box=$('#notesBox'), list=$('#notesList');
@@ -1833,6 +2030,8 @@ function renderNotes(){
     li.innerHTML='لسه بدري على الملاحظات — سجّلتي <b>'+totalTries+'</b> محاولة. '+
       'أحتاج خمس محاولات على الأقل في تمرينين عشان أميّز التحسّن الحقيقي عن التذبذب اليومي.';
     list.appendChild(li);
+    const pn0=pathsNote();
+    if(pn0){ const lp=el('li'); lp.innerHTML=pn0; list.appendChild(lp); }
     if(justLeveled.length){ const l2=el('li');
       l2.innerHTML='ترقيتي في <b>'+justLeveled.map(nameOf).join('، ')+'</b>، والتمرين صار أصعب — '+
         'فبديت خط أساس جديد. الدرجات قبل وبعد الترقية ما تنقارن، وأي مقارنة بينهم تكون مضللة.';
@@ -1891,6 +2090,8 @@ function renderNotes(){
       '(وسّمتي '+tagged+' مرة لين الحين). بعد أسبوعين بقدر أقول لج أي وحدة منهم ترفع '+
       'درجاتج فعلًا وبكم — وهذي الأرقام اللي رح تحرّك مخج خلال شهر، مو التمارين لحالها.');
   }
+
+  const pn=pathsNote(); if(pn) out.push(pn);
 
   /* الانتظام */
   const days14=(()=>{let n=0;for(let i=0;i<14;i++){const d=new Date();d.setDate(d.getDate()-i);
@@ -1987,6 +2188,25 @@ const TIPS={
   ['الأتمتة','السرعة ما تجي من التفكير الأسرع، تجي من إلغاء التفكير. جدول الضرب المحفوظ ظهر عن قلب يفرّغ ذاكرتج العاملة للمسألة نفسها.'],
   ['في التمرين','لا تصلّحين الغلط بالرجوع — امسحي وابدئي. الرجوع يكلّفج وقت أكثر من إعادة الحساب.'],
   ['الظروف','السرعة أكثر مقياس يتأثر بالكافيين ووقت اليوم. لو تبين مقارنة عادلة بين الأيام، سويها بنفس الوقت تقريبًا كل يوم.']]},
+
+ decide:{t:'كيف تقوّين القرار تحت المفاجأة',b:[
+  ['اللي ينفع فعلًا','مو تسريع التفكير — <b>بناء مكتبة مواقف</b>. الخبراء تحت الضغط ما '+
+   'يوازنون خيارات؛ يتعرّفون على الموقف إنه «من هذا النوع»، ويشغّلون أول تصرّفٍ معقول، '+
+   'ويتخيّلونه بسرعة قبل ما ينفّذون. هذا اللي رصده كلاين على رجال الإطفاء والممرّضات '+
+   'والقادة الميدانيين. سرعتهم من التعرّف لا من الحساب.'],
+  ['ليش نسمّي المسار','التسمية بعد كل قرار هي اللي تبني المكتبة. بدونها تتكرّر التجربة '+
+   'ولا يتراكم منها شي — تصير خبرةً بلا تعلّم.'],
+  ['متى تُصدَّق بديهتج ومتى تخون','كانمان وكلاين اختلفا كثيرًا واتفقا على شرطين: أن يكون '+
+   'الموقف من نوعٍ <b>يتكرّر</b>، وأن ترجع لج <b>نتيجته بسرعة</b>. تحقّقا ⇒ بديهتج '+
+   'جديرة بالثقة. ما تحقّقا ⇒ الأفضل قاعدةٌ مكتوبة، لا سرعة.'],
+  ['الأقوى دليلًا','«لو… إذن…» للمواقف اللي تتكرّر عندج تحديدًا. تربطين الموقف بالتصرّف '+
+   'مقدّمًا فيشتغل تلقائيًّا وقت المفاجأة بدل ما يعتمد على قرارٍ في اللحظة — '+
+   'ومُختبَر على ADHD تحديدًا.'],
+  ['الحلقة اللي بدونها ما فيه تعلّم','التطبيق ما يقدر يحكم إذا قرارج صح؛ ما فيه جوابٌ '+
+   'واحد للمواقف. الحكم يجي من الواقع: ارجعي بعد ما يصير الشي واكتبيه في «أبدأ». '+
+   'بدون هالحلقة تتحسّن سرعتج ولا تتحسّن دقّتج.'],
+  ['وبصراحة','الدليل على تمارين المواقف تطبيقيّ ومتوسّط، مو تجارب محكّمة واسعة. '+
+   'أقواه هو «لو… إذن…» والتغذية الراجعة من الواقع — وهذولا اللي بنيت عليهم القسم.']]},
 
  lang:{t:'كيف تقوّين الطلاقة والربط',b:[
   ['في الاشتقاق','لا تدورين كلمات عشوائية — امشي في عناقيد. «المطبخ» → الأواني كلها، بعدين الأجهزة، بعدين البهارات. الدماغ يسحب من مجموعة أسرع ما يسحب من فراغ.'],
@@ -2413,7 +2633,7 @@ setInterval(refreshDay,60000);
 function backupText(){
   return JSON.stringify({v:1,at:Date.now(),days:S.days,notes:S.notes,hist:S.hist,
     sleep:S.sleep,level:S.level,set:S.set,lvRule:S.lvRule,acts:S.acts,
-    plan:S.plan,start:S.start,tasks:S.tasks});
+    plan:S.plan,start:S.start,tasks:S.tasks,paths:S.paths});
 }
 (function(){
   const msg=$('#bkMsg'), area=$('#bkArea'), copyB=$('#bkCopy'), openB=$('#bkOpen'),
