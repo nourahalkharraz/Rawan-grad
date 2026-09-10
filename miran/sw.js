@@ -46,7 +46,10 @@ self.addEventListener('fetch', e => {
   e.respondWith(
     caches.match(e.request).then(hit => {
       const net = fetch(e.request).then(res => {
-        if (res && (res.type === 'basic' || res.type === 'opaque')) {
+        /* خطوط جوجل ترجع نوع cors، وكان الشرط القديم يرفضها فما تُخزّن أبدًا:
+           كل فتحة تدفع رحلةً للشبكة، وبدون إنترنت ما تجي أصلًا. */
+        if (res && (res.type === 'basic' || res.type === 'opaque' ||
+                    res.type === 'cors')) {
           const copy = res.clone();
           caches.open(CACHE).then(c => c.put(e.request, copy)).catch(()=>{});
         }
