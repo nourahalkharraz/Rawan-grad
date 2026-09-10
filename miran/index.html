@@ -596,6 +596,9 @@ footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--line-soft);
         <button type="button" class="btn sm" id="bkPut" hidden
           style="margin-top:8px">استرجعي</button>
         <p class="note" id="bkMsg"></p>
+        <p class="note" id="bkBroken" hidden></p>
+        <button type="button" class="btn ghost sm" id="bkShowBroken" hidden
+          style="margin-top:8px">ورّيني النصّ المحفوظ</button>
       </div>
     </details>
   </section>
@@ -652,12 +655,23 @@ let S={days:{},notes:{},hist:{},sleep:{},level:{},set:{},lvRule:null,
 let db=null;
 
 function loadLocal(){
-  try{const raw=localStorage.getItem(LS); if(raw){const o=JSON.parse(raw);
-    if(o&&typeof o==='object'){S.days=o.days||{};S.notes=o.notes||{};
+  let raw=null;
+  try{ raw=localStorage.getItem(LS); }catch(e){}
+  try{
+    if(raw){
+      const o=JSON.parse(raw);
+      if(!o||typeof o!=='object') throw new Error('شكل غير متوقّع');
+      S.days=o.days||{};S.notes=o.notes||{};
       S.hist=o.hist||{};S.sleep=o.sleep||{};S.level=o.level||{};
       S.set=o.set||{};S.lvRule=o.lvRule||null;
       S.acts=o.acts||{};S.plan=o.plan||'';S.start=o.start||null;
-      S.tasks=Array.isArray(o.tasks)?o.tasks:[];}}}catch(e){}
+      S.tasks=Array.isArray(o.tasks)?o.tasks:[];
+    }
+  }catch(e){
+    /* نصّ محفوظ ما انقرأ. لا نكتب فوقه حالةً فاضية — نحفظه جنبًا
+       عشان يبقى ممكن ترجيعه بدل ما يضيع بصمت. */
+    if(raw) try{ localStorage.setItem(LS+'.broken',raw); }catch(_){}
+  }
   seedHist();
 }
 function saveLocal(){ try{localStorage.setItem(LS,JSON.stringify(S));}catch(e){} }
@@ -2398,6 +2412,17 @@ function backupText(){
       say('الصقي النسخة وبعدين «استرجعي». ما ينمسح شي — يتضاف اللي ناقص بس.'); }
     else say('');
   };
+  /* لو صار خلل مرّة، النصّ القديم محفوظ — خلّيها تشوفه وتنسخه */
+  (function(){
+    let br=null; try{ br=localStorage.getItem(LS+'.broken'); }catch(e){}
+    if(!br) return;
+    const note=$('#bkBroken'), btn=$('#bkShowBroken');
+    note.hidden=false; btn.hidden=false;
+    note.textContent='فيه نصّ بيانات قديم ما انقرأ مرّة، وحفظناه جنبًا بدل ما ينمسح.';
+    btn.onclick=()=>{ area.hidden=false; area.value=br; putB.hidden=false;
+      area.focus(); area.select();
+      say('هذا هو. انسخيه واحفظيه، ولو ضغطتي «استرجعي» بنحاول نقراه.'); };
+  })();
   putB.onclick=async()=>{
     let o=null;
     try{ o=JSON.parse(area.value.trim()); }catch(e){ say('النصّ مو نسخة صحيحة.'); return; }
