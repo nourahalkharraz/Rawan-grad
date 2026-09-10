@@ -1021,17 +1021,16 @@ nback:{
 math:{
   trains:'<b>السرعة والأتمتة</b> — كم عملية تسوينها بدون ما تفكرين فيها، وهذا يفرّغ ذاكرتج للأهم.',
   name:'حساب سريع', pillar:'سرعة ذهنية',
-  how:'مسائل ورا بعض. جاوبي بأسرع ما تقدرين. تبدأ بجمع وطرح بس، وكل ما ترقّين يدخل نوع جديد: نتائج سالبة (م٣) ← ضرب (م٤) ← قسمة (م٥) ← مسائل مركّبة (م٦). ستين ثانية.',
+  how:'مسائل ورا بعض. جاوبي بأسرع ما تقدرين، وما فيه زر — أول ما يكتمل الجواب الصح ينتقل لوحده. '+
+      'يبدأ من <b>جمع تحت العشرة</b> ويكبر معج خطوة خطوة: تحت العشرين (م٢) ← عشرات بسيطة (م٣) '+
+      '← جمع وطرح كامل (م٤) ← نتائج سالبة وضرب (م٥) ← قسمة ومركّب (م٦). ستين ثانية.',
   unit:'إجابة صحيحة',
-  lv:{ /* 0:+  1:−  2:×  3:ثلاثة حدود  4:÷  5:ضرب ثم طرح */
-     kinds:[[0,1],[0,1],[0,1],[0,1,2],[0,1,2,4],[0,1,2,3,4,5]],
-     neg:  [0,0,1,1,1,1],          /* النتائج السالبة تبدأ من م٣ */
-     big:  [0,1,1,1,1,1]},
+  /* السلّم يبدأ من الصفر فعلًا. كان يبدأ بخانتين مع حمل، وهذي مو بداية. */
   run(stage,finish,L){
     L=Math.min(6,Math.max(1,Math.round(L)||1));
     let ok=0,live=true,ans=0;
     const missed=[];
-    const KINDS=this.lv.kinds[L-1], NEG=this.lv.neg[L-1], BIG=this.lv.big[L-1];
+    const R=(lo,hi)=>lo+rnd(hi-lo+1);
     const q=el('div','big num','—'); stage.appendChild(q);
     const field=el('div','field');
     /* زر السالب: لوحة الأرقام على الجوال ما فيها إشارة ناقص */
@@ -1042,26 +1041,35 @@ math:{
     neg.onclick=()=>{ if(!live) return;
       inp.value = inp.value.charAt(0)==='-' ? inp.value.slice(1) : '-'+inp.value;
       inp.focus(); check(); };
-    field.appendChild(inp); field.appendChild(neg); stage.appendChild(field);
+    field.appendChild(inp);
+    /* زرّ السالب ما له معنى قبل م٥ — النتائج كلها موجبة قبلها */
+    if(L>=5) field.appendChild(neg);
+    stage.appendChild(field);
     const fb=el('div','verdict',''); stage.appendChild(fb);
     const timer=timerBar(stage,60,()=>{live=false;
       finish({score:ok,missed:missed,detail:ok+' في الدقيقة'});});
     function next(){
-      const kind=KINDS[rnd(KINDS.length)];
-      const R=BIG?90:35;
       let a,b,c,txt;
-      if(kind===0){a=2+rnd(R);b=2+rnd(R);ans=a+b;txt=a+' + '+b;}
-      else if(kind===1){
-        if(NEG){ a=12+rnd(R+30); b=2+rnd(R+30); }   /* من م٣: الناتج ممكن يطلع سالب */
-        else   { a=12+rnd(R+20); b=2+rnd(a-2); }    /* قبلها: الناتج موجب دايمًا */
-        ans=a-b; txt=a+' − '+b; }
-      else if(kind===2){a=3+rnd(BIG?13:10);b=3+rnd(BIG?13:10);ans=a*b;txt=a+' × '+b;}
-      else if(kind===3){                         /* ثلاثة حدود */
-        a=10+rnd(60);b=5+rnd(40);c=5+rnd(40);ans=a+b-c;txt=a+' + '+b+' − '+c; }
-      else if(kind===4){                         /* قسمة بلا باقي */
-        b=2+rnd(11); ans=2+rnd(14); a=b*ans; txt=a+' ÷ '+b; }
-      else{                                      /* ضرب ثم طرح */
-        a=3+rnd(12);b=3+rnd(9);c=5+rnd(60);ans=a*b-c;txt=a+' × '+b+' − '+c; }
+      if(L===1){                       /* جمع، والناتج ما يتعدّى العشرة */
+        a=R(1,8); b=R(1,9-a); ans=a+b; txt=a+' + '+b;
+      } else if(L===2){                /* جمع وطرح تحت العشرين، بخانة وحدة */
+        if(Math.random()<.5){ a=R(2,9); b=R(2,9); ans=a+b; txt=a+' + '+b; }
+        else { a=R(5,18); b=R(1,a); ans=a-b; txt=a+' − '+b; }
+      } else if(L===3){                /* عشرات وآحاد، بلا حمل ولا استلاف */
+        if(Math.random()<.5){ a=R(1,8)*10+R(0,4); b=R(1,5); ans=a+b; txt=a+' + '+b; }
+        else { a=R(2,9)*10+R(5,9); b=R(1,5); ans=a-b; txt=a+' − '+b; }
+      } else if(L===4){                /* جمع وطرح كامل، والناتج موجب */
+        if(Math.random()<.5){ a=R(12,89); b=R(12,89); ans=a+b; txt=a+' + '+b; }
+        else { a=R(25,99); b=R(6,a-1); ans=a-b; txt=a+' − '+b; }
+      } else if(L===5){                /* هني تدخل النتائج السالبة، ومعها الضرب */
+        if(rnd(3)===0){ a=R(10,60); b=R(10,90); ans=a-b; txt=a+' − '+b; }
+        else { a=R(2,9); b=R(2,9); ans=a*b; txt=a+' × '+b; }
+      } else {                         /* قسمة بلا باقي، ومسائل مركّبة */
+        const k=rnd(3);
+        if(k===0){ b=R(2,9); ans=R(2,12); a=b*ans; txt=a+' ÷ '+b; }
+        else if(k===1){ a=R(3,12); b=R(2,9); c=R(5,40); ans=a*b-c; txt=a+' × '+b+' − '+c; }
+        else { a=R(20,70); b=R(5,40); c=R(5,40); ans=a+b-c; txt=a+' + '+b+' − '+c; }
+      }
       q.textContent=txt; inp.value=''; fb.textContent=''; neg.classList.remove('need');
     }
     function check(){
@@ -1188,7 +1196,7 @@ const TARGETS={
   cpt    :[ 8, 8, 8, 7, 7, 7],
   span   :[ 5, 5, 6, 6, 7, 7],
   nback  :[ 4, 4, 5, 5, 4, 5],
-  math   :[16,18,18,16,15,14],
+  math   :[16,15,15,14,12,10],
   fluency:[ 9,10,10,10,10,10]
 };
 const LV=id=>Math.min(MAX_LV,Math.max(1,S.level[id]||1));
@@ -1486,14 +1494,15 @@ const TUT={
    ];
  },
  math(){
-   const a=el('div','tutseq','12 − 30');
+   const a=el('div','tutseq','12 − 30');   /* مثالُ م٥ فما فوق */
    const row=el('div','tutopts');
    const inp=el('span','opt','18'); inp.style.fontFamily='var(--f-num)';
    const neg=el('span','opt hit','−');  neg.style.fontFamily='var(--f-num)';
    row.appendChild(inp); row.appendChild(neg);
    return [
     {t:'مسألة، وتكتبين الجواب. ما فيه زر «تأكيد» — أول ما يكتمل الجواب الصح ينتقل لوحده.'},
-    {t:'لو طلع ناتج سالب — مثل هذي:', node:tex(a)},
+    {t:'يبدأ من جمعٍ تحت العشرة (<b>3 + 4</b>) ويكبر معج خطوة خطوة. '+
+       'ومن المستوى الخامس تدخل نتائج سالبة، مثل هذي:', node:tex(a)},
     {t:'اكتبي الأرقام عادي، وبعدين اضغطي زرّ <b>−</b> اللي جنب الخانة:', node:tex(row)},
     {t:'ولو كتبتي الأرقام صح ونسيتي الإشارة، ما يحسبها غلط — يقول لج «ناقصج إشارة −» ويضوّي الزرّ، والخانة تظل مكانها.'},
     {t:'لوحة المفاتيح العربية (٠١٢٣) تشتغل عادي.'}
