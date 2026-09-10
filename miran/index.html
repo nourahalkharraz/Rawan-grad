@@ -358,7 +358,13 @@ details.tips .in p b{color:var(--ink);font-weight:400}
 details.tips .in .lbl{margin-top:13px;display:block}
 
 .levers{margin-top:24px;background:var(--mint);border:1px solid var(--line);
-  border-radius:5px;padding:14px 16px;box-shadow:var(--shadow)}
+  border-radius:5px;padding:16px 16px 14px;box-shadow:var(--shadow)}
+.lv-hd{margin:0 0 6px;font-family:var(--f-disp);font-size:16px;font-weight:700}
+.lv-note.lv-top{margin:0 0 15px}
+.lv-note.lv-key{margin-top:12px;line-height:1.95}
+.lv-note.lv-key b{color:var(--ink);font-weight:700}
+.lv-note.lv-count{margin-top:12px;padding-top:11px;
+  border-top:1px solid var(--line-soft)}
 .lv-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:9px}
 .lv-row .lbl{flex:none;min-width:74px}
 .lv-note{margin:10px 0 0;font-size:13px;font-weight:400;color:var(--ink-3);line-height:1.6}
@@ -547,24 +553,33 @@ footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--line-soft);
 
   <section class="report" style="border:0;margin-top:26px;padding-top:0">
     <div class="levers">
+      <h4 class="lv-hd">تجربة على نفسج</h4>
+      <p class="lv-note lv-top">وسّمي يومج بضغطة، وبعد أسبوعين أقول لج
+        <b>أي عادة من هذي ترفع درجاتج فعلًا وبكم بالمية</b> — محسوبة من بياناتج
+        أنتِ، مو نصيحة عامة.</p>
+
       <div class="lv-row">
-        <span class="lbl">نومج أمس</span>
+        <span class="lbl">كيف نمتي أمس؟</span>
         <div class="tag" id="tagRow">
           <button type="button" data-s="good">زين</button>
           <button type="button" data-s="mid">متوسط</button>
           <button type="button" data-s="bad">قليل</button>
         </div>
       </div>
+
       <div class="lv-row">
-        <span class="lbl">اليوم سويتي</span>
+        <span class="lbl">اليوم سويتي أيّ وحدة من هذي؟</span>
         <div class="tag" id="actRow">
           <button type="button" data-a="move">حركة ٢٠ دقيقة</button>
-          <button type="button" data-a="light">ضوء صباح</button>
+          <button type="button" data-a="light">ضوء الصباح</button>
           <button type="button" data-a="caf">كافيين</button>
         </div>
       </div>
-      <p class="lv-note">هذي مو زينة ولا مكافأة — هذي <b>تجربة على نفسج</b>. وسّميها كل يوم،
-        وبعد أسبوعين الصفحة تحسب لج أي وحدة فيها ترفع درجاتج فعلًا وبكم بالمية.</p>
+      <p class="lv-note lv-key">
+        <b>حركة ٢٠ دقيقة</b> — مشي أو رياضة أو حتى درج، المهم عشرين دقيقة متواصلة.<br>
+        <b>ضوء الصباح</b> — طلعتي بره أو قعدتي جنب شبّاك في أول ساعة من صحيانج.<br>
+        <b>كافيين</b> — قهوة أو شاي. مو زينة ولا غلط، بس نشوف أثرها عليج.</p>
+      <p class="lv-note lv-count" id="lvCount">—</p>
     </div>
     <div id="tips"></div>
 
@@ -1725,6 +1740,19 @@ function renderTag(){
       if(!S.sleep[TODAY]) delete S.sleep[TODAY];
       renderTag(); renderNotes(); await push(); };
   });
+  const cnt=$('#lvCount');
+  if(cnt){
+    const set=new Set();
+    Object.keys(S.sleep).forEach(k=>{ if(S.sleep[k]) set.add(k); });
+    Object.keys(S.acts).forEach(k=>{
+      const v=S.acts[k]||{};
+      if(Object.keys(v).some(x=>v[x])) set.add(k); });
+    const n=set.size;
+    cnt.innerHTML='اضغطي اللي ينطبق عليج اليوم، وضغطة ثانية تشيلها. '+
+      'وسّمتي <b>'+n+'</b> '+(n===1?'يوم':'يوم')+' لين الحين — '+
+      (n>=14 ? 'الجواب طالع لج في قسم <b>تقدّمي</b>.'
+             : 'الجواب يطلع في قسم <b>تقدّمي</b> بعد ما توسّمين حوالي أسبوعين.');
+  }
   const a=S.acts[TODAY]||{};
   document.querySelectorAll('#actRow button').forEach(b=>{
     b.classList.toggle('on',!!a[b.dataset.a]);
