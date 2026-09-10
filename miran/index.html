@@ -206,6 +206,8 @@ input.num{font-family:var(--f-num);font-size:19px;text-align:center;letter-spaci
 .tk.done .tk-t{font-size:14.5px;font-weight:400;color:var(--ink-2)}
 .tk-step{margin:0;font-size:14px;font-weight:400;color:var(--aqua);line-height:1.6}
 .tk-when{margin:0;font-size:13px;font-weight:400;color:var(--ink-3);line-height:1.6}
+.tk-advice{margin:0;font-size:14px;font-weight:400;color:var(--ink-2);line-height:1.7;
+  border-right:2px solid var(--signal-soft);padding-right:11px}
 .tk .note{margin:0;text-align:right;max-width:none}
 .tk .field{max-width:none}
 .tk-row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
@@ -443,13 +445,18 @@ footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--line-soft);
       المشكلة قاعدة في راسج <b>كاملة وغير محدودة</b>، وهذا حِمل أكبر من أي ذاكرة عاملة،
       فيطلع إحساس ثقيل والمخّ يهرب منه — والهروب يريّح فورًا، فيتثبّت ويتكرّر.
       اللي يفكّها مو إنج تصيرين أسرع تفكيرًا، إنج <b>تطلّعينها من راسج</b>
-      وتحدّدين أول خطوة وموعدها. هني تسوّينها، وهني نقيس إذا نفعت.</p>
+      وتحدّدين أول خطوة وموعدها.</p>
+    <p class="intro">ومو كل شي مؤجّل مهمّة. أحيانًا يكون <b>موقفًا صار في حياتج</b>
+      ومحتاجة تفكّرين فيه عشان تعرفين تتصرّفين. هذا نوع ثاني والطريقة معه غير:
+      ما له «أصغر خطوة»، له حقايق ونظرة من برّا وسؤال واحد يفرزه.
+      القسم يسألج أول شي: شي تسوّينه، ولا موقف تفكّرين فيه؟</p>
 
     <div class="field tkadd">
-      <input type="text" id="tkIn" placeholder="وش الشي اللي مأجّلته؟" autocomplete="off">
+      <input type="text" id="tkIn" placeholder="وش الشي المعلّق في راسج؟" autocomplete="off">
       <button type="button" class="btn sm" id="tkAdd">حطّيه</button>
     </div>
-    <p class="note" id="tkMsg">اكتبيه بالطريقة اللي في راسج، مو بصيغة مرتّبة.</p>
+    <p class="note" id="tkMsg">مهمّة كانت أو موقف — اكتبيه بالطريقة اللي في راسج،
+      مو بصيغة مرتّبة.</p>
 
     <div id="tkList"></div>
 
@@ -474,6 +481,14 @@ footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--line-soft);
           تهربين من الإحساس مو من الشغل (Sirois &amp; Pychyl ٢٠١٣). ولأنه مبنيّ على
           توقّع مبالغ فيه للثِّقل، أقوى شي يكسره إنج تشوفين بأرقامج أنتِ
           إن الواقع أخفّ من التوقّع.</p>
+        <p><b>في المواقف: النظرة من برّا.</b> لما تفكّرين في موقفٍ صعب وأنتِ داخله،
+          تدورين فيه. ولما تنظرين له كأنه يخصّ غيرج — «وش أقول لصاحبتي؟» — ينزل
+          الانفعال ويطلع رأي أوضح، وهذي من أثبت النتايج تكرارًا في أبحاث
+          كروس وأيدُك عن المسافة النفسية.</p>
+        <p><b>وسؤال «وش بيدج فيه؟».</b> التصرّف ينفع لما يكون في الموقف شي تتصرّفين
+          فيه فعلًا. ولما ما يكون، محاولة حلّه تزيد الثِّقل بدل ما تنقصه — هذا فرق
+          مثبَت في أبحاث لازاروس وفولكمان عن التأقلم. عشان جذي نسألج قبل ما نطلب
+          منج تصرّفًا.</p>
         <p><b>وبصراحة:</b> التمارين في «اليوم» ما تعالج هذا. هي تحسّن أداءج فيها هي،
           وانتقال فايدتها للحياة اليومية ضعيف في الأبحاث. القسم هذا هو اللي يشتغل
           على التأجيل مباشرة.</p>
@@ -1996,8 +2011,8 @@ function tkSave(){ saveLocal(); renderTasks(); push(); }
 function tkAdd(txt){
   const t=String(txt||'').trim(); if(t.length<2) return false;
   S.tasks.push({id:'t'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),
-    t:t, step:'', when:'', pre:null, post:null, started:null,
-    ts:Date.now(), at:Date.now()});
+    t:t, kind:null, step:'', when:'', facts:'', advice:'', control:null, close:'',
+    pre:null, post:null, started:null, ts:Date.now(), at:Date.now()});
   tkSave(); return true;
 }
 function tkTouch(o){ o.at=Date.now(); tkSave(); }
@@ -2015,84 +2030,36 @@ function tkScale(cur,label,cb){
   w.appendChild(row);
   return w;
 }
-function tkCard(o){
-  const c=el('article','tk'+(o.started?' done':''));
-  const h=el('div','tk-t'); h.textContent=o.t; h.dir='auto'; c.appendChild(h);
-
-  if(o.started){
-    const m=el('p','note');
-    m.textContent='بدأتيها' + (o.pre&&o.post
-      ? ' · توقّعتيها '+HEAVY[o.pre-1]+'، وطلعت '+HEAVY[o.post-1] : '');
-    c.appendChild(m);
-    const del=el('button','tk-x','شيليها'); del.type='button';
-    del.onclick=()=>{ S.tasks=S.tasks.filter(x=>x.id!==o.id); tkSave(); };
-    c.appendChild(del);
-    return c;
-  }
-
-  /* ١) كم تتوقّعينها ثقيلة — نسألها والإحساس لسه حيّ */
-  if(!o.pre){
-    c.appendChild(tkScale(null,'قبل ما تبدين: كم تتوقّعينها ثقيلة؟',
-      v=>{ o.pre=v; tkTouch(o); }));
-    return c;
-  }
-
-  /* ٢) أصغر خطوة — هذا هو الدواء الفعّال */
-  if(!o.step){
-    c.appendChild(el('span','lbl','أصغر خطوة تخلّصينها في دقيقتين'));
-    const f=el('div','field');
-    const i=el('input'); i.type='text'; i.autocomplete='off';
-    i.placeholder='أصغر خطوة تخلّصينها في دقيقتين';
-    i.setAttribute('aria-label','أصغر خطوة');
-    const g=el('button','btn sm','تمام'); g.type='button';
-    const go=()=>{ const v=i.value.trim(); if(v.length<2) return;
-      o.step=v; tkTouch(o); };
-    g.onclick=go; i.addEventListener('keydown',e=>{if(e.key==='Enter')go();});
-    f.appendChild(i); f.appendChild(g); c.appendChild(f);
-    c.appendChild(el('p','note','مو «أحلّ المشكلة» — «أفتح الملف وأقرأ أول سطر». '+
-      'لو ما تقدرين تسوّينها بدقيقتين، صغّريها أكثر.'));
-    setTimeout(()=>i.focus(),30);
-    return c;
-  }
-  const st=el('p','tk-step'); st.textContent='أول خطوة: '+o.step; st.dir='auto';
-  c.appendChild(st);
-
-  /* ٣) متى بالضبط — «لو… إذن…» */
-  if(!o.when){
-    c.appendChild(el('span','lbl','متى بالضبط؟'));
-    const f=el('div','field');
-    const i=el('input'); i.type='text'; i.autocomplete='off';
-    i.placeholder='لو … إذن أسوّي الخطوة';
-    i.setAttribute('aria-label','متى');
-    const g=el('button','btn sm','تمام'); g.type='button';
-    const go=()=>{ const v=i.value.trim(); if(v.length<3) return;
-      o.when=v; tkTouch(o); };
-    g.onclick=go; i.addEventListener('keydown',e=>{if(e.key==='Enter')go();});
-    const sk=el('button','tk-x','تخطّي'); sk.type='button';
-    sk.onclick=()=>{ o.when='—'; tkTouch(o); };
-    f.appendChild(i); f.appendChild(g); c.appendChild(f);
-    c.appendChild(el('p','note','اربطيها بشي يصير أكيد: «لو حطّيت الجوال على الشاحن، '+
-      'إذن…». الموقف يشغّلها بدل ما تعتمدين على قرارٍ باللحظة.'));
-    c.appendChild(sk);
-    setTimeout(()=>i.focus(),30);
-    return c;
-  }
-  if(o.when!=='—'){
-    const wn=el('p','tk-when'); wn.textContent=o.when; wn.dir='auto'; c.appendChild(wn);
-  }
-
-  /* ٤) خمس دقايق، أو «بدأتها» */
+/* حقل نصّ + زرّ، يرجّع القيمة لما تتأكّد. الشكل نفسه في كل الخطوات. */
+function tkField(c,label,ph,hint,cb,skip){
+  c.appendChild(el('span','lbl',label));
+  const f=el('div','field');
+  const i=el('input'); i.type='text'; i.autocomplete='off';
+  i.placeholder=ph; i.setAttribute('aria-label',label);
+  const g=el('button','btn sm','تمام'); g.type='button';
+  const go=()=>{ const v=i.value.trim(); if(v.length<2) return; cb(v); };
+  g.onclick=go; i.addEventListener('keydown',e=>{if(e.key==='Enter')go();});
+  f.appendChild(i); f.appendChild(g); c.appendChild(f);
+  if(hint) c.appendChild(el('p','note',hint));
+  if(skip){ const sk=el('button','tk-x','تخطّي'); sk.type='button';
+    sk.onclick=()=>cb('—'); c.appendChild(sk); }
+  setTimeout(()=>i.focus(),30);
+}
+function tkLine(c,cls,txt){
+  const p=el('p',cls); p.textContent=txt; p.dir='auto'; c.appendChild(p);
+}
+/* شريط «٥ دقايق» + زرّ الإنهاء. نصّهما يختلف حسب نوع الشي. */
+function tkDo(c,o,fiveTx,doneTx){
   const row=el('div','tk-row');
-  const five=el('button','btn sm','٥ دقايق بس'); five.type='button';
-  const mark=el('button','btn ghost sm','بدأتها ✓'); mark.type='button';
+  const five=el('button','btn sm',fiveTx); five.type='button';
+  const mark=el('button','btn ghost sm',doneTx); mark.type='button';
   const clock=el('div','tk-clock'); clock.hidden=true;
   let iv=null;
   const stop=()=>{ if(iv){clearInterval(iv);iv=null;} clock.hidden=true;
-    five.textContent='٥ دقايق بس'; };
+    five.textContent=fiveTx; };
   five.onclick=()=>{
     if(iv){ stop(); return; }
-    let left=300; five.textContent='وقفيها';
-    clock.hidden=false;
+    let left=300; five.textContent='وقفيها'; clock.hidden=false;
     const tick=()=>{ clock.textContent=Math.floor(left/60)+':'+
         String(left%60).padStart(2,'0');
       if(left<=0){ stop(); clock.hidden=false;
@@ -2103,14 +2070,171 @@ function tkCard(o){
   mark.onclick=()=>{ stop(); o.started=Date.now(); tkTouch(o); };
   row.appendChild(five); row.appendChild(mark);
   c.appendChild(row); c.appendChild(clock);
+}
 
-  /* بعد ما تبدأ نسأل كم كانت فعلًا — بس لو ما سألناها */
+/* ═══ شي أسوّيه ═══ */
+function tkTask(c,o){
+  if(!o.pre){
+    c.appendChild(tkScale(null,'قبل ما تبدين: كم تتوقّعينها ثقيلة؟',
+      v=>{ o.pre=v; tkTouch(o); }));
+    return;
+  }
+  if(!o.step){
+    tkField(c,'أصغر خطوة تخلّصينها في دقيقتين','مثلًا: أفتح الملف وأقرأ أول سطر',
+      'مو «أحلّ المشكلة» — «أفتح الملف وأقرأ أول سطر». '+
+      'لو ما تقدرين تسوّينها بدقيقتين، صغّريها أكثر.',
+      v=>{ o.step=v; tkTouch(o); });
+    return;
+  }
+  tkLine(c,'tk-step','أول خطوة: '+o.step);
+  if(!o.when){
+    tkField(c,'متى بالضبط؟','لو … إذن أسوّي الخطوة',
+      'اربطيها بشي يصير أكيد: «لو حطّيت الجوال على الشاحن، إذن…». '+
+      'الموقف يشغّلها بدل ما تعتمدين على قرارٍ باللحظة.',
+      v=>{ o.when=v; tkTouch(o); }, true);
+    return;
+  }
+  if(o.when!=='—') tkLine(c,'tk-when',o.when);
+  tkDo(c,o,'٥ دقايق بس','بدأتها ✓');
+}
+
+/* ═══ موقف أفكر فيه ═══
+   هني الهروب مو من الشغل، من التفكير نفسه — لأنه يلفّ بلا نهاية.
+   فنعطيه شكلًا: حقايق، ثم نظرة من برّا، ثم سؤال واحد يفرز كل شي:
+   هل بيدج شي؟ لأن التصرّف ينفع لما يكون فيه ما تتصرّفين فيه، ويزيد
+   الثِّقل لما ما يكون. */
+function tkSit(c,o){
+  if(!o.pre){
+    c.appendChild(tkScale(null,'كم يشغل بالج الحين؟',
+      v=>{ o.pre=v; tkTouch(o); }));
+    return;
+  }
+  if(!o.facts){
+    tkField(c,'بس الحقايق: وش صار؟','اللي صار فعلًا، بلا تفسير ولا توقّع',
+      'الحقايق وحدها. «قالت كذا» مو «يعني إنها زعلانة مني». '+
+      'أغلب الثِّقل يجي من الخلط بين اللي صار واللي تخافين منه.',
+      v=>{ o.facts=v; tkTouch(o); }, true);
+    return;
+  }
+  if(o.facts!=='—') tkLine(c,'tk-step',o.facts);
+  if(!o.advice){
+    tkField(c,'لو صاحبتج جتج بنفس الموقف، وش تقولين لها؟',
+      'نصيحتج لها، بنفس كلماتج',
+      'النظر للموقف من برّا — كأنه يخصّ غيرج — يقلّل الانفعال ويطلّع رأيًا '+
+      'أوضح من الدوران فيه من داخله.',
+      v=>{ o.advice=v; tkTouch(o); }, true);
+    return;
+  }
+  if(o.advice!=='—') tkLine(c,'tk-advice','«'+o.advice+'»');
+
+  if(!o.control){
+    c.appendChild(el('span','lbl','وش اللي بيدج فيه؟'));
+    const row=el('div','tag');
+    [['act','فيه شي أقدر أسوّيه'],['none','ما بيدي شي'],
+     ['unclear','لسه مو واضح لي']].forEach(x=>{
+      const b=el('button','',x[1]); b.type='button';
+      b.onclick=()=>{ o.control=x[0]; tkTouch(o); };
+      row.appendChild(b); });
+    c.appendChild(row);
+    return;
+  }
+
+  if(o.control==='unclear'){
+    c.appendChild(el('p','note','فكّري فيه خمس دقايق بس — بحدّ، لأن التفكير '+
+      'بلا حدّ يلفّ ولا يوصل. وبعدها قرّري.'));
+    const row=el('div','tk-row');
+    const five=el('button','btn sm','٥ دقايق تفكير'); five.type='button';
+    const back=el('button','btn ghost sm','وضح لي الحين'); back.type='button';
+    const clock=el('div','tk-clock'); clock.hidden=true;
+    let iv=null;
+    const stop=()=>{ if(iv){clearInterval(iv);iv=null;} clock.hidden=true;
+      five.textContent='٥ دقايق تفكير'; };
+    five.onclick=()=>{
+      if(iv){ stop(); return; }
+      let left=300; five.textContent='وقفيها'; clock.hidden=false;
+      const tick=()=>{ clock.textContent=Math.floor(left/60)+':'+
+          String(left%60).padStart(2,'0');
+        if(left<=0){ stop(); clock.hidden=false;
+          clock.textContent='خلصن — قرّري الحين'; return; }
+        left--; };
+      tick(); iv=setInterval(tick,1000); tkTimers.push(iv);
+    };
+    back.onclick=()=>{ stop(); o.control=null; tkTouch(o); };
+    row.appendChild(five); row.appendChild(back);
+    c.appendChild(row); c.appendChild(clock);
+    return;
+  }
+
+  if(o.control==='none'){
+    if(!o.close){
+      c.appendChild(el('p','note','ما بيدج شي فيه. إعادة تشغيله في راسج ما تغيّره — '+
+        'تتعبج بس. الشغل هني مو تصرّف، هو إنج تقفلينه.'));
+      tkField(c,'جملة وحدة تقفلينه فيها','مثلًا: سويت اللي عليّ، والباقي مو بيدي',
+        '', v=>{ o.close=v; tkTouch(o); }, true);
+      return;
+    }
+    if(o.close!=='—') tkLine(c,'tk-advice','«'+o.close+'»');
+    tkDo(c,o,'٥ دقايق تفكير','قفلتها ✓');
+    return;
+  }
+
+  /* فيه شي بيدها: يصير له تصرّف وموعد، زيّ أي شي تسوّينه */
+  if(!o.step){
+    tkField(c,'وش أقرب تصرّف معقول؟','أصغر تصرّف يحرّك الموقف',
+      'مو الحلّ الكامل — أقرب تصرّف. لو طلعت لج أكثر من فكرة، '+
+      'اكتبي اللي تقدرين تسوّينها اليوم.',
+      v=>{ o.step=v; tkTouch(o); });
+    return;
+  }
+  tkLine(c,'tk-step','التصرّف: '+o.step);
+  if(!o.when){
+    tkField(c,'متى بالضبط؟','لو … إذن أتصرّف','',
+      v=>{ o.when=v; tkTouch(o); }, true);
+    return;
+  }
+  if(o.when!=='—') tkLine(c,'tk-when',o.when);
+  tkDo(c,o,'٥ دقايق بس','تصرّفت ✓');
+}
+
+function tkCard(o){
+  const sit=o.kind==='sit';
+  const c=el('article','tk'+(o.started?' done':''));
+  const h=el('div','tk-t'); h.textContent=o.t; h.dir='auto'; c.appendChild(h);
+
+  if(o.started){
+    const m=el('p','note');
+    m.textContent=(sit?'تعاملتي معها':'بدأتيها') + (o.pre&&o.post
+      ? (sit ? ' · كانت '+HEAVY[o.pre-1]+'، وصارت '+HEAVY[o.post-1]
+             : ' · توقّعتيها '+HEAVY[o.pre-1]+'، وطلعت '+HEAVY[o.post-1]) : '');
+    c.appendChild(m);
+    const del=el('button','tk-x','شيليها'); del.type='button';
+    del.onclick=()=>{ S.tasks=S.tasks.filter(x=>x.id!==o.id); tkSave(); };
+    c.appendChild(del);
+    return c;
+  }
+
+  /* أول قرار: نوعه. الطريقتان مختلفتان تمامًا. */
+  if(!o.kind){
+    c.appendChild(el('span','lbl','هذا شي أسوّيه، ولا موقف أبي أفكر فيه؟'));
+    const row=el('div','tag');
+    [['task','شي أسوّيه'],['sit','موقف أفكر فيه']].forEach(x=>{
+      const b=el('button','',x[1]); b.type='button';
+      b.onclick=()=>{ o.kind=x[0]; tkTouch(o); };
+      row.appendChild(b); });
+    c.appendChild(row);
+    return c;
+  }
+
+  if(sit) tkSit(c,o); else tkTask(c,o);
   return c;
 }
+
 function tkAsk(o){
   const c=el('article','tk asking');
   const h=el('div','tk-t'); h.textContent=o.t; h.dir='auto'; c.appendChild(h);
-  c.appendChild(tkScale(null,'بعد ما بدأتيها: كم كانت فعلًا؟',
+  c.appendChild(tkScale(null, o.kind==='sit'
+    ? 'الحين بعد ما فكّرتي فيها: كم تشغل بالج؟'
+    : 'بعد ما بدأتيها: كم كانت فعلًا؟',
     v=>{ o.post=v; tkTouch(o); }));
   return c;
 }
@@ -2133,20 +2257,36 @@ function renderTasks(){
 
   /* الخلاصة: بدأتي كم، والفرق بين توقّعج والواقع */
   const box=$('#tkSum'), ul=$('#tkSumList');
-  const both=S.tasks.filter(t=>t.pre&&t.post);
   const startedN=S.tasks.filter(t=>t.started).length;
   const out=[];
   if(S.tasks.length>=3)
-    out.push('كتبتي <b>'+S.tasks.length+'</b> شي، وبدأتي <b>'+startedN+'</b> منها.');
-  if(both.length>=4){
-    const gap=both.reduce((a,t)=>a+(t.pre-t.post),0)/both.length;
-    const r=Math.round(gap*10)/10;
-    if(r>=0.5) out.push('في <b>'+both.length+'</b> مرّة، توقّعتيها أثقل مما كانت '+
+    out.push('كتبتي <b>'+S.tasks.length+'</b> شي، وتعاملتي مع <b>'+startedN+'</b> منها.');
+  const mean=a=>a.reduce((x,y)=>x+y,0)/a.length;
+  const r1=n=>Math.round(n*10)/10;
+
+  /* الأشياء اللي تُسوّى: نقيس المبالغة في توقّع الثِّقل */
+  const tk=S.tasks.filter(t=>t.kind!=='sit'&&t.pre&&t.post);
+  if(tk.length>=4){
+    const r=r1(mean(tk.map(t=>t.pre-t.post)));
+    if(r>=0.5) out.push('في <b>'+tk.length+'</b> شي سوّيتيه، توقّعتيه أثقل مما كان '+
       'بـ <b>'+r+'</b> درجة في المتوسط. توقّعج مبالغ فيه — وهذا هو اللي يخلّيج تأجّلين.');
-    else if(r<=-0.5) out.push('طلعت أثقل من توقّعج بـ <b>'+Math.abs(r)+'</b> درجة. '+
-      'يعني الخطوة الأولى لسه كبيرة — صغّريها أكثر.');
-    else out.push('توقّعج قريب من الواقع. التأجيل عندج مو من المبالغة في التوقّع، '+
-      'فركّزي على الموقف المُشغِّل («لو… إذن…») أكثر.');
+    else if(r<=-0.5) out.push('الأشياء اللي سوّيتيها طلعت أثقل من توقّعج بـ '+
+      '<b>'+Math.abs(r)+'</b> درجة. يعني خطوتج الأولى لسه كبيرة — صغّريها أكثر.');
+    else out.push('توقّعج للأشياء اللي تسوّينها قريب من الواقع. التأجيل عندج مو من '+
+      'المبالغة في التوقّع، فركّزي على الموقف المُشغِّل («لو… إذن…») أكثر.');
+  }
+
+  /* المواقف: نقيس كم خفّ ثِقلها بعد ما فكّرتي فيها بشكل */
+  const st=S.tasks.filter(t=>t.kind==='sit'&&t.pre&&t.post);
+  if(st.length>=4){
+    const r=r1(mean(st.map(t=>t.pre-t.post)));
+    if(r>=0.5) out.push('في <b>'+st.length+'</b> موقف، خفّ ثِقله بـ <b>'+r+'</b> درجة '+
+      'بعد ما فكّرتي فيه بهالطريقة. يعني الطريقة تنفع معج — استخدميها بدري مو بعد ما يتراكم.');
+    else if(r<=-0.5) out.push('المواقف صارت أثقل بعد التفكير فيها بـ '+
+      '<b>'+Math.abs(r)+'</b> درجة. هذا يصير لما تكون المواقف مو بيدج فعلًا — '+
+      'جرّبي «ما بيدي شي» بدل ما تدوّرين تصرّفًا ما هو موجود.');
+    else out.push('المواقف ثِقلها ما تغيّر كثير بعد التفكير. جرّبي تكتبين الحقايق '+
+      'وحدها بدقّة أكثر — أغلب الثِّقل يجي من الخلط بينها وبين التوقّعات.');
   }
   if(out.length){ ul.textContent='';
     out.forEach(t=>{ const li=el('li'); li.innerHTML=t; ul.appendChild(li); });
