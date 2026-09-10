@@ -721,9 +721,21 @@ function seedHist(){
   });
   S.hist=out;
 }
+/* عندنا شي يستاهل الرفع أصلًا؟ */
+function hasAny(){
+  if(Object.keys(S.days).length) return true;
+  for(const id in S.hist) if((S.hist[id]||[]).length) return true;
+  if((S.tasks||[]).length) return true;
+  if(Object.keys(S.sleep).length||Object.keys(S.acts).length) return true;
+  return !!S.plan;
+}
 async function push(){
   saveLocal();
   if(!db) return;
+  /* ‎set()‎ يستبدل المستند كاملًا. لو رُفعت حالةٌ فاضية فوق سجلٍّ موجود
+     على السحابة انمسح — وهذا يصير لو فشلت قراءة السحابة لأيّ سبب.
+     فما نرفع إلا وعندنا شي فعلًا. */
+  if(!hasAny()) return;
   try{ await db.doc('progress/main').set(
     {days:S.days,notes:S.notes,hist:S.hist,sleep:S.sleep,level:S.level,
      set:S.set,lvRule:S.lvRule,acts:S.acts,plan:S.plan,start:S.start,
@@ -2443,8 +2455,9 @@ function backupText(){
     const d=await claude.use('db');
     if(!d) return;
     db=d;
+    let gotRemote=false;
     const snap=await db.doc('progress/main').get();
-    if(snap&&snap.exists){ const d=snap.data(); if(d) merge(d); }
+    if(snap&&snap.exists){ const d=snap.data(); if(d){ merge(d); gotRemote=true; } }
     recomputeLevels();
     remoteLevel();
     SET=getSet();
@@ -2452,7 +2465,9 @@ function backupText(){
     renderAll();
     $('#syncDot').classList.add('ok');
     $('#syncTx').textContent='محفوظ ومتزامن على أجهزتج';
-    await push();   /* ارفعي أي تقدّم كان محفوظ على هذا الجهاز فقط */
+    /* ما نرفع عند الإقلاع إلا لو قرينا البعيد فعلًا، أو عندنا شي محليّ
+       يستحقّ الرفع. غير كذا نسكت — السكوت ما يمسح شيئًا. */
+    if(gotRemote || hasAny()) await push();
   }catch(e){}
 })();
 })();
