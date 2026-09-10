@@ -198,6 +198,37 @@ details.tips.misses>summary{font-size:13.5px;color:var(--ink-2)}
   font-variant-numeric:var(--num-feat)}
 .misslist .my{font-size:12.5px;font-weight:400;color:var(--ink-3);margin-right:auto;
   font-variant-numeric:var(--num-feat)}
+.startp{margin-top:0}
+.startp>h3{font-size:20px}
+.startp>.intro{font-size:13.5px;color:var(--ink-2);font-weight:400;line-height:1.75;
+  margin:8px 0 20px;max-width:38em}
+.startp>.intro b{color:var(--ink);font-weight:400}
+.field.tkadd{max-width:none}
+#tkMsg{margin:8px 2px 0;font-size:12.5px}
+#tkList{margin-top:20px;display:flex;flex-direction:column;gap:12px}
+.tk{background-color:var(--panel);border:1px solid var(--line);border-radius:6px;
+  padding:15px 16px;box-shadow:var(--shadow);
+  display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.tk.asking{border-color:var(--signal);background-color:var(--blush)}
+.tk.done{background:transparent;box-shadow:none;border-color:var(--line-soft);
+  padding:11px 14px;gap:5px}
+.tk-t{font-family:var(--f-disp);font-size:17px;font-weight:700;line-height:1.45}
+.tk.done .tk-t{font-size:14.5px;font-weight:400;color:var(--ink-2)}
+.tk-step{margin:0;font-size:14px;font-weight:400;color:var(--aqua);line-height:1.6}
+.tk-when{margin:0;font-size:13px;font-weight:400;color:var(--ink-3);line-height:1.6}
+.tk .note{margin:0;text-align:right;max-width:none}
+.tk .field{max-width:none}
+.tk-row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+.tk-clock{font-family:var(--f-num);font-size:26px;font-weight:400;color:var(--signal-tx);
+  font-variant-numeric:var(--num-feat);direction:ltr;align-self:center}
+.tk-x{background:none;border:0;padding:2px 0;font-size:12.5px;font-weight:400;
+  color:var(--ink-3);text-decoration:underline;text-underline-offset:3px}
+.tk-hd{margin:14px 0 -2px;font-family:var(--f-disp);font-size:14px;font-weight:600;
+  color:var(--ink-3)}
+.tkscale{width:100%}
+.tkscale .lbl{display:block;margin-bottom:8px}
+.tkscale .tag button{padding:6px 12px;font-size:13px}
+
 details.tips.tut{margin-top:13px}
 details.tips.tut>summary{font-size:13.5px;color:var(--signal-tx)}
 .tutlist{margin:0;padding:0;list-style:none;counter-reset:tut;
@@ -415,6 +446,52 @@ footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--line-soft);
 
   </section>
 
+  <section class="tabp" id="tab-start" hidden>
+  <section class="startp">
+    <h3>الشي المؤجّل</h3>
+    <p class="intro">التأجيل اللي يصير معج مو كسل ولا مخّ خامل. اللي يصير:
+      المشكلة قاعدة في راسج <b>كاملة وغير محدودة</b>، وهذا حِمل أكبر من أي ذاكرة عاملة،
+      فيطلع إحساس ثقيل والمخّ يهرب منه — والهروب يريّح فورًا، فيتثبّت ويتكرّر.
+      اللي يفكّها مو إنج تصيرين أسرع تفكيرًا، إنج <b>تطلّعينها من راسج</b>
+      وتحدّدين أول خطوة وموعدها. هني تسوّينها، وهني نقيس إذا نفعت.</p>
+
+    <div class="field tkadd">
+      <input type="text" id="tkIn" placeholder="وش الشي اللي مأجّلته؟" autocomplete="off">
+      <button type="button" class="btn sm" id="tkAdd">حطّيه</button>
+    </div>
+    <p class="note" id="tkMsg">اكتبيه بالطريقة اللي في راسج، مو بصيغة مرتّبة.</p>
+
+    <div id="tkList"></div>
+
+    <div class="notes-box" id="tkSum" hidden>
+      <h4>وش تقول بياناتج</h4>
+      <ul id="tkSumList"></ul>
+    </div>
+
+    <details class="tips">
+      <summary>ليش هالطريقة بالذات</summary>
+      <div class="in">
+        <p><b>الخطوة الصغيرة أوّلًا.</b> «أحلّ مشكلة الجامعة» ما لها أول خطوة واضحة،
+          فما تبدأ. «أفتح الإيميل وأدوّر رسالة القبول» لها. الفرق مو في الهمّة،
+          في إن وحدة قابلة للتنفيذ والثانية لا.</p>
+        <p><b>«لو… إذن…».</b> ربط الخطوة بموقفٍ محدّد يصير مُشغِّلًا تلقائيًا بدل ما
+          تعتمدين على القرار في اللحظة. تحليل بريدي لـ ٩٤ دراسة (Gollwitzer &amp; Sheeran ٢٠٠٦)
+          طلع أثرها متوسط-كبير، وجُرّبت على ADHD تحديدًا (Gawrilow &amp; Gollwitzer ٢٠٠٨).</p>
+        <p><b>كتابة الخطة تفكّ الانشغال.</b> الأشياء اللي ما خلصت تظل تقاطع تفكيرج —
+          إلا إذا كتبتي لها خطة محدّدة، وقتها المقاطعة توقف حتى قبل ما تسوّينها
+          (Masicampo &amp; Baumeister ٢٠١١). يعني الكتابة نفسها ترجّع لج بال.</p>
+        <p><b>ليش نقيس التوقّع والواقع.</b> التأجيل غالبًا إصلاح مزاج قصير المدى:
+          تهربين من الإحساس مو من الشغل (Sirois &amp; Pychyl ٢٠١٣). ولأنه مبنيّ على
+          توقّع مبالغ فيه للثِّقل، أقوى شي يكسره إنج تشوفين بأرقامج أنتِ
+          إن الواقع أخفّ من التوقّع.</p>
+        <p><b>وبصراحة:</b> التمارين في «اليوم» ما تعالج هذا. هي تحسّن أداءج فيها هي،
+          وانتقال فايدتها للحياة اليومية ضعيف في الأبحاث. القسم هذا هو اللي يشتغل
+          على التأجيل مباشرة.</p>
+      </div>
+    </details>
+  </section>
+  </section>
+
   <section class="tabp" id="tab-progress" hidden>
   <section class="report">
     <h3>مؤشر أدائج</h3>
@@ -514,6 +591,7 @@ footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--line-soft);
 
 <nav class="tabs" role="tablist">
   <button type="button" role="tab" data-t="today"    aria-selected="true">اليوم</button>
+  <button type="button" role="tab" data-t="start"    aria-selected="false">أبدأ</button>
   <button type="button" role="tab" data-t="progress" aria-selected="false">تقدّمي</button>
   <button type="button" role="tab" data-t="program"  aria-selected="false">برنامجي</button>
 </nav>
@@ -550,7 +628,7 @@ const shuffle=(a,r)=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.flo
 /* ═══ الحالة ═══ */
 const LS='miran.v1';
 let S={days:{},notes:{},hist:{},sleep:{},level:{},set:{},lvRule:null,
-       acts:{},plan:'',start:null};
+       acts:{},plan:'',start:null,tasks:[]};
 let db=null;
 
 function loadLocal(){
@@ -558,7 +636,8 @@ function loadLocal(){
     if(o&&typeof o==='object'){S.days=o.days||{};S.notes=o.notes||{};
       S.hist=o.hist||{};S.sleep=o.sleep||{};S.level=o.level||{};
       S.set=o.set||{};S.lvRule=o.lvRule||null;
-      S.acts=o.acts||{};S.plan=o.plan||'';S.start=o.start||null;}}}catch(e){}
+      S.acts=o.acts||{};S.plan=o.plan||'';S.start=o.start||null;
+      S.tasks=Array.isArray(o.tasks)?o.tasks:[];}}}catch(e){}
   seedHist();
 }
 function saveLocal(){ try{localStorage.setItem(LS,JSON.stringify(S));}catch(e){} }
@@ -580,6 +659,14 @@ function merge(remote){
   for(const k in ra) S.acts[k]=Object.assign({},ra[k],S.acts[k]||{});
   if(remote.plan&&!S.plan) S.plan=remote.plan;
   if(remote.start&&(!S.start||remote.start<S.start)) S.start=remote.start;
+  /* المؤجّلات: اتّحاد بالمعرّف، والنسخة الأحدث تفوز */
+  if(Array.isArray(remote.tasks)){
+    const byId={}; S.tasks.forEach(t=>{ if(t&&t.id) byId[t.id]=t; });
+    remote.tasks.forEach(t=>{ if(!t||!t.id) return;
+      const mine=byId[t.id];
+      if(!mine||(t.at||0)>(mine.at||0)) byId[t.id]=t; });
+    S.tasks=Object.keys(byId).map(k=>byId[k]).sort((a,b)=>(a.ts||0)-(b.ts||0));
+  }
   /* السجل: ادمجي المحاولات ونقّي المكرر بالطابع الزمني */
   for(const id in rh){
     const mine=S.hist[id]||[], seen=new Set(mine.map(a=>a.ts));
@@ -606,7 +693,7 @@ async function push(){
   try{ await db.doc('progress/main').set(
     {days:S.days,notes:S.notes,hist:S.hist,sleep:S.sleep,level:S.level,
      set:S.set,lvRule:S.lvRule,acts:S.acts,plan:S.plan,start:S.start,
-     at:Date.now()}); }catch(e){}
+     tasks:S.tasks,at:Date.now()}); }catch(e){}
 }
 
 
@@ -650,6 +737,7 @@ const TABICON={
   today   : SVG('<circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2'+
                 'M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6L17 7M7 17l-1.4 1.4"/>'),
   progress: SVG('<path d="M4 18l5-5 3.5 3L20 8"/><path d="M15.5 8H20v4.5"/>'),
+  start   : SVG('<path d="M13 3L5.5 13.5H11l-1 7.5L18.5 10H13z"/>'),
   program : SVG('<rect x="3.5" y="5" width="17" height="15.5" rx="2"/>'+
                 '<path d="M3.5 9.5h17M8 3.5v3M16 3.5v3"/>'+
                 '<circle cx="12" cy="15" r="1.5" fill="currentColor" stroke="none"/>')
@@ -1926,13 +2014,179 @@ function renderProgram(){
   if(pi&&!pi.dataset.b){ pi.dataset.b='1';
     pi.addEventListener('change',async()=>{ S.plan=pi.value.trim(); await push(); }); }
 }
+/* ═══ الشي المؤجّل ═══
+   خطوة وحدة في كل مرّة — كل ما تخلّصين وحدة تنفتح اللي بعدها.
+   السبب: القرارات المتزامنة هي نفسها اللي تشلّ البداية. */
+const HEAVY=['خفيفة','عادية','ثقيلة','صعبة','مستحيلة'];
+let tkTimers=[];   /* لو أُعيد رسم القائمة وفيه مؤقّت شغّال، ما نخلّيه يتيمًا */
+function tkSave(){ saveLocal(); renderTasks(); push(); }
+function tkAdd(txt){
+  const t=String(txt||'').trim(); if(t.length<2) return false;
+  S.tasks.push({id:'t'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),
+    t:t, step:'', when:'', pre:null, post:null, started:null,
+    ts:Date.now(), at:Date.now()});
+  tkSave(); return true;
+}
+function tkTouch(o){ o.at=Date.now(); tkSave(); }
+
+function tkScale(cur,label,cb){
+  const w=el('div','tkscale');
+  w.appendChild(el('span','lbl',label));
+  const row=el('div','tag');
+  HEAVY.forEach((nm,k)=>{
+    const b=el('button','',nm); b.type='button';
+    if(cur===k+1) b.classList.add('on');
+    b.onclick=()=>cb(k+1);
+    row.appendChild(b);
+  });
+  w.appendChild(row);
+  return w;
+}
+function tkCard(o){
+  const c=el('article','tk'+(o.started?' done':''));
+  const h=el('div','tk-t'); h.textContent=o.t; h.dir='auto'; c.appendChild(h);
+
+  if(o.started){
+    const m=el('p','note');
+    m.textContent='بدأتيها' + (o.pre&&o.post
+      ? ' · توقّعتيها '+HEAVY[o.pre-1]+'، وطلعت '+HEAVY[o.post-1] : '');
+    c.appendChild(m);
+    const del=el('button','tk-x','شيليها'); del.type='button';
+    del.onclick=()=>{ S.tasks=S.tasks.filter(x=>x.id!==o.id); tkSave(); };
+    c.appendChild(del);
+    return c;
+  }
+
+  /* ١) كم تتوقّعينها ثقيلة — نسألها والإحساس لسه حيّ */
+  if(!o.pre){
+    c.appendChild(tkScale(null,'قبل ما تبدين: كم تتوقّعينها ثقيلة؟',
+      v=>{ o.pre=v; tkTouch(o); }));
+    return c;
+  }
+
+  /* ٢) أصغر خطوة — هذا هو الدواء الفعّال */
+  if(!o.step){
+    c.appendChild(el('span','lbl','أصغر خطوة تخلّصينها في دقيقتين'));
+    const f=el('div','field');
+    const i=el('input'); i.type='text'; i.autocomplete='off';
+    i.placeholder='أصغر خطوة تخلّصينها في دقيقتين';
+    i.setAttribute('aria-label','أصغر خطوة');
+    const g=el('button','btn sm','تمام'); g.type='button';
+    const go=()=>{ const v=i.value.trim(); if(v.length<2) return;
+      o.step=v; tkTouch(o); };
+    g.onclick=go; i.addEventListener('keydown',e=>{if(e.key==='Enter')go();});
+    f.appendChild(i); f.appendChild(g); c.appendChild(f);
+    c.appendChild(el('p','note','مو «أحلّ المشكلة» — «أفتح الملف وأقرأ أول سطر». '+
+      'لو ما تقدرين تسوّينها بدقيقتين، صغّريها أكثر.'));
+    setTimeout(()=>i.focus(),30);
+    return c;
+  }
+  const st=el('p','tk-step'); st.textContent='أول خطوة: '+o.step; st.dir='auto';
+  c.appendChild(st);
+
+  /* ٣) متى بالضبط — «لو… إذن…» */
+  if(!o.when){
+    c.appendChild(el('span','lbl','متى بالضبط؟'));
+    const f=el('div','field');
+    const i=el('input'); i.type='text'; i.autocomplete='off';
+    i.placeholder='لو … إذن أسوّي الخطوة';
+    i.setAttribute('aria-label','متى');
+    const g=el('button','btn sm','تمام'); g.type='button';
+    const go=()=>{ const v=i.value.trim(); if(v.length<3) return;
+      o.when=v; tkTouch(o); };
+    g.onclick=go; i.addEventListener('keydown',e=>{if(e.key==='Enter')go();});
+    const sk=el('button','tk-x','تخطّي'); sk.type='button';
+    sk.onclick=()=>{ o.when='—'; tkTouch(o); };
+    f.appendChild(i); f.appendChild(g); c.appendChild(f);
+    c.appendChild(el('p','note','اربطيها بشي يصير أكيد: «لو حطّيت الجوال على الشاحن، '+
+      'إذن…». الموقف يشغّلها بدل ما تعتمدين على قرارٍ باللحظة.'));
+    c.appendChild(sk);
+    setTimeout(()=>i.focus(),30);
+    return c;
+  }
+  if(o.when!=='—'){
+    const wn=el('p','tk-when'); wn.textContent=o.when; wn.dir='auto'; c.appendChild(wn);
+  }
+
+  /* ٤) خمس دقايق، أو «بدأتها» */
+  const row=el('div','tk-row');
+  const five=el('button','btn sm','٥ دقايق بس'); five.type='button';
+  const mark=el('button','btn ghost sm','بدأتها ✓'); mark.type='button';
+  const clock=el('div','tk-clock'); clock.hidden=true;
+  let iv=null;
+  const stop=()=>{ if(iv){clearInterval(iv);iv=null;} clock.hidden=true;
+    five.textContent='٥ دقايق بس'; };
+  five.onclick=()=>{
+    if(iv){ stop(); return; }
+    let left=300; five.textContent='وقفيها';
+    clock.hidden=false;
+    const tick=()=>{ clock.textContent=Math.floor(left/60)+':'+
+        String(left%60).padStart(2,'0');
+      if(left<=0){ stop(); clock.hidden=false;
+        clock.textContent='خمس دقايق خلصن ✓'; return; }
+      left--; };
+    tick(); iv=setInterval(tick,1000); tkTimers.push(iv);
+  };
+  mark.onclick=()=>{ stop(); o.started=Date.now(); tkTouch(o); };
+  row.appendChild(five); row.appendChild(mark);
+  c.appendChild(row); c.appendChild(clock);
+
+  /* بعد ما تبدأ نسأل كم كانت فعلًا — بس لو ما سألناها */
+  return c;
+}
+function tkAsk(o){
+  const c=el('article','tk asking');
+  const h=el('div','tk-t'); h.textContent=o.t; h.dir='auto'; c.appendChild(h);
+  c.appendChild(tkScale(null,'بعد ما بدأتيها: كم كانت فعلًا؟',
+    v=>{ o.post=v; tkTouch(o); }));
+  return c;
+}
+function renderTasks(){
+  const list=$('#tkList'); if(!list) return;
+  tkTimers.forEach(clearInterval); tkTimers=[];
+  list.textContent='';
+  const open=S.tasks.filter(t=>!t.started);
+  const ask =S.tasks.filter(t=>t.started&&t.pre&&!t.post);
+  const done=S.tasks.filter(t=>t.started&&(t.post||!t.pre));
+  ask.forEach(o=>list.appendChild(tkAsk(o)));
+  open.slice().reverse().forEach(o=>list.appendChild(tkCard(o)));
+  if(done.length){
+    const hd=el('h4','tk-hd','اللي بدأتيها');
+    list.appendChild(hd);
+    done.slice().reverse().slice(0,8).forEach(o=>list.appendChild(tkCard(o)));
+  }
+  if(!S.tasks.length)
+    list.appendChild(el('p','note','ما فيه شي هني. أول ما يجيج إحساس «بعدين» — اكتبيه فوق.'));
+
+  /* الخلاصة: بدأتي كم، والفرق بين توقّعج والواقع */
+  const box=$('#tkSum'), ul=$('#tkSumList');
+  const both=S.tasks.filter(t=>t.pre&&t.post);
+  const startedN=S.tasks.filter(t=>t.started).length;
+  const out=[];
+  if(S.tasks.length>=3)
+    out.push('كتبتي <b>'+S.tasks.length+'</b> شي، وبدأتي <b>'+startedN+'</b> منها.');
+  if(both.length>=4){
+    const gap=both.reduce((a,t)=>a+(t.pre-t.post),0)/both.length;
+    const r=Math.round(gap*10)/10;
+    if(r>=0.5) out.push('في <b>'+both.length+'</b> مرّة، توقّعتيها أثقل مما كانت '+
+      'بـ <b>'+r+'</b> درجة في المتوسط. توقّعج مبالغ فيه — وهذا هو اللي يخلّيج تأجّلين.');
+    else if(r<=-0.5) out.push('طلعت أثقل من توقّعج بـ <b>'+Math.abs(r)+'</b> درجة. '+
+      'يعني الخطوة الأولى لسه كبيرة — صغّريها أكثر.');
+    else out.push('توقّعج قريب من الواقع. التأجيل عندج مو من المبالغة في التوقّع، '+
+      'فركّزي على الموقف المُشغِّل («لو… إذن…») أكثر.');
+  }
+  if(out.length){ ul.textContent='';
+    out.forEach(t=>{ const li=el('li'); li.innerHTML=t; ul.appendChild(li); });
+    box.hidden=false; } else box.hidden=true;
+}
+
 function renderAll(){ renderHead(); renderList(); renderProgram(); renderReport();
-  renderTrace(); renderLog(); }
+  renderTrace(); renderLog(); renderTasks(); }
 
 /* ═══ الأقسام ═══
    يفتح دايمًا على «اليوم» — قرار أقل كل صباح. */
 function showTab(t){
-  ['today','progress','program'].forEach(k=>{
+  ['today','start','progress','program'].forEach(k=>{
     const panel=document.getElementById('tab-'+k);
     if(panel) panel.hidden=(k!==t);
   });
@@ -1940,6 +2194,16 @@ function showTab(t){
     b.setAttribute('aria-selected', String(b.dataset.t===t)));
   scrollTo({top:0,behavior:RM?'auto':'smooth'});
 }
+(function(){
+  const i=$('#tkIn'), b=$('#tkAdd'), m=$('#tkMsg');
+  if(!i) return;
+  const go=()=>{ if(tkAdd(i.value)){ i.value='';
+      m.textContent='طلعت من راسج. الحين صغّريها.'; }
+    else m.textContent='اكتبيها بكلمتين على الأقل.'; };
+  b.onclick=go;
+  i.addEventListener('keydown',e=>{ if(e.key==='Enter') go(); });
+})();
+
 document.querySelectorAll('.tabs button').forEach(b=>{
   const ic=document.createElement('span');
   ic.className='tab-ico'; ic.innerHTML=TABICON[b.dataset.t]||'';
@@ -1973,7 +2237,7 @@ setInterval(refreshDay,60000);
 function backupText(){
   return JSON.stringify({v:1,at:Date.now(),days:S.days,notes:S.notes,hist:S.hist,
     sleep:S.sleep,level:S.level,set:S.set,lvRule:S.lvRule,acts:S.acts,
-    plan:S.plan,start:S.start});
+    plan:S.plan,start:S.start,tasks:S.tasks});
 }
 (function(){
   const msg=$('#bkMsg'), area=$('#bkArea'), copyB=$('#bkCopy'), openB=$('#bkOpen'),
