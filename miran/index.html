@@ -1020,12 +1020,17 @@ cpt:{
 span:{
   trains:'<b>الذاكرة العاملة اللفظية</b> — تحملين معلومة وتشتغلين عليها بنفس الوقت، مو بس تحفظينها.',
   name:'مدى الأرقام معكوسًا', pillar:'ذاكرة عاملة',
-  how:'بتشوفين أرقام وحد وحد. لما تخلص، اكتبيها <b>بالمقلوب</b> — من آخر رقم لأوله. كل جولة تزيد رقم.',
+  how:'بتشوفين أرقام وحد وحد. لما تخلص، اكتبيها <b>بالمقلوب</b> — من آخر رقم لأوله. '+
+      'كل جولة تزيد رقم، ولكلّ مستوى <b>سقف</b> ما يتعدّاه: أربعة في م١ وتكبر معج. '+
+      'توصلين السقف ⇒ خلّصتي الجولة.',
   unit:'أطول سلسلة',
-  lv:{start:[3,3,3,4,4,5], pace:[800,720,660,600,540,480]},
+  /* كانت تبدأ من ٣ بلا سقف وتكبر لين تغلطين مرّتين، فالمبتدئة تطلع بصفر.
+     الحين تبدأ من رقمين، وتمشي أبطأ، ولكلّ مستوى سقفٌ يوقّفها. */
+  lv:{start:[2,3,3,4,4,5], cap:[4,5,6,7,8,9],
+      pace:[1100,950,850,750,650,560]},
   run(stage,finish,L){
     L=Math.min(6,Math.max(1,Math.round(L)||1));
-    const PACE=this.lv.pace[L-1];
+    const PACE=this.lv.pace[L-1], CAP=this.lv.cap[L-1];
     let len=this.lv.start[L-1],best=0,fails=0,live=true;
     const missed=[];
     const box=el('div','big num','—'); stage.appendChild(box);
@@ -1055,8 +1060,14 @@ span:{
       field.style.display='none';   /* اقفليها فورًا: الضغطتين السريعتين كانت تعدّ غلطتين */
       const want=digits.slice().reverse().join('');
       const got=WEST(inp.value||'').replace(/\D/g,'');
-      if(got===want){ best=Math.max(best,len); len++; fails=0;
-        info.textContent='صح 🎯'; }
+      if(got===want){
+        best=Math.max(best,len); fails=0;
+        if(len>=CAP){                      /* بلغتِ سقف المستوى: نهاية موفّقة */
+          live=false;
+          finish({score:best, missed:missed,
+                  detail:'وصلتي سقف المستوى — '+best+' أرقام'});
+          info.textContent='وصلتي السقف 🎯'; return; }
+        len++; info.textContent='صح 🎯'; }
       else { fails++; info.textContent='كان لازم: '+want;
         missed.push({q:'سلسلة '+len+' أرقام', right:want, you:'كتبتي '+(got||'—')}); }
       if(fails>=2){ live=false;
@@ -1385,7 +1396,7 @@ const MIN_TRIES=5;   /* ما ترقّين قبل ٥ محاولات على الم
 const TARGETS={
   stroop :[18,18,18,17,17,17],
   cpt    :[ 8, 8, 8, 7, 7, 7],
-  span   :[ 5, 5, 6, 6, 7, 7],
+  span   :[ 3, 4, 5, 6, 7, 8],
   nback  :[ 4, 4, 5, 5, 4, 5],
   math   :[16,15,15,14,12,10],
   fluency:[ 9,10,10,10,10,10],
