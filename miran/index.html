@@ -184,6 +184,20 @@ input[type=text]{flex:1;min-width:0;font-family:var(--f-body);font-size:16px;pad
 input.num{font-family:var(--f-num);font-size:19px;text-align:center;letter-spacing:.3em;direction:ltr}
 .btn.need{border-color:var(--signal);color:var(--signal-tx);
   box-shadow:0 0 0 3px color-mix(in srgb,var(--signal) 18%,transparent)}
+details.tips.misses{width:100%;max-width:400px;margin:4px auto 0;text-align:right}
+details.tips.misses>summary{font-size:13.5px;color:var(--ink-2)}
+.mcount{font-weight:700;color:var(--signal-tx);font-variant-numeric:var(--num-feat)}
+.allright{font-family:var(--f-disp);font-size:14px;font-weight:600;color:var(--good)}
+.misslist{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:9px}
+.misslist li{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;
+  padding-bottom:9px;border-bottom:1px solid var(--line-soft);line-height:1.6}
+.misslist li:last-child{border-bottom:0;padding-bottom:0}
+.misslist .mq{font-size:14.5px;font-weight:400;color:var(--ink-2);
+  font-variant-numeric:var(--num-feat)}
+.misslist .mr{font-size:16px;font-weight:700;color:var(--good);
+  font-variant-numeric:var(--num-feat)}
+.misslist .my{font-size:12.5px;font-weight:400;color:var(--ink-3);margin-right:auto;
+  font-variant-numeric:var(--num-feat)}
 .lead{text-align:center;padding:30px 0 26px}
 .lead b{display:block;font-family:var(--f-num);font-size:62px;font-weight:400;
   line-height:1;color:var(--signal-tx);font-variant-numeric:var(--num-feat);
@@ -626,18 +640,22 @@ stroop:{
   run(stage,finish,L){
     L=Math.min(6,Math.max(1,Math.round(L)||1));
     let ok=0,tot=0,rts=[],t0=0,live=true,dead=null;
+    const missed=[];
     const NC=this.lv.n[L-1], INC=this.lv.inc[L-1], DL=this.lv.dl[L-1];
     const PAL=COLORS.slice(0,NC);
     const word=el('div','big'); stage.appendChild(word);
     const opts=el('div','opts'); stage.appendChild(opts);
     const timer=timerBar(stage,30,()=>{live=false;
-      finish({score:ok,detail:rts.length?Math.round(rts.reduce((a,b)=>a+b,0)/rts.length)+' ms متوسط':'—'});});
+      finish({score:ok,missed:missed,
+        detail:rts.length?Math.round(rts.reduce((a,b)=>a+b,0)/rts.length)+' ms متوسط':'—'});});
     let ink=null;
     PAL.forEach(c=>{const b=el('button','opt',c.name);
       b.onclick=()=>{ if(!live||!ink) return; tot++;
         clearTimeout(dead);
         const good=c.name===ink.name;
         if(good){ok++;rts.push(performance.now()-t0);}
+        else missed.push({q:'«'+word.textContent+'» بحبر…', right:ink.name,
+                          hex:ink.hex, you:'ضغطتي '+c.name});
         b.classList.add(good?'hit':'miss');
         setTimeout(()=>{b.classList.remove('hit','miss'); if(live) next();},160);
       };
@@ -649,6 +667,8 @@ stroop:{
       ink=c; word.textContent=w.name; word.style.color=c.hex; t0=performance.now();
       clearTimeout(dead);
       if(DL) dead=setTimeout(()=>{ if(!live) return;      /* فوّتي المهلة = محسوبة غلط */
+        missed.push({q:'«'+word.textContent+'» بحبر…', right:ink.name,
+                     hex:ink.hex, you:'راحت المهلة'});
         word.style.opacity='.25';
         setTimeout(()=>{word.style.opacity=''; if(live) next();},150); },DL);
     }
@@ -678,15 +698,23 @@ cpt:{
     const hEl=mk('إصابة'), fEl=mk('خطأ'), nEl=mk('باقي');
     stage.appendChild(hud);
     let hits=0,fa=0,i=0,armed=false,live=true;
+    const missed=[];
     const seq=[]; for(let k=0;k<TRIALS;k++){
       seq.push(Math.random()<RATE?target:LETTERS.filter(x=>x!==target)[rnd(LETTERS.length-1)]);}
     btn.onclick=()=>{ if(!live) return;
       if(armed){hits++;armed=false;hEl.textContent=hits;box.style.color='var(--good)';}
-      else{fa++;fEl.textContent=fa;box.style.color='var(--warn)';}
+      else{fa++;fEl.textContent=fa;box.style.color='var(--warn)';
+        missed.push({q:'الجولة '+i, right:'الهدف «'+target+'» بس',
+                     you:'ضغطتي على «'+seq[i-1]+'»'});}
       setTimeout(()=>{box.style.color='';},140); };
+    /* الهدف طلع وما ضغطتي: يُقيَّد قبل ما تبدّل الجولة */
+    const lapse=()=>{ if(armed) missed.push({q:'الجولة '+i,
+      right:'طلع «'+target+'» — كان لازم تضغطين', you:'ما ضغطتي'}); };
     let iv=setInterval(()=>{
-      if(i>=TRIALS){ live=false; clearInterval(iv);
-        finish({score:Math.max(0,hits-fa),detail:hits+' إصابة · '+fa+' ضغطة غلط'}); return; }
+      if(i>=TRIALS){ live=false; clearInterval(iv); lapse();
+        finish({score:Math.max(0,hits-fa),missed:missed,
+                detail:hits+' إصابة · '+fa+' ضغطة غلط'}); return; }
+      lapse();
       const ch=seq[i++]; box.textContent=ch; armed=(ch===target);
       nEl.textContent=TRIALS-i;
       setTimeout(()=>{ if(live&&box.textContent===ch) box.textContent='·'; },ISI*.58);
@@ -706,6 +734,7 @@ span:{
     L=Math.min(6,Math.max(1,Math.round(L)||1));
     const PACE=this.lv.pace[L-1];
     let len=this.lv.start[L-1],best=0,fails=0,live=true;
+    const missed=[];
     const box=el('div','big num','—'); stage.appendChild(box);
     const info=el('div','note'); stage.appendChild(info);
     const field=el('div','field'); field.style.display='none';
@@ -734,9 +763,11 @@ span:{
       const got=(inp.value||'').replace(/\D/g,'');
       if(got===want){ best=Math.max(best,len); len++; fails=0;
         info.textContent='صح 🎯'; }
-      else { fails++; info.textContent='كان لازم: '+want; }
+      else { fails++; info.textContent='كان لازم: '+want;
+        missed.push({q:'سلسلة '+len+' أرقام', right:want, you:'كتبتي '+(got||'—')}); }
       if(fails>=2){ live=false;
-        finish({score:best,detail:best?('وصلتي '+best+' أرقام'):'ما ثبتت سلسلة'}); return; }
+        finish({score:best,missed:missed,
+                detail:best?('وصلتي '+best+' أرقام'):'ما ثبتت سلسلة'}); return; }
       setTimeout(()=>{ if(live) show(); },1100);
     }
     go.onclick=submit;
@@ -771,15 +802,22 @@ nback:{
     for(let k=0;k<TRIALS;k++){
       if(k>=N&&Math.random()<.3) seq.push(seq[k-N]); else seq.push(rnd(9)); }
     let i=0,hits=0,fa=0,answered=false,live=true;
+    const missed=[];
     btn.onclick=()=>{ if(!live||answered||i===0) return; answered=true;
       const isM=(i>=N+1)&&seq[i-1]===seq[i-1-N];
       if(isM){hits++;hEl.textContent=hits;btn.style.borderColor='var(--good)';}
-      else{fa++;fEl.textContent=fa;btn.style.borderColor='var(--warn)';}
+      else{fa++;fEl.textContent=fa;btn.style.borderColor='var(--warn)';
+        missed.push({q:'الجولة '+i, right:'ما كانت مطابقة', you:'ضغطتي «مطابق»'});}
       setTimeout(()=>{btn.style.borderColor='';},180); };
+    /* كانت مطابقة وعدّت بلا ضغطة: تُقيَّد قبل ما تبدّل الجولة */
+    const lapse=()=>{ if(i>N&&!answered&&seq[i-1]===seq[i-1-N])
+      missed.push({q:'الجولة '+i, right:'كانت مطابقة', you:'ما ضغطتي'}); };
     const iv=setInterval(()=>{
       if(!live){clearInterval(iv);return;}
-      if(i>=TRIALS){ live=false; clearInterval(iv);
-        finish({score:Math.max(0,hits-fa),detail:hits+' إصابة · '+fa+' ضغطة غلط'}); return; }
+      if(i>=TRIALS){ live=false; clearInterval(iv); lapse();
+        finish({score:Math.max(0,hits-fa),missed:missed,
+                detail:hits+' إصابة · '+fa+' ضغطة غلط'}); return; }
+      lapse();
       cells.forEach(c=>c.classList.remove('lit'));
       const p=seq[i]; cells[p].classList.add('lit'); i++; answered=false;
       nEl.textContent=TRIALS-i;
@@ -802,6 +840,7 @@ math:{
   run(stage,finish,L){
     L=Math.min(6,Math.max(1,Math.round(L)||1));
     let ok=0,live=true,ans=0;
+    const missed=[];
     const KINDS=this.lv.kinds[L-1], NEG=this.lv.neg[L-1], BIG=this.lv.big[L-1];
     const q=el('div','big num','—'); stage.appendChild(q);
     const field=el('div','field');
@@ -815,7 +854,8 @@ math:{
       inp.focus(); check(); };
     field.appendChild(inp); field.appendChild(neg); stage.appendChild(field);
     const fb=el('div','verdict',''); stage.appendChild(fb);
-    const timer=timerBar(stage,60,()=>{live=false;finish({score:ok,detail:ok+' في الدقيقة'});});
+    const timer=timerBar(stage,60,()=>{live=false;
+      finish({score:ok,missed:missed,detail:ok+' في الدقيقة'});});
     function next(){
       const kind=KINDS[rnd(KINDS.length)];
       const R=BIG?90:35;
@@ -853,6 +893,7 @@ math:{
       neg.classList.remove('need');
       /* غلط فقط لما يكتمل عدد الخانات */
       if(digits.length>=want.length){
+        missed.push({q:q.textContent, right:String(ans), you:'كتبتي '+v});
         fb.textContent='مرة ثانية'; fb.className='verdict soft';
         setTimeout(()=>{fb.textContent='';},420); inp.value=''; }
     }
@@ -1190,6 +1231,34 @@ function openBody(body,id,rec){
 /* البداية المفاجئة تاكل أول ثانيتين، وهي أغلى ثواني في تمرينٍ من ثلاثين ثانية.
    «ربط بعيد» ما له مؤقّت فيبدأ على طول. */
 const NOLEAD={remote:1};
+/* «الي فاتج»: الدرجة وحدها ما تعلّم شي — لازم تشوفين وش كان الصح.
+   مفتوحة على طول لأنها هي المقصودة، ومحدودة بعشرة عشان ما تصير جدار كلام. */
+const MISS_MAX=10;
+function missBox(list){
+  const d=el('details','tips misses'); d.open=true;
+  const sm=el('summary');
+  const lab=el('span'); lab.appendChild(document.createTextNode('الي فاتج '));
+  const cnt=el('b','mcount',String(list.length)); cnt.dir='ltr';
+  lab.appendChild(cnt); sm.appendChild(lab);
+  d.appendChild(sm);
+  const inn=el('div','in');
+  const ul=el('ul','misslist');
+  list.slice(0,MISS_MAX).forEach(m=>{
+    const li=el('li');
+    const q=el('span','mq',m.q); q.dir='auto'; li.appendChild(q);
+    const r=el('b','mr',m.right); r.dir='auto';
+    if(m.hex) r.style.color=m.hex;
+    li.appendChild(r);
+    if(m.you){ const y=el('span','my',m.you); y.dir='auto'; li.appendChild(y); }
+    ul.appendChild(li);
+  });
+  inn.appendChild(ul);
+  if(list.length>MISS_MAX)
+    inn.appendChild(el('p','note','وباقي '+(list.length-MISS_MAX)+' — عرضت أول عشرة.'));
+  d.appendChild(inn);
+  return d;
+}
+
 function start(stage,id,body){
   if(activeStop){activeStop();activeStop=null;}
   if(NOLEAD[id]) return begin(stage,id,body);
@@ -1243,6 +1312,9 @@ function begin(stage,id,body){
         : ('للترقية: '+t+' أو أكثر في ٣ محاولات ورا بعض. آخر ٣: '+
            at2.slice(-3).map(a=>a.s).join(' · '))));
     }
+    if(res.missed&&res.missed.length) stage.appendChild(missBox(res.missed));
+    else if(res.missed&&!res.noScore&&res.score>0)
+      stage.appendChild(el('div','allright','ما فاتج ولا وحدة'));
     const pb=personalBest(id);
     if(!res.noScore&&pb!==null&&res.score>=pb&&res.score>0)
       stage.appendChild(el('div','pb','أفضل نتيجة لج حتى الحين'));
