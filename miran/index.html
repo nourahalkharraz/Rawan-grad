@@ -232,6 +232,38 @@ details.tips.tut>summary{font-size:13.5px;color:var(--signal-tx)}
   display:flex;align-items:center;justify-content:center;color:var(--signal-tx)}
 .tutlist li p{margin:0!important;font-size:14px;line-height:1.7;color:var(--ink-2)}
 .tutlist li p b{color:var(--ink);font-weight:700}
+/* ══ شبكة اليوم ══ */
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.tile{position:relative;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:7px;min-height:134px;padding:18px 12px;
+  border:1px solid var(--line);border-radius:14px;background-color:var(--panel);
+  box-shadow:var(--shadow);text-align:center;color:var(--ink);
+  transition:transform .12s ease,opacity .2s ease}
+.tiles>.tile:nth-child(5){grid-column:1 / -1;min-height:104px}
+.tile-ico{width:30px;height:30px;color:var(--signal)}
+.tile-ico svg{width:30px;height:30px;display:block}
+.tile-n{font-family:var(--f-disp);font-size:17px;font-weight:700;line-height:1.35}
+.tile-s{font-size:12.5px;font-weight:400;color:var(--ink-3);line-height:1.5}
+.tile-lv{position:absolute;top:9px;left:9px;font-size:10.5px;font-weight:600;
+  padding:2px 8px;border-radius:20px;background-image:var(--nacre);
+  border:1px solid var(--line);color:var(--signal-tx)}
+.tile.now{border-color:var(--gold);box-shadow:0 0 0 2px var(--signal-soft),var(--shadow)}
+.tile.done{background:transparent;box-shadow:none;border-color:var(--line-soft)}
+.tile.done .tile-ico{opacity:.45}
+.tile.done .tile-s{color:var(--good);font-weight:700}
+.tile.locked{opacity:.4;box-shadow:none;background:transparent;
+  border-style:dashed}
+.tile:not(.locked):active{transform:translateY(1px)}
+.tile.shake{animation:tshake .34s ease}
+@keyframes tshake{20%{transform:translateX(-5px)}60%{transform:translateX(5px)}
+  100%{transform:none}}
+#lockNote{text-align:center;max-width:30em}
+.backbtn{display:block;background:none;border:0;padding:2px 2px 13px;
+  font-size:13.5px;font-weight:400;color:var(--ink-3);
+  text-decoration:underline;text-underline-offset:3px}
+.ex.open{border-radius:14px}
+.ex.open .ex-hd{width:100%}
+
 .snap-q{font-family:var(--f-disp);font-size:20px;font-weight:700;line-height:1.6;
   max-width:22em;padding:0 6px}
 .snap-wrap{width:100%;max-width:330px;height:6px;border-radius:4px;
@@ -1508,12 +1540,11 @@ function renderHead(){
   if(nx){ qs.hidden=false;
     qs.innerHTML='<b>'+(done===0?'ابدئي':'التالي')+'</b>'+
       '<i>'+nameOf(nx)+' · '+durOf(nx)+'</i>';
-    qs.onclick=()=>{ const i=SET.indexOf(nx), h=document.querySelectorAll('.ex-hd')[i];
-      if(h.parentElement.querySelector('.ex-body').hidden) h.click();
-      h.scrollIntoView({behavior:RM?'auto':'smooth',block:'center'});
-      const go=[...h.parentElement.querySelectorAll('button')]
+    qs.onclick=()=>{ openId=nx; renderList();
+      scrollTo({top:0,behavior:RM?'auto':'smooth'});
+      setTimeout(()=>{ const go=[...$('#list').querySelectorAll('button')]
         .find(b=>b.textContent.trim()==='ابدئي');
-      if(go) setTimeout(()=>go.click(),RM?0:340); };
+        if(go) go.click(); },RM?0:260); };
   } else { qs.hidden=false;
     qs.innerHTML='<b>خلصتي اليوم</b><i>وقفي وارتاحي</i>'; qs.onclick=null; }
   const lamps=$('#lamps'); lamps.textContent='';
@@ -1522,36 +1553,76 @@ function renderHead(){
     if(S.days[TODAY]&&S.days[TODAY][id]) l.classList.add('on'); lamps.appendChild(l); });
 }
 
+/* ═══ شبكة اليوم ═══
+   مربّعات، وواحدٌ واحد: ما ينفتح تمرينٌ إلا لما يخلص اللي قبله.
+   والاستثناء الوحيد زرّ «بدّليه» — القفل ما يكون سجنًا. */
+let openId=null;
+
+function unlockedAt(i){
+  const d=S.days[TODAY]||{};
+  return SET.slice(0,i).every(k=>d[k]);
+}
 function renderList(){
   const list=$('#list'); list.textContent='';
+  if(openId && SET.includes(openId)) renderOne(list,openId);
+  else renderGrid(list);
+}
+function renderGrid(list){
+  const d=S.days[TODAY]||{};
+  const g=el('div','tiles');
   SET.forEach((id,i)=>{
-    const ex=EX[id], rec=(S.days[TODAY]||{})[id];
-    const card=el('section','ex'+(rec?' done':''));
-    const hd=el('button','ex-hd'); hd.type='button';
-    const g=el('span','ex-ico'); g.innerHTML=GLYPH[id]||''; hd.appendChild(g);
-    const t=el('div','ex-t');
-    const h=el('h3','',nameOf(id));
-    if(LV(id)>1){ const bd=el('span','lvbadge','م'+LV(id)); h.appendChild(bd); }
-    t.appendChild(h);
-    const sub=el('p','');
-    sub.textContent=ex.pillar+(rec?'':' · '+durOf(id));
-    t.appendChild(sub); hd.appendChild(t);
-    if(rec){
-      const sc=el('div','ex-sc');
-      if(rec.noScore){ const b=el('b','','✓'); sc.appendChild(b); sc.appendChild(el('span','','خلصتيه')); }
-      else{ sc.appendChild(el('b','',String(rec.score))); sc.appendChild(el('span','',ex.unit)); }
-      hd.appendChild(sc);
-    }
-    card.appendChild(hd);
-
-    const body=el('div','ex-body'); body.hidden=true; card.appendChild(body);
-    hd.onclick=()=>{
-      if(!body.hidden){ closeBody(body); return; }
-      document.querySelectorAll('.ex-body').forEach(b=>{ if(!b.hidden) closeBody(b); });
-      openBody(body,id,rec);
+    const rec=d[id], locked=!rec&&!unlockedAt(i);
+    const t=el('button','tile'+(rec?' done':'')+(locked?' locked':'')); t.type='button';
+    if(!rec&&!locked) t.classList.add('now');
+    const ic=el('span','tile-ico'); ic.innerHTML=GLYPH[id]||''; t.appendChild(ic);
+    t.appendChild(el('span','tile-n',nameOf(id)));
+    const sub=el('span','tile-s');
+    sub.textContent = rec ? (rec.noScore?'خلّصتيه ✓':(rec.score+' '+EX[id].unit))
+                     : (locked?'يفتح بعد اللي قبله':durOf(id));
+    t.appendChild(sub);
+    if(LV(id)>1) t.appendChild(el('span','tile-lv','م'+LV(id)));
+    t.onclick=()=>{
+      if(locked){
+        t.classList.remove('shake'); void t.offsetWidth; t.classList.add('shake');
+        const n=$('#lockNote');
+        if(n) n.textContent='واحدٍ واحد — خلّصي اللي قبله وينفتح. '+
+          'ولو ما ودّج فيه، افتحيه واضغطي «ما ودّي هذا · بدّليه».';
+        return;
+      }
+      openId=id; renderList(); scrollTo({top:0,behavior:RM?'auto':'smooth'});
     };
-    list.appendChild(card);
+    g.appendChild(t);
   });
+  list.appendChild(g);
+  const note=el('p','note'); note.id='lockNote'; note.style.marginTop='14px';
+  list.appendChild(note);
+}
+function renderOne(list,id){
+  const ex=EX[id], rec=(S.days[TODAY]||{})[id];
+  const back=el('button','backbtn','‹ رجوع للتمارين'); back.type='button';
+  back.onclick=()=>{ if(activeStop){activeStop();activeStop=null;}
+    openId=null; renderAll(); scrollTo({top:0,behavior:RM?'auto':'smooth'}); };
+  list.appendChild(back);
+  const card=el('section','ex open'+(rec?' done':''));
+  const hd=el('div','ex-hd');
+  const g=el('span','ex-ico'); g.innerHTML=GLYPH[id]||''; hd.appendChild(g);
+  const t=el('div','ex-t');
+  const h=el('h3','',nameOf(id));
+  if(LV(id)>1) h.appendChild(el('span','lvbadge','م'+LV(id)));
+  t.appendChild(h);
+  const sub=el('p',''); sub.textContent=ex.pillar+(rec?'':' · '+durOf(id));
+  t.appendChild(sub); hd.appendChild(t);
+  if(rec){
+    const sc=el('div','ex-sc');
+    if(rec.noScore){ sc.appendChild(el('b','','✓')); sc.appendChild(el('span','','خلّصتيه')); }
+    else { sc.appendChild(el('b','',String(rec.score)));
+           sc.appendChild(el('span','',ex.unit)); }
+    hd.appendChild(sc);
+  }
+  card.appendChild(hd);
+  const body=el('div','ex-body'); card.appendChild(body);
+  list.appendChild(card);
+  openBody(body,id,rec);
 }
 function closeBody(body){
   if(activeStop){activeStop();activeStop=null;}
@@ -1569,7 +1640,7 @@ function openBody(body,id,rec){
       const alt=Object.keys(EX).filter(k=>!SET.includes(k));
       if(!alt.length||i<0) return;
       SET[i]=alt[Math.floor(Math.random()*alt.length)];
-      S.set[TODAY]=SET.slice(); renderAll(); await push(); };
+      S.set[TODAY]=SET.slice(); openId=SET[i]; renderAll(); await push(); };
     body.appendChild(sw);
   }
   const pb=personalBest(id);
@@ -1831,10 +1902,8 @@ function begin(stage,id,body){
     nx.onclick=()=>{
       const i=SET.indexOf(id);
       const next=SET.slice(i+1).concat(SET.slice(0,i)).find(k=>!(S.days[TODAY]||{})[k]);
-      renderAll();
-      if(next){ const cards=document.querySelectorAll('.ex-hd');
-        cards[SET.indexOf(next)].click();
-        cards[SET.indexOf(next)].scrollIntoView({behavior:RM?'auto':'smooth',block:'center'}); }
+      openId = next || null;                       /* ما فيه باقي ⇒ ارجعي للشبكة */
+      renderAll(); scrollTo({top:0,behavior:RM?'auto':'smooth'});
     };
     row.appendChild(again); row.appendChild(nx);
     stage.appendChild(row);
