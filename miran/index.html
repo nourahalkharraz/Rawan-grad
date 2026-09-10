@@ -184,20 +184,10 @@ input[type=text]{flex:1;min-width:0;font-family:var(--f-body);font-size:16px;pad
 input.num{font-family:var(--f-num);font-size:19px;text-align:center;letter-spacing:.3em;direction:ltr}
 .btn.need{border-color:var(--signal);color:var(--signal-tx);
   box-shadow:0 0 0 3px color-mix(in srgb,var(--signal) 18%,transparent)}
-details.tips.misses{width:100%;max-width:400px;margin:4px auto 0;text-align:right}
-details.tips.misses>summary{font-size:13.5px;color:var(--ink-2)}
-.mcount{font-weight:700;color:var(--signal-tx);font-variant-numeric:var(--num-feat)}
+.misses{font-family:var(--f-disp);font-size:15px;font-weight:600;color:var(--ink-2)}
+.mcount{font-weight:700;color:var(--signal-tx);font-variant-numeric:var(--num-feat);
+  font-size:19px}
 .allright{font-family:var(--f-disp);font-size:14px;font-weight:600;color:var(--good)}
-.misslist{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:9px}
-.misslist li{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;
-  padding-bottom:9px;border-bottom:1px solid var(--line-soft);line-height:1.6}
-.misslist li:last-child{border-bottom:0;padding-bottom:0}
-.misslist .mq{font-size:14.5px;font-weight:400;color:var(--ink-2);
-  font-variant-numeric:var(--num-feat)}
-.misslist .mr{font-size:16px;font-weight:700;color:var(--good);
-  font-variant-numeric:var(--num-feat)}
-.misslist .my{font-size:12.5px;font-weight:400;color:var(--ink-3);margin-right:auto;
-  font-variant-numeric:var(--num-feat)}
 .startp{margin-top:0}
 .startp>h3{font-size:20px}
 .startp>.intro{font-size:13.5px;color:var(--ink-2);font-weight:400;line-height:1.75;
@@ -1531,29 +1521,12 @@ function lvBar(id){
   return box;
 }
 
-const MISS_MAX=10;
+/* رقم بس. جمع اللي فات يظل شغّالًا داخل كل تمرين — هو اللي يطلّع الرقم. */
 function missBox(list){
-  const d=el('details','tips misses'); d.open=true;
-  const sm=el('summary');
-  const lab=el('span'); lab.appendChild(document.createTextNode('الي فاتج '));
-  const cnt=el('b','mcount',String(list.length)); cnt.dir='ltr';
-  lab.appendChild(cnt); sm.appendChild(lab);
-  d.appendChild(sm);
-  const inn=el('div','in');
-  const ul=el('ul','misslist');
-  list.slice(0,MISS_MAX).forEach(m=>{
-    const li=el('li');
-    const q=el('span','mq',m.q); q.dir='auto'; li.appendChild(q);
-    const r=el('b','mr',m.right); r.dir='auto';
-    if(m.hex) r.style.color=m.hex;
-    li.appendChild(r);
-    if(m.you){ const y=el('span','my',m.you); y.dir='auto'; li.appendChild(y); }
-    ul.appendChild(li);
-  });
-  inn.appendChild(ul);
-  if(list.length>MISS_MAX)
-    inn.appendChild(el('p','note','وباقي '+(list.length-MISS_MAX)+' — عرضت أول عشرة.'));
-  d.appendChild(inn);
+  const d=el('div','misses');
+  d.appendChild(document.createTextNode('فاتج '));
+  const n=el('b','mcount',String(list.length)); n.dir='ltr';
+  d.appendChild(n);
   return d;
 }
 
