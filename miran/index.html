@@ -198,6 +198,52 @@ details.tips.misses>summary{font-size:13.5px;color:var(--ink-2)}
   font-variant-numeric:var(--num-feat)}
 .misslist .my{font-size:12.5px;font-weight:400;color:var(--ink-3);margin-right:auto;
   font-variant-numeric:var(--num-feat)}
+details.tips.tut{margin-top:13px}
+details.tips.tut>summary{font-size:13.5px;color:var(--signal-tx)}
+.tutlist{margin:0;padding:0;list-style:none;counter-reset:tut;
+  display:flex;flex-direction:column;gap:15px}
+.tutlist li{counter-increment:tut;position:relative;padding-right:29px}
+.tutlist li::before{content:counter(tut);position:absolute;right:0;top:1px;
+  width:21px;height:21px;border-radius:50%;background-image:var(--nacre);
+  border:1px solid var(--line);font-family:var(--f-num);font-size:12px;
+  display:flex;align-items:center;justify-content:center;color:var(--signal-tx)}
+.tutlist li p{margin:0!important;font-size:14px;line-height:1.7;color:var(--ink-2)}
+.tutlist li p b{color:var(--ink);font-weight:700}
+.tutex{margin-top:10px;padding:13px 12px;border-radius:5px;background:var(--panel-2);
+  border:1px solid var(--line-soft);text-align:center}
+.tutex .note{margin:0;font-size:13.5px;line-height:1.7}
+.tutbig{font-family:var(--f-disp);font-size:32px;font-weight:700;line-height:1.25}
+.tutseq{font-family:var(--f-num);font-size:26px;direction:ltr;
+  font-variant-numeric:var(--num-feat)}
+.tutopts{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.tutopts .opt{padding:8px 17px;font-size:15px;flex:none}
+.tutgrid{display:inline-grid;grid-template-columns:repeat(3,19px);
+  grid-template-rows:repeat(3,19px);gap:3px}
+.tutgrid span{border:1px solid var(--line);border-radius:3px;background:var(--panel)}
+.tutgrid span.lit{background:var(--signal);border-color:var(--signal)}
+.tutrow{display:flex;gap:15px;justify-content:center;align-items:flex-start;flex-wrap:wrap}
+.tutrow small{display:block;font-size:10.5px;color:var(--ink-3);margin-top:6px;
+  font-family:var(--f-body);font-weight:400}
+.tutchips{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.tutlet{display:flex;gap:13px;justify-content:center;font-size:23px;
+  font-family:var(--f-disp)}
+.tutlet i{font-style:normal;color:var(--ink-3)}
+.tutlet i.on{color:var(--signal-tx);font-weight:700}
+.lvprog{width:100%;max-width:400px;margin:4px auto 0;text-align:right;
+  padding:0 14px}
+.lvhd{display:flex;justify-content:space-between;align-items:baseline;
+  gap:10px;margin-bottom:7px}
+.lvhd+.lvlad+.lvhd,.lvlad+.lvhd{margin-top:18px}
+.lvhd b{font-family:var(--f-num);font-size:16px;font-weight:400;color:var(--ink);
+  font-variant-numeric:var(--num-feat)}
+.lvlad{display:flex;gap:4px}
+.lvlad i{flex:1;height:5px;border-radius:3px;background:var(--line-soft)}
+.lvlad i.on{background-image:var(--nacre-deep);background-size:600% 100%}
+.upwrap{margin-top:11px;height:7px;border-radius:4px;background:var(--line-soft);
+  overflow:hidden}
+.upfill{height:100%;min-width:4px;border-radius:4px;background:var(--good);
+  transition:width .6s ease}
+.lvprog>.note{margin-top:8px;font-size:12.5px;text-align:right;max-width:none}
 .lead{text-align:center;padding:30px 0 26px}
 .lead b{display:block;font-family:var(--f-num);font-size:62px;font-weight:400;
   line-height:1;color:var(--signal-tx);font-variant-numeric:var(--num-feat);
@@ -494,6 +540,11 @@ function seeded(str){                       /* mulberry32 من نص */
     t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};
 }
 const rnd=n=>Math.floor(Math.random()*n);
+/* لوحة المفاتيح العربية تكتب ٠١٢٣ (والفارسية ۰۱۲۳)، وجافاسكربت ما يعدّها أرقامًا.
+   بدون هذا التحويل كانت الإجابة تنمسح كأنها فاضية ويستحيل تجاوبين. */
+const WEST=s=>String(s)
+  .replace(/[\u0660-\u0669]/g,d=>d.charCodeAt(0)-0x0660)
+  .replace(/[\u06F0-\u06F9]/g,d=>d.charCodeAt(0)-0x06F0);
 const shuffle=(a,r)=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor((r?r():Math.random())*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
 
 /* ═══ الحالة ═══ */
@@ -650,12 +701,14 @@ stroop:{
         detail:rts.length?Math.round(rts.reduce((a,b)=>a+b,0)/rts.length)+' ms متوسط':'—'});});
     let ink=null;
     PAL.forEach(c=>{const b=el('button','opt',c.name);
-      b.onclick=()=>{ if(!live||!ink) return; tot++;
+      b.onclick=()=>{ if(!live||!ink) return;
+        const cur=ink; ink=null;   /* اقفلي المحاولة: الضغطة الثانية كانت تتحسب سؤالًا ثانيًا */
+        tot++;
         clearTimeout(dead);
-        const good=c.name===ink.name;
+        const good=c.name===cur.name;
         if(good){ok++;rts.push(performance.now()-t0);}
-        else missed.push({q:'«'+word.textContent+'» بحبر…', right:ink.name,
-                          hex:ink.hex, you:'ضغطتي '+c.name});
+        else missed.push({q:'«'+word.textContent+'» بحبر…', right:cur.name,
+                          hex:cur.hex, you:'ضغطتي '+c.name});
         b.classList.add(good?'hit':'miss');
         setTimeout(()=>{b.classList.remove('hit','miss'); if(live) next();},160);
       };
@@ -666,9 +719,10 @@ stroop:{
       if(Math.random()<INC) while(c.name===w.name) c=PAL[rnd(NC)];
       ink=c; word.textContent=w.name; word.style.color=c.hex; t0=performance.now();
       clearTimeout(dead);
-      if(DL) dead=setTimeout(()=>{ if(!live) return;      /* فوّتي المهلة = محسوبة غلط */
-        missed.push({q:'«'+word.textContent+'» بحبر…', right:ink.name,
-                     hex:ink.hex, you:'راحت المهلة'});
+      if(DL) dead=setTimeout(()=>{ if(!live||!ink) return;  /* فوّتي المهلة = محسوبة غلط */
+        const cur=ink; ink=null;
+        missed.push({q:'«'+word.textContent+'» بحبر…', right:cur.name,
+                     hex:cur.hex, you:'راحت المهلة'});
         word.style.opacity='.25';
         setTimeout(()=>{word.style.opacity=''; if(live) next();},150); },DL);
     }
@@ -697,11 +751,12 @@ cpt:{
     const mk=(l)=>{const d=el('div');d.appendChild(el('span','lbl',l));const b=el('b','', '0');d.appendChild(b);hud.appendChild(d);return b;};
     const hEl=mk('إصابة'), fEl=mk('خطأ'), nEl=mk('باقي');
     stage.appendChild(hud);
-    let hits=0,fa=0,i=0,armed=false,live=true;
+    let hits=0,fa=0,i=0,armed=false,live=true,answered=false;
     const missed=[];
     const seq=[]; for(let k=0;k<TRIALS;k++){
       seq.push(Math.random()<RATE?target:LETTERS.filter(x=>x!==target)[rnd(LETTERS.length-1)]);}
-    btn.onclick=()=>{ if(!live) return;
+    btn.onclick=()=>{ if(!live||i===0||answered) return;  /* قبل أوّل حرف، أو ضغطة ثانية بنفس الجولة */
+      answered=true;
       if(armed){hits++;armed=false;hEl.textContent=hits;box.style.color='var(--good)';}
       else{fa++;fEl.textContent=fa;box.style.color='var(--warn)';
         missed.push({q:'الجولة '+i, right:'الهدف «'+target+'» بس',
@@ -715,7 +770,7 @@ cpt:{
         finish({score:Math.max(0,hits-fa),missed:missed,
                 detail:hits+' إصابة · '+fa+' ضغطة غلط'}); return; }
       lapse();
-      const ch=seq[i++]; box.textContent=ch; armed=(ch===target);
+      const ch=seq[i++]; box.textContent=ch; armed=(ch===target); answered=false;
       nEl.textContent=TRIALS-i;
       setTimeout(()=>{ if(live&&box.textContent===ch) box.textContent='·'; },ISI*.58);
     },ISI);
@@ -759,8 +814,9 @@ span:{
     }
     function submit(){
       if(!live||field.style.display==='none') return;
+      field.style.display='none';   /* اقفليها فورًا: الضغطتين السريعتين كانت تعدّ غلطتين */
       const want=digits.slice().reverse().join('');
-      const got=(inp.value||'').replace(/\D/g,'');
+      const got=WEST(inp.value||'').replace(/\D/g,'');
       if(got===want){ best=Math.max(best,len); len++; fails=0;
         info.textContent='صح 🎯'; }
       else { fails++; info.textContent='كان لازم: '+want;
@@ -876,7 +932,7 @@ math:{
     }
     function check(){
       if(!live) return;
-      let v=inp.value.replace(/[^\d-]/g,'');
+      let v=WEST(inp.value).replace(/[^\d-]/g,'');
       if(v.indexOf('-')>0) v=v.replace(/-/g,'');   /* الناقص في البداية فقط */
       if(v!==inp.value) inp.value=v;
       if(v===''||v==='-') return;                 /* ناقص لحاله انتظار، مو غلط */
@@ -1202,6 +1258,7 @@ function openBody(body,id,rec){
   body.hidden=false; body.textContent='';
   const tr=el('p','trains2'); tr.innerHTML='يدرّب: '+ex.trains; body.appendChild(tr);
   const how=el('p','how'); how.innerHTML=ex.how; body.appendChild(how);
+  const tb=tutBox(id); if(tb) body.appendChild(tb);
   if(!rec){
     const sw=el('button','swapbtn','ما ودّي هذا · بدّليه'); sw.type='button';
     sw.onclick=async()=>{ const i=SET.indexOf(id);
@@ -1233,6 +1290,159 @@ function openBody(body,id,rec){
 const NOLEAD={remote:1};
 /* «الي فاتج»: الدرجة وحدها ما تعلّم شي — لازم تشوفين وش كان الصح.
    مفتوحة على طول لأنها هي المقصودة، ومحدودة بعشرة عشان ما تصير جدار كلام. */
+
+/* ═══ الشرح: مثال محلول واحد بنفس شكل التمرين ═══
+   مغلق دايمًا — اللي فاهمة ما تشوفه، واللي ضايعة تفتحه بضغطة. */
+function tex(node){ const w=el('div','tutex'); w.appendChild(node); return w; }
+function tgrid(lit){ const g=el('div','tutgrid');
+  for(let k=0;k<9;k++) g.appendChild(el('span',k===lit?'lit':''));
+  return g; }
+function tcell(node,cap){ const d=el('div'); d.appendChild(node);
+  if(cap){ const s=el('small','',cap); d.appendChild(s); } return d; }
+
+const TUT={
+ stroop(){
+   const w=el('div','tutbig','أحمر'); w.style.color='#3A6FB0';
+   const row=el('div','tutopts');
+   row.appendChild(el('span','opt hit','أزرق'));
+   row.appendChild(el('span','opt','أحمر'));
+   return [
+    {t:'تطلع كلمة، بس مكتوبة بلونٍ غير اللي تقوله:', node:tex(w)},
+    {t:'عقلج بيقرأ «أحمر» على طول — وهذا بالضبط اللي المفروض توقفينه.'},
+    {t:'الصح: تضغطين <b>أزرق</b>، لأنه لون الحبر مو الكلمة المكتوبة.', node:tex(row)},
+    {t:'ثلاثين ثانية، والأسئلة تجي ورا بعض بدون ما تنتظرين شي.'}
+   ];
+ },
+ cpt(){
+   const r=el('div','tutlet');
+   'ب س م ر س'.split(' ').forEach(function(c){
+     const i=el('i',c==='س'?'on':''); i.textContent=c; r.appendChild(i); });
+   return [
+    {t:'أول شي يقول لج الهدف — مثلًا الهدف <b>«س»</b>.'},
+    {t:'بعدين تمر حروف وحد وحد بسرعة:', node:tex(r)},
+    {t:'تضغطين «هذا هو» عند <b>«س»</b> بس. الحرفين الملوّنين فوق هم اللي تضغطين عندهم.'},
+    {t:'أصعب شي مو إنج تلقين الهدف — إنج <b>ما تضغطين</b> على غيره. كل ضغطة زايدة تنقص من درجتج.'}
+   ];
+ },
+ span(){
+   const a=el('div','tutrow');
+   [['7','أوّل'],['4','ثاني'],['1','ثالث وآخر']].forEach(function(x){
+     const d=el('div','tutseq'); d.textContent=x[0];
+     a.appendChild(tcell(d,x[1])); });
+   const b=el('div','tutseq','147');
+   return [
+    {t:'تطلع أرقام وحد ورا الثاني في نفس المكان، كل وحد يختفي قبل ما يجي اللي بعده:',
+     node:tex(a)},
+    {t:'لما تخلص يطلع «؟» — الحين اكتبيها <b>بالمقلوب</b>: آخر رقم شفتيه يصير أول رقم تكتبينه.'},
+    {t:'يعني في المثال فوق: الآخر <b>1</b>، بعده <b>4</b>، بعده <b>7</b> ⇒ تكتبين:', node:tex(b)},
+    {t:'صح ⇒ الجولة الجاية تزيد رقم. غلطتين ورا بعض ⇒ يخلص، ودرجتج هي أطول سلسلة ضبطتيها.'}
+   ];
+ },
+ nback(){
+   const r=el('div','tutrow');
+   r.appendChild(tcell(tgrid(4),'الجولة ١'));
+   r.appendChild(tcell(tgrid(4),'الجولة ٢ — مطابق'));
+   r.appendChild(tcell(tgrid(0),'الجولة ٣ — مو مطابق'));
+   return [
+    {t:'مربع يضوي في الشبكة، وينطفي، وييجي غيره.'},
+    {t:'في المستوى الأول تقارنين مع <b>اللي قبله مباشرة</b> بس:', node:tex(r)},
+    {t:'الجولة ٢ ضوّت في نفس مكان الجولة ١ ⇒ تضغطين «مطابق». الجولة ٣ مكان جديد ⇒ ما تضغطين.'},
+    {t:'كل ما ترقّين تبعد المسافة: في م٢ تقارنين مع اللي قبل <b>خانتين</b>، وفي م٥ مع اللي قبل <b>ثلاث</b>.'},
+    {t:'هذا أصعب تمرين هني. درجة ٣ أو ٤ نتيجة عادية تمامًا.'}
+   ];
+ },
+ math(){
+   const a=el('div','tutseq','12 − 30');
+   const row=el('div','tutopts');
+   const inp=el('span','opt','18'); inp.style.fontFamily='var(--f-num)';
+   const neg=el('span','opt hit','−');  neg.style.fontFamily='var(--f-num)';
+   row.appendChild(inp); row.appendChild(neg);
+   return [
+    {t:'مسألة، وتكتبين الجواب. ما فيه زر «تأكيد» — أول ما يكتمل الجواب الصح ينتقل لوحده.'},
+    {t:'لو طلع ناتج سالب — مثل هذي:', node:tex(a)},
+    {t:'اكتبي الأرقام عادي، وبعدين اضغطي زرّ <b>−</b> اللي جنب الخانة:', node:tex(row)},
+    {t:'ولو كتبتي الأرقام صح ونسيتي الإشارة، ما يحسبها غلط — يقول لج «ناقصج إشارة −» ويضوّي الزرّ، والخانة تظل مكانها.'},
+    {t:'لوحة المفاتيح العربية (٠١٢٣) تشتغل عادي.'}
+   ];
+ },
+ fluency(){
+   const h=el('div','tutbig','أشياء في المطبخ');
+   h.style.fontSize='19px';
+   const l=el('div','tutseq','تبدأ بحرف «م»'); l.style.direction='rtl';
+   l.style.fontFamily='var(--f-disp)'; l.style.fontSize='17px';
+   const box=el('div'); box.appendChild(h); box.appendChild(l);
+   const c=el('div','tutchips');
+   ['ملعقة','مقلاة','ملح'].forEach(function(w){ c.appendChild(el('span','chip',w)); });
+   return [
+    {t:'يعطيج فئة وحرف:', node:tex(box)},
+    {t:'اكتبي كلمة واضغطي «إدخال»، وبعدين الثانية، وهكذا:', node:tex(c)},
+    {t:'لازم تبدأ بالحرف — و«ال» في أولها مقبولة («الملح» تنحسب). اللي ما تبدأ به يقول لج ويخلّيها بالخانة تعدّلينها.'},
+    {t:'لا تتوقفين تفكرين. امشي في عناقيد: الأواني كلها، بعدين الأجهزة، بعدين البهارات.'}
+   ];
+ },
+ remote(){
+   const a=el('div','tutbig','مفتاح ↔ ثقة'); a.style.fontSize='24px';
+   const b=el('div','note','«الثقة مثل المفتاح — تفتح أبواب كانت مقفلة، وتنكسر لو لويتيها بالعافية.»');
+   return [
+    {t:'كلمتين ما لهم علاقة ببعض:', node:tex(a)},
+    {t:'اكتبي جملة وحدة تربطهم ربط يقنعج:', node:tex(b)},
+    {t:'ما فيه صح وغلط هني، وما فيه درجة — الفايدة في إنج تجبرين مخج يمشي بين شيئين بعيدين.'},
+    {t:'حيلة تسهّلها: اسألي عن <b>الوظيفة</b> مو الشكل. وش يسوي المفتاح؟ يفتح شي مقفل. وش تسوي الثقة؟ نفس الشي.'}
+   ];
+ }
+};
+function tutBox(id){
+  if(!TUT[id]) return null;
+  const d=el('details','tips tut');
+  const sm=el('summary'); sm.textContent='ما فهمتيها؟ شوفي مثال محلول';
+  d.appendChild(sm);
+  const inn=el('div','in'), ol=el('ol','tutlist');
+  TUT[id]().forEach(function(st){
+    const li=el('li'), pp=el('p'); pp.innerHTML=st.t; li.appendChild(pp);
+    if(st.node) li.appendChild(st.node);
+    ol.appendChild(li);
+  });
+  inn.appendChild(ol); d.appendChild(inn);
+  return d;
+}
+
+/* وين أنتِ من الترقية في هذا التمرين — الشرط شرطان:
+   خمس محاولات على المستوى أوّلًا، وبعدها ثلاث ورا بعض تبلغ الهدف. */
+function upProgress(id){
+  const T=TARGETS[id]; if(!T) return null;
+  const lv=LV(id);
+  if(lv>=MAX_LV) return {lv:lv,max:true};
+  const at=(S.hist[id]||[]).filter(a=>(a.lv||1)===lv).map(a=>a.s);
+  const t=T[lv-1];
+  if(at.length<MIN_TRIES)
+    return {lv:lv,t:t,step:1,have:at.length,need:MIN_TRIES};
+  const last3=at.slice(-3);
+  return {lv:lv,t:t,step:2,have:last3.filter(v=>v>=t).length,need:3,last3:last3};
+}
+function lvRow(label,num){
+  const hd=el('div','lvhd');
+  hd.appendChild(el('span','lbl',label));
+  const n=el('b'); n.dir='ltr'; n.textContent=num; hd.appendChild(n);
+  return hd;
+}
+function lvBar(id){
+  const p=upProgress(id); if(!p) return null;
+  const box=el('div','lvprog');
+  box.appendChild(lvRow('مستواج في هذا التمرين',p.lv+' / '+MAX_LV));
+  const lad=el('div','lvlad');
+  for(let k=1;k<=MAX_LV;k++) lad.appendChild(el('i',k<=p.lv?'on':''));
+  box.appendChild(lad);
+  if(p.max){ box.appendChild(el('p','note','وصلتي آخر مستوى هني. باقي تثبتينه.')); return box; }
+  box.appendChild(lvRow('للترقية',p.have+' / '+p.need));
+  const wrap=el('div','upwrap'), fill=el('div','upfill');
+  fill.style.width=Math.round(p.have/p.need*100)+'%';
+  wrap.appendChild(fill); box.appendChild(wrap);
+  box.appendChild(el('p','note', p.step===1
+    ? ('لازم '+p.need+' محاولات على هالمستوى أوّل — عشان تتمكنين منه، مو تعدّينه.')
+    : ('آخر 3: '+p.last3.join(' · ')+' — لازم ثلاثتهن يبلغن '+p.t+'.')));
+  return box;
+}
+
 const MISS_MAX=10;
 function missBox(list){
   const d=el('details','tips misses'); d.open=true;
@@ -1300,18 +1510,8 @@ function begin(stage,id,body){
         ? 'ترقيتي للمستوى <b>'+moved.to+'</b> — التمرين بيصير أصعب من الجولة الجاية.'
         : 'نزّلتج للمستوى <b>'+moved.to+'</b> عشان ترجعين تبنين ثقة، مو عقاب.';
       stage.appendChild(m);
-    } else if(!res.noScore&&targetOf(id)!==null&&LV(id)<MAX_LV){
-      const t=targetOf(id);
-      const at=(S.hist[id]||[]).filter(a=>(a.lv||1)===LV(id)).map(a=>a.s);
-
-      const at2=(S.hist[id]||[]).filter(a=>(a.lv||1)===LV(id));
-      const left=Math.max(0,MIN_TRIES-at2.length);
-      stage.appendChild(el('div','note', left
-        ? ('للترقية: باقي '+left+' محاولة على هالمستوى قبل ما يُفتح الترقّي — '+
-           'عشان تتمكنين منه، مو تعدينه.')
-        : ('للترقية: '+t+' أو أكثر في ٣ محاولات ورا بعض. آخر ٣: '+
-           at2.slice(-3).map(a=>a.s).join(' · '))));
     }
+    if(!res.noScore){ const lb=lvBar(id); if(lb) stage.appendChild(lb); }
     if(res.missed&&res.missed.length) stage.appendChild(missBox(res.missed));
     else if(res.missed&&!res.noScore&&res.score>0)
       stage.appendChild(el('div','allright','ما فاتج ولا وحدة'));
