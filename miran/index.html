@@ -96,7 +96,6 @@ button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer}
 .lamp{flex:1;height:3px;border-radius:2px;background:var(--line-soft);position:relative;
   transition:background .35s ease}
 .lamp.on{background-image:var(--nacre-deep);background-size:500% 100%}
-.lamp.now{background:var(--ink-3)}
 .daymeta{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:24px}
 .daymeta .lbl{font-size:10px}
 
@@ -251,8 +250,13 @@ details.tips.tut>summary{font-size:13.5px;color:var(--signal-tx)}
 .tile.done{background:transparent;box-shadow:none;border-color:var(--line-soft)}
 .tile.done .tile-ico{opacity:.45}
 .tile.done .tile-s{color:var(--good);font-weight:700}
-.tile.locked{opacity:.4;box-shadow:none;background:transparent;
-  border-style:dashed}
+.tile.locked{box-shadow:none;background:transparent;
+  border-style:dashed;border-color:var(--line)}
+.tile.locked .tile-ico{opacity:.4}
+.tile.locked .tile-n{color:var(--ink-3);font-weight:400}
+.tile-lock{position:absolute;top:10px;left:10px;width:15px;height:15px;
+  color:var(--ink-3);opacity:.75}
+.tile-lock svg{width:15px;height:15px;display:block}
 .tile:not(.locked):active{transform:translateY(1px)}
 .tile.shake{animation:tshake .34s ease}
 @keyframes tshake{20%{transform:translateX(-5px)}60%{transform:translateX(5px)}
@@ -1409,7 +1413,23 @@ function remoteLevel(){
   const t=Object.keys(S.days).filter(k=>S.days[k]&&S.days[k].remote).length;
   S.level.remote=Math.min(MAX_LV,1+Math.floor(t/5));
 }
-const targetOf=id=>TARGETS[id]?TARGETS[id][LV(id)-1]:null;
+/* حدّ المستوى.
+   التقرير يقول «المقارنة مع نفسج»، لكن الترقية كانت على رقمٍ ثابتٍ غريبٍ عنها:
+   ستروب يطلب ١٨ وهي على ٤، فتقعد في م١ شهورًا وهي تتحسّن فعلًا.
+   الحدّ الآن أقربُ الرقمين: المعيار الثابت، أو تحسّنٌ واضح على خط أساسها
+   في هذا المستوى — أيّهما أسهل. فالمعيار سقفٌ للصعوبة، لا حاجزًا. */
+function barFrom(fixed,at){
+  if(!at||at.length<3) return fixed;
+  const base=med(at.slice(0,3));
+  return Math.min(fixed, Math.max(Math.round(base*1.25), base+1));
+}
+function levelBar(id,lv){
+  const T=TARGETS[id]; if(!T) return null;
+  lv=lv||LV(id);
+  const at=(S.hist[id]||[]).filter(a=>(a.lv||1)===lv).map(a=>a.s);
+  return barFrom(T[lv-1], at);
+}
+const targetOf=id=>levelBar(id);
 const nameOf=id=>EX[id].nameFor?EX[id].nameFor(LV(id)):EX[id].name;
 /* الوقت مكتوب على كل بطاقة: تقدير المدة أصعب شي مع ADHD، فما نخليها مفاجأة */
 function durOf(id){
@@ -1430,7 +1450,7 @@ function gradeLevel(id){
   const T=TARGETS[id]; if(!T) return null;          /* تمرينٌ بلا درجة: لا ترقية له */
   const lv=LV(id);
   const at=(S.hist[id]||[]).filter(a=>(a.lv||1)===lv).map(a=>a.s);
-  const t=T[lv-1];
+  const t=barFrom(T[lv-1], at);
   if(at.length>=MIN_TRIES&&lv<MAX_LV&&at.slice(-3).every(v=>v>=t)) return 'up';
   if(at.length>=6&&lv>1&&at.slice(-4).every(v=>v<t*0.5)) return 'down';
   return null;
@@ -1456,7 +1476,7 @@ function recomputeLevels(){
     let lv=1, at=[];
     all.forEach(a=>{
       a.lv=lv; at.push(a.s);
-      const t=TARGETS[id][lv-1];
+      const t=barFrom(TARGETS[id][lv-1], at);
       if(at.length>=MIN_TRIES&&lv<MAX_LV&&at.slice(-3).every(v=>v>=t)){ lv++; at=[]; }
     });
     S.hist[id]=all;
@@ -1537,7 +1557,7 @@ function renderHead(){
   const done=Object.keys(S.days[TODAY]||{}).filter(id=>SET.includes(id)).length;
   $('#progLbl').textContent = done===0 ? 'الهدف اليوم: تمرين واحد'
     : (done===1 ? 'وصلتي هدف اليوم ✓ · والباقي بونص'
-                : 'خلصتي '+done+' من ٥ · هدفج كان ١');
+                : 'خلصتي '+done+' من 5 · هدفج كان 1');
 
   /* رسالة الرجوع بعد غياب — بلا لوم أبدًا */
   const away=daysAway(), msg=$('#welcome');
@@ -1591,7 +1611,14 @@ function renderGrid(list){
     sub.textContent = rec ? (rec.noScore?'خلّصتيه ✓':(rec.score+' '+EX[id].unit))
                      : (locked?'يفتح بعد اللي قبله':durOf(id));
     t.appendChild(sub);
-    if(LV(id)>1) t.appendChild(el('span','tile-lv','م'+LV(id)));
+    if(locked){
+      const lk=el('span','tile-lock');
+      lk.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" '+
+        'stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" '+
+        'aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2"/>'+
+        '<path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg>';
+      t.appendChild(lk);
+    } else if(LV(id)>1) t.appendChild(el('span','tile-lv','م'+LV(id)));
     t.onclick=()=>{
       if(locked){
         t.classList.remove('shake'); void t.offsetWidth; t.classList.add('shake');
@@ -1818,7 +1845,7 @@ function upProgress(id){
   const lv=LV(id);
   if(lv>=MAX_LV) return {lv:lv,max:true};
   const at=(S.hist[id]||[]).filter(a=>(a.lv||1)===lv).map(a=>a.s);
-  const t=T[lv-1];
+  const t=barFrom(T[lv-1], at);
   if(at.length<MIN_TRIES)
     return {lv:lv,t:t,step:1,have:at.length,need:MIN_TRIES};
   const last3=at.slice(-3);
@@ -2893,7 +2920,7 @@ body.nostreak .streak span{color:var(--ink-3)}
   text-shadow:none}
 .btn.ghost{background-image:none;background:transparent;border-color:#E0CDAB;
   color:var(--ink-2);box-shadow:none;font-weight:400}
-.btn.sm{padding:8px 16px;min-height:38px;font-size:13.5px}
+.btn.sm{padding:9px 16px;min-height:44px;font-size:13.5px}
 .btn:active{transform:translateY(1px)}
 
 .opt{background-image:linear-gradient(180deg,#FFFEFA,#F6EEE0);border-color:#DFCBA6;
@@ -2982,7 +3009,7 @@ html{scrollbar-color:var(--gold) transparent;scrollbar-width:thin}
 /* البطاقة تردّ على الإصبع فورًا — التغذية الراجعة الفوريّة تُشعر بالسيطرة،
    وهي أنفع ما يكون مع ADHD. */
 .ex{transition:transform .13s ease,box-shadow .22s ease,border-color .22s ease}
-.ex.press{transform:scale(.988);box-shadow:0 1px 2px rgba(80,56,36,.06)}
+.tile.press,.ex.press{transform:scale(.988);box-shadow:0 1px 2px rgba(80,56,36,.06)}
 @media (hover:hover){
   .ex:hover{border-color:var(--gold);
     box-shadow:0 2px 4px rgba(80,56,36,.06),0 12px 28px rgba(80,56,36,.09)}
@@ -2991,12 +3018,6 @@ html{scrollbar-color:var(--gold) transparent;scrollbar-width:thin}
 .swapbtn{text-decoration-color:var(--gold)}
 
 /* دخولُ القائمة متدرّجًا — أوّل مرّةٍ فقط، لا بعد كلّ تمرينٍ تخلّصينه */
-#list:not(.staged) .ex{animation:exrise .44s cubic-bezier(.2,.7,.3,1) backwards}
-#list:not(.staged) .ex:nth-child(1){animation-delay:.02s}
-#list:not(.staged) .ex:nth-child(2){animation-delay:.07s}
-#list:not(.staged) .ex:nth-child(3){animation-delay:.12s}
-#list:not(.staged) .ex:nth-child(4){animation-delay:.17s}
-#list:not(.staged) .ex:nth-child(5){animation-delay:.22s}
 @keyframes exrise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 
 /* الفتح يظهر بلينٍ لا بقفزة */
@@ -3161,12 +3182,12 @@ input[type=text]{min-height:46px}
   var listEl=$('#list');
   if(listEl){
     listEl.addEventListener('pointerdown',function(e){
-      var c=e.target&&e.target.closest?e.target.closest('.ex'):null;
+      var c=e.target&&e.target.closest?e.target.closest('.tile,.ex'):null;
       if(c) c.classList.add('press');
     });
     ['pointerup','pointercancel','pointerleave'].forEach(function(ev){
       listEl.addEventListener(ev,function(){
-        var p=listEl.querySelector('.ex.press'); if(p) p.classList.remove('press');
+        var p=listEl.querySelector('.press'); if(p) p.classList.remove('press');
       });
     });
     /* الدخول المتدرّج مرّةً واحدة: بعدها تُعاد القائمة بعد كلّ تمرين،
