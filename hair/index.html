@@ -96,21 +96,25 @@ body::after{
   -webkit-mask-image:radial-gradient(62% 52% at 30% 2%,#000 0%,transparent 72%);
   mask-image:radial-gradient(62% 52% at 30% 2%,#000 0%,transparent 72%)}
 
-/* فقاعات صابون تطلع من تحت الشاشة لفوق وتتمايل — الحجم والشفافية كما هما */
+/* فقاعات صابون تطلع من تحت الشاشة: تظهر من الأسفل، تتمايل، ترجف مثل الهلام، وتذوب فوق */
 .bubbles{position:fixed;inset:0;z-index:9;pointer-events:none;overflow:hidden}
-.bubw{position:absolute;top:0;will-change:transform;animation:rise linear infinite}
-.bub{display:block;height:auto;will-change:transform;animation:sway ease-in-out infinite alternate}
-@keyframes rise{from{transform:translate3d(0,104vh,0)}to{transform:translate3d(0,-28vh,0)}}
-@keyframes sway{from{transform:translate3d(-14px,0,0) rotate(-7deg)}to{transform:translate3d(14px,0,0) rotate(7deg)}}
-.b1{inset-inline-start:7%;  animation-duration:34s;animation-delay:-4s}  .b1 .bub{width:70px;opacity:.62;animation-duration:6.4s}
-.b2{inset-inline-start:77%; animation-duration:41s;animation-delay:-19s} .b2 .bub{width:42px;opacity:.55;animation-duration:5.1s}
-.b3{inset-inline-start:3%;  animation-duration:29s;animation-delay:-11s} .b3 .bub{width:28px;opacity:.5;animation-duration:4.4s}
-.b4{inset-inline-start:86%; animation-duration:38s;animation-delay:-27s} .b4 .bub{width:56px;opacity:.6;animation-duration:7.2s}
-.b5{inset-inline-start:12%; animation-duration:31s;animation-delay:-16s} .b5 .bub{width:36px;opacity:.5;animation-duration:5.6s}
-.b6{inset-inline-start:72%; animation-duration:44s;animation-delay:-9s}  .b6 .bub{width:78px;opacity:.58;animation-duration:8.1s}
-.b7{inset-inline-start:24%; animation-duration:27s;animation-delay:-22s} .b7 .bub{width:30px;opacity:.5;animation-duration:4.8s}
-.b8{inset-inline-start:81%; animation-duration:36s;animation-delay:-31s} .b8 .bub{width:48px;opacity:.55;animation-duration:6s}
-.b9{inset-inline-start:45%; animation-duration:25s;animation-delay:-6s}  .b9 .bub{width:22px;opacity:.45;animation-duration:3.9s}
+.bubw{position:absolute;top:0;will-change:transform,opacity;animation:rise linear infinite}
+.bubs{display:block;animation:sway ease-in-out infinite alternate}
+.bub{display:block;height:auto;animation:wobble ease-in-out infinite}
+@keyframes rise{0%{transform:translate3d(0,106vh,0);opacity:0}7%{opacity:1}
+  86%{opacity:1}100%{transform:translate3d(0,-24vh,0);opacity:0}}
+@keyframes sway{from{transform:translate3d(-18px,0,0) rotate(-5deg)}to{transform:translate3d(18px,0,0) rotate(5deg)}}
+@keyframes wobble{0%,100%{transform:scale(1,1)}25%{transform:scale(1.055,.95)}
+  50%{transform:scale(.955,1.045)}75%{transform:scale(1.03,.975)}}
+.b1{inset-inline-start:7%;  animation-duration:30s;animation-delay:-4s}  .b1 .bubs{animation-duration:5.8s} .b1 .bub{width:70px;opacity:.62;animation-duration:3.1s}
+.b2{inset-inline-start:77%; animation-duration:37s;animation-delay:-19s} .b2 .bubs{animation-duration:4.9s} .b2 .bub{width:42px;opacity:.55;animation-duration:2.6s}
+.b3{inset-inline-start:3%;  animation-duration:26s;animation-delay:-11s} .b3 .bubs{animation-duration:4.2s} .b3 .bub{width:28px;opacity:.5;animation-duration:2.2s}
+.b4{inset-inline-start:86%; animation-duration:34s;animation-delay:-27s} .b4 .bubs{animation-duration:6.4s} .b4 .bub{width:56px;opacity:.6;animation-duration:2.9s}
+.b5{inset-inline-start:12%; animation-duration:28s;animation-delay:-16s} .b5 .bubs{animation-duration:5.2s} .b5 .bub{width:36px;opacity:.5;animation-duration:2.4s}
+.b6{inset-inline-start:72%; animation-duration:40s;animation-delay:-9s}  .b6 .bubs{animation-duration:7s}   .b6 .bub{width:78px;opacity:.58;animation-duration:3.4s}
+.b7{inset-inline-start:24%; animation-duration:24s;animation-delay:-22s} .b7 .bubs{animation-duration:4.5s} .b7 .bub{width:30px;opacity:.5;animation-duration:2.1s}
+.b8{inset-inline-start:81%; animation-duration:33s;animation-delay:-31s} .b8 .bubs{animation-duration:5.6s} .b8 .bub{width:48px;opacity:.55;animation-duration:2.7s}
+.b9{inset-inline-start:45%; animation-duration:22s;animation-delay:-6s}  .b9 .bubs{animation-duration:3.9s} .b9 .bub{width:22px;opacity:.45;animation-duration:1.9s}
 
 .wrap{position:relative;z-index:2;max-width:600px;margin:0 auto;padding-inline:20px;
   padding-block:8px 52px}
@@ -121,8 +125,10 @@ h1,h2,h3{margin:0;line-height:1.3}
 
 /* ══ الترويسة ═════════════════════════════════════════════════════ */
 .head{position:relative;text-align:center;padding-block:clamp(164px,47vw,204px) 30px}
-.head .bow{width:clamp(126px,40vw,176px);top:-10px;inset-inline-start:50%;
-  transform:translateX(50%) rotate(-4deg)}
+.head .hero{width:clamp(104px,30vw,140px);top:2px;inset-inline-start:50%;
+  transform:translateX(50%);filter:none;animation:bob 6.5s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateX(50%) translateY(0) rotate(0)}
+  50%{transform:translateX(50%) translateY(-10px) rotate(3deg)}}
 .head .peonywhite{width:clamp(50px,15vw,68px);top:88px;inset-inline-start:0;
   transform:rotate(-14deg)}
 .head .branch{width:clamp(40px,12vw,56px);top:100px;inset-inline-end:2px;
@@ -320,8 +326,7 @@ ul.ticks em{font-style:normal;color:var(--rose);font-weight:700}
 .pane.on{display:block;animation:rise .38s ease-out}
 @keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 .pane>.chapter{margin-top:8px}
-.head{padding-block:clamp(100px,28vw,124px) 6px}
-.head .bow{width:clamp(88px,25vw,112px)}
+.head{padding-block:clamp(112px,32vw,146px) 6px}
 .head h1{font-size:clamp(36px,10.5vw,52px)}
 .head p{margin-top:8px}
 .head .peonywhite{top:70px}
@@ -548,21 +553,21 @@ footer .dove{width:clamp(40px,12vw,54px);top:8px;inset-inline-start:50%;
 
 <div class="rays"></div>
 <div class="bubbles" aria-hidden="true">
-  <span class="bubw b1"><img class="bub" src="gen/bub1.png" alt="" width="360" height="345"></span>
-  <span class="bubw b2"><img class="bub" src="gen/bub4.png" alt="" width="339" height="328"></span>
-  <span class="bubw b3"><img class="bub" src="gen/bub6.png" alt="" width="194" height="190"></span>
-  <span class="bubw b4"><img class="bub" src="gen/bub3.png" alt="" width="340" height="322"></span>
-  <span class="bubw b5"><img class="bub" src="gen/bub5.png" alt="" width="230" height="221"></span>
-  <span class="bubw b6"><img class="bub" src="gen/bub2.png" alt="" width="360" height="344"></span>
-  <span class="bubw b7"><img class="bub" src="gen/bub6.png" alt="" width="194" height="190"></span>
-  <span class="bubw b8"><img class="bub" src="gen/bub4.png" alt="" width="339" height="328"></span>
-  <span class="bubw b9"><img class="bub" src="gen/bub5.png" alt="" width="230" height="221"></span>
+  <span class="bubw b1"><span class="bubs"><img class="bub" src="gen/bub1.png" alt="" width="360" height="345"></span></span>
+  <span class="bubw b2"><span class="bubs"><img class="bub" src="gen/bub4.png" alt="" width="339" height="328"></span></span>
+  <span class="bubw b3"><span class="bubs"><img class="bub" src="gen/bub6.png" alt="" width="194" height="190"></span></span>
+  <span class="bubw b4"><span class="bubs"><img class="bub" src="gen/bub3.png" alt="" width="340" height="322"></span></span>
+  <span class="bubw b5"><span class="bubs"><img class="bub" src="gen/bub5.png" alt="" width="230" height="221"></span></span>
+  <span class="bubw b6"><span class="bubs"><img class="bub" src="gen/bub2.png" alt="" width="360" height="344"></span></span>
+  <span class="bubw b7"><span class="bubs"><img class="bub" src="gen/bub6.png" alt="" width="194" height="190"></span></span>
+  <span class="bubw b8"><span class="bubs"><img class="bub" src="gen/bub4.png" alt="" width="339" height="328"></span></span>
+  <span class="bubw b9"><span class="bubs"><img class="bub" src="gen/bub5.png" alt="" width="230" height="221"></span></span>
 </div>
 
 <div class="wrap">
 
   <header class="head">
-    <img class="stk bow" src="st/bow.png" alt="" width="282" height="326">
+    <img class="stk hero" src="gen/bub1.png" alt="" width="360" height="345">
     <img class="stk peonywhite" src="st/peonywhite.png" alt="" width="268" height="276">
     <img class="stk branch" src="st/branch.png" alt="" width="235" height="255">
     <span class="eyebrow">بعد الكيراتين والصبغة</span>
@@ -575,7 +580,7 @@ footer .dove{width:clamp(40px,12vw,54px);top:8px;inset-inline-start:50%;
     <button type="button" data-pane="check"><img src="st/waterflower.png" alt="" width="300" height="256"><span>الفحص</span></button>
     <button type="button" data-pane="shower"><img src="st/bubble.png" alt="" width="194" height="194"><span>الشاور</span></button>
     <button type="button" data-pane="after"><img src="st/butterfly.png" alt="" width="222" height="221"><span>بعده</span></button>
-    <button type="button" data-pane="care"><img src="st/bowheart.png" alt="" width="255" height="284"><span>الصيانة</span></button>
+    <button type="button" data-pane="care"><img src="st/blossoms.png" alt="" width="262" height="241"><span>الصيانة</span></button>
   </nav>
 
   <section class="pane" data-pane="log">
@@ -962,7 +967,7 @@ footer .dove{width:clamp(40px,12vw,54px);top:8px;inset-inline-start:50%;
   <section class="pane" data-pane="care">
   <div class="chapter"><span class="ch-no">الفصل الرابع</span><h2 class="ch-ttl">الصيانة</h2><div class="orn"><i></i></div></div>
   <section class="card maint">
-    <img class="stk mark mark-r bowheart" src="st/bowheart.png" alt="" width="255" height="284">
+    <img class="stk mark mark-r peonypink" src="st/peonypink.png" alt="" width="309" height="372" style="width:clamp(34px,9vw,44px);top:-19px;bottom:auto;inset-inline-end:auto">
     <div class="card-hd">
       <h2>الصيانة</h2>
       <span class="chip">تقويم</span>
