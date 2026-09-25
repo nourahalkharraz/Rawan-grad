@@ -1,13 +1,15 @@
 /* عامل الخدمة.
    القاعدة: الصفحة نفسها من الشبكة أولًا (عشان أي تحديث يوصلك فورًا)،
    والأصول الثابتة من المخزون أولًا (عشان السرعة). وبدون إنترنت: كل شي من المخزون. */
-const CACHE = 'hair-v1';
+const CACHE = 'hair-v2';
 const CORE = ['./','./index.html','./manifest.webmanifest',
               './icon-192.png','./icon-512.png','./icon-maskable.png',
               './st/bow.png','./st/bubble.png','./st/peonywhite.png','./st/branch.png',
               './st/waterflower.png','./st/blossoms.png','./st/peonypink.png','./st/heartbub.png',
               './st/butterfly.png','./st/cosmos.png','./st/bowheart.png','./st/lemon.png',
               './st/arbor.png','./st/dove.png',
+              './gen/garden.jpg','./gen/sparkle.jpg','./gen/bub1.png','./gen/bub2.png',
+              './gen/bub3.png','./gen/bub4.png','./gen/bub5.png','./gen/bub6.png',
               './apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
