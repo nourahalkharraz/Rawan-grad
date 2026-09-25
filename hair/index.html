@@ -353,11 +353,11 @@ ul.ticks em{font-style:normal;color:var(--rose);font-weight:700}
 .nav b{font-family:var(--f-disp);font-size:20px;font-weight:700;color:var(--ink)}
 
 /* ── الشبكة ── */
-.dows,.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;
+.dows,.grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;
   position:relative;z-index:1}
 .dows{margin-bottom:5px}
 .dows span{text-align:center;font-size:11px;font-weight:800;color:var(--ink-3)}
-.cell{position:relative;aspect-ratio:1;border-radius:7px;cursor:pointer;
+.cell{position:relative;aspect-ratio:1;min-width:0;padding:0;line-height:1.15;border-radius:7px;cursor:pointer;
   border:1px solid var(--hair-2);background:rgba(255,255,255,.45);
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
   font-family:var(--f-mid);font-size:15px;color:var(--ink-2);
