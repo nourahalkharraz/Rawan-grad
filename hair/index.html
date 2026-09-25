@@ -11,9 +11,34 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <title>روتين شعرك</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=Amiri:wght@400;700&family=Almarai:wght@400;800&display=swap">
+<link rel="preload" href="fonts/ArefRuqaa-700-arabic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/Almarai-400-arabic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/Almarai-800-arabic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="gen/garden.jpg" as="image">
+<link rel="preload" href="gen/bub1.png" as="image">
+<style>
+/* الخطوط محلية: لا رحلة لجوجل ولا انتظار — وتُخزَّن مع الصفحة للعمل بدون إنترنت */
+@font-face{font-family:'Almarai';font-style:normal;font-weight:400;font-display:swap;
+  src:url(fonts/Almarai-400-arabic.woff2) format('woff2');unicode-range:U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC, U+102E0-102FB, U+10E60-10E7E, U+10EC2-10EC4, U+10EFC-10EFF, U+1EE00-1EE03, U+1EE05-1EE1F, U+1EE21-1EE22, U+1EE24, U+1EE27, U+1EE29-1EE32, U+1EE34-1EE37, U+1EE39, U+1EE3B, U+1EE42, U+1EE47, U+1EE49, U+1EE4B, U+1EE4D-1EE4F, U+1EE51-1EE52, U+1EE54, U+1EE57, U+1EE59, U+1EE5B, U+1EE5D, U+1EE5F, U+1EE61-1EE62, U+1EE64, U+1EE67-1EE6A, U+1EE6C-1EE72, U+1EE74-1EE77, U+1EE79-1EE7C, U+1EE7E, U+1EE80-1EE89, U+1EE8B-1EE9B, U+1EEA1-1EEA3, U+1EEA5-1EEA9, U+1EEAB-1EEBB, U+1EEF0-1EEF1}
+@font-face{font-family:'Almarai';font-style:normal;font-weight:400;font-display:swap;
+  src:url(fonts/Almarai-400-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Almarai';font-style:normal;font-weight:800;font-display:swap;
+  src:url(fonts/Almarai-800-arabic.woff2) format('woff2');unicode-range:U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC, U+102E0-102FB, U+10E60-10E7E, U+10EC2-10EC4, U+10EFC-10EFF, U+1EE00-1EE03, U+1EE05-1EE1F, U+1EE21-1EE22, U+1EE24, U+1EE27, U+1EE29-1EE32, U+1EE34-1EE37, U+1EE39, U+1EE3B, U+1EE42, U+1EE47, U+1EE49, U+1EE4B, U+1EE4D-1EE4F, U+1EE51-1EE52, U+1EE54, U+1EE57, U+1EE59, U+1EE5B, U+1EE5D, U+1EE5F, U+1EE61-1EE62, U+1EE64, U+1EE67-1EE6A, U+1EE6C-1EE72, U+1EE74-1EE77, U+1EE79-1EE7C, U+1EE7E, U+1EE80-1EE89, U+1EE8B-1EE9B, U+1EEA1-1EEA3, U+1EEA5-1EEA9, U+1EEAB-1EEBB, U+1EEF0-1EEF1}
+@font-face{font-family:'Almarai';font-style:normal;font-weight:800;font-display:swap;
+  src:url(fonts/Almarai-800-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Amiri';font-style:normal;font-weight:400;font-display:swap;
+  src:url(fonts/Amiri-400-arabic.woff2) format('woff2');unicode-range:U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC, U+102E0-102FB, U+10E60-10E7E, U+10EC2-10EC4, U+10EFC-10EFF, U+1EE00-1EE03, U+1EE05-1EE1F, U+1EE21-1EE22, U+1EE24, U+1EE27, U+1EE29-1EE32, U+1EE34-1EE37, U+1EE39, U+1EE3B, U+1EE42, U+1EE47, U+1EE49, U+1EE4B, U+1EE4D-1EE4F, U+1EE51-1EE52, U+1EE54, U+1EE57, U+1EE59, U+1EE5B, U+1EE5D, U+1EE5F, U+1EE61-1EE62, U+1EE64, U+1EE67-1EE6A, U+1EE6C-1EE72, U+1EE74-1EE77, U+1EE79-1EE7C, U+1EE7E, U+1EE80-1EE89, U+1EE8B-1EE9B, U+1EEA1-1EEA3, U+1EEA5-1EEA9, U+1EEAB-1EEBB, U+1EEF0-1EEF1}
+@font-face{font-family:'Amiri';font-style:normal;font-weight:400;font-display:swap;
+  src:url(fonts/Amiri-400-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Amiri';font-style:normal;font-weight:700;font-display:swap;
+  src:url(fonts/Amiri-700-arabic.woff2) format('woff2');unicode-range:U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC, U+102E0-102FB, U+10E60-10E7E, U+10EC2-10EC4, U+10EFC-10EFF, U+1EE00-1EE03, U+1EE05-1EE1F, U+1EE21-1EE22, U+1EE24, U+1EE27, U+1EE29-1EE32, U+1EE34-1EE37, U+1EE39, U+1EE3B, U+1EE42, U+1EE47, U+1EE49, U+1EE4B, U+1EE4D-1EE4F, U+1EE51-1EE52, U+1EE54, U+1EE57, U+1EE59, U+1EE5B, U+1EE5D, U+1EE5F, U+1EE61-1EE62, U+1EE64, U+1EE67-1EE6A, U+1EE6C-1EE72, U+1EE74-1EE77, U+1EE79-1EE7C, U+1EE7E, U+1EE80-1EE89, U+1EE8B-1EE9B, U+1EEA1-1EEA3, U+1EEA5-1EEA9, U+1EEAB-1EEBB, U+1EEF0-1EEF1}
+@font-face{font-family:'Amiri';font-style:normal;font-weight:700;font-display:swap;
+  src:url(fonts/Amiri-700-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Aref Ruqaa';font-style:normal;font-weight:700;font-display:swap;
+  src:url(fonts/ArefRuqaa-700-arabic.woff2) format('woff2');unicode-range:U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC, U+102E0-102FB, U+10E60-10E7E, U+10EC2-10EC4, U+10EFC-10EFF, U+1EE00-1EE03, U+1EE05-1EE1F, U+1EE21-1EE22, U+1EE24, U+1EE27, U+1EE29-1EE32, U+1EE34-1EE37, U+1EE39, U+1EE3B, U+1EE42, U+1EE47, U+1EE49, U+1EE4B, U+1EE4D-1EE4F, U+1EE51-1EE52, U+1EE54, U+1EE57, U+1EE59, U+1EE5B, U+1EE5D, U+1EE5F, U+1EE61-1EE62, U+1EE64, U+1EE67-1EE6A, U+1EE6C-1EE72, U+1EE74-1EE77, U+1EE79-1EE7C, U+1EE7E, U+1EE80-1EE89, U+1EE8B-1EE9B, U+1EEA1-1EEA3, U+1EEA5-1EEA9, U+1EEAB-1EEBB, U+1EEF0-1EEF1}
+@font-face{font-family:'Aref Ruqaa';font-style:normal;font-weight:700;font-display:swap;
+  src:url(fonts/ArefRuqaa-700-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+</style>
 
 <style>
 /*  بستان مسحور في ضوء النهار.
@@ -553,23 +578,23 @@ footer .dove{width:clamp(40px,12vw,54px);top:8px;inset-inline-start:50%;
 
 <div class="rays"></div>
 <div class="bubbles" aria-hidden="true">
-  <span class="bubw b1"><span class="bubs"><img class="bub" src="gen/bub1.png" alt="" width="360" height="345"></span></span>
-  <span class="bubw b2"><span class="bubs"><img class="bub" src="gen/bub4.png" alt="" width="339" height="328"></span></span>
-  <span class="bubw b3"><span class="bubs"><img class="bub" src="gen/bub6.png" alt="" width="194" height="190"></span></span>
-  <span class="bubw b4"><span class="bubs"><img class="bub" src="gen/bub3.png" alt="" width="340" height="322"></span></span>
-  <span class="bubw b5"><span class="bubs"><img class="bub" src="gen/bub5.png" alt="" width="230" height="221"></span></span>
-  <span class="bubw b6"><span class="bubs"><img class="bub" src="gen/bub2.png" alt="" width="360" height="344"></span></span>
-  <span class="bubw b7"><span class="bubs"><img class="bub" src="gen/bub6.png" alt="" width="194" height="190"></span></span>
-  <span class="bubw b8"><span class="bubs"><img class="bub" src="gen/bub4.png" alt="" width="339" height="328"></span></span>
-  <span class="bubw b9"><span class="bubs"><img class="bub" src="gen/bub5.png" alt="" width="230" height="221"></span></span>
+  <span class="bubw b1"><span class="bubs"><img loading="lazy" decoding="async" class="bub" src="gen/bub1.png" alt="" width="360" height="345"></span></span>
+  <span class="bubw b2"><span class="bubs"><img loading="lazy" decoding="async" class="bub" src="gen/bub4.png" alt="" width="339" height="328"></span></span>
+  <span class="bubw b3"><span class="bubs"><img loading="lazy" decoding="async" class="bub" src="gen/bub6.png" alt="" width="194" height="190"></span></span>
+  <span class="bubw b4"><span class="bubs"><img loading="lazy" decoding="async" class="bub" src="gen/bub3.png" alt="" width="340" height="322"></span></span>
+  <span class="bubw b5"><span class="bubs"><img loading="lazy" decoding="async" class="bub" src="gen/bub5.png" alt="" width="230" height="221"></span></span>
+  <span class="bubw b6"><span class="bubs"><img loading="lazy" decoding="async" class="bub" src="gen/bub2.png" alt="" width="360" height="344"></span></span>
+  <span class="bubw b7"><span class="bubs"><img loading="lazy" decoding="async" class="bub" src="gen/bub6.png" alt="" width="194" height="190"></span></span>
+  <span class="bubw b8"><span class="bubs"><img loading="lazy" decoding="async" class="bub" src="gen/bub4.png" alt="" width="339" height="328"></span></span>
+  <span class="bubw b9"><span class="bubs"><img loading="lazy" decoding="async" class="bub" src="gen/bub5.png" alt="" width="230" height="221"></span></span>
 </div>
 
 <div class="wrap">
 
   <header class="head">
     <img class="stk hero" src="gen/bub1.png" alt="" width="360" height="345">
-    <img class="stk peonywhite" src="st/peonywhite.png" alt="" width="268" height="276">
-    <img class="stk branch" src="st/branch.png" alt="" width="235" height="255">
+    <img loading="lazy" decoding="async" class="stk peonywhite" src="st/peonywhite.png" alt="" width="268" height="276">
+    <img loading="lazy" decoding="async" class="stk branch" src="st/branch.png" alt="" width="235" height="255">
     <span class="eyebrow">بعد الكيراتين والصبغة</span>
     <h1>روتين شعرك</h1>
     <p>كل شي فيه من اللي عندك أصلًا. لا منتج جديد، ولا بروتين زيادة.</p>
@@ -585,7 +610,7 @@ footer .dove{width:clamp(40px,12vw,54px);top:8px;inset-inline-start:50%;
 
   <section class="pane" data-pane="log">
   <section class="card">
-    <img class="stk" style="width:34px;top:-15px;inset-inline-end:44px;transform:rotate(10deg)"
+    <img loading="lazy" decoding="async" class="stk" style="width:34px;top:-15px;inset-inline-end:44px;transform:rotate(10deg)"
          src="st/waterflower.png" alt="" width="300" height="256">
     <div class="card-hd"><h2 id="monTitle">الرزنامة</h2></div>
 
@@ -647,7 +672,7 @@ footer .dove{width:clamp(40px,12vw,54px);top:8px;inset-inline-start:50%;
   </div>
 
   <section class="card">
-    <img class="stk" style="width:36px;top:-16px;inset-inline-start:44px;transform:rotate(-11deg)"
+    <img loading="lazy" decoding="async" class="stk" style="width:36px;top:-16px;inset-inline-start:44px;transform:rotate(-11deg)"
          src="st/heartbub.png" alt="" width="195" height="176">
     <div class="card-hd">
       <h2>الفحص</h2>
@@ -659,7 +684,7 @@ footer .dove{width:clamp(40px,12vw,54px);top:8px;inset-inline-start:50%;
   </section>
 
   <section class="card">
-    <img class="stk" style="width:34px;top:-15px;inset-inline-end:44px;transform:rotate(9deg)"
+    <img loading="lazy" decoding="async" class="stk" style="width:34px;top:-15px;inset-inline-end:44px;transform:rotate(9deg)"
          src="st/blossoms.png" alt="" width="262" height="241">
     <div class="card-hd">
       <h2>آخر الغسلات</h2>
@@ -706,7 +731,7 @@ footer .dove{width:clamp(40px,12vw,54px);top:8px;inset-inline-start:50%;
   </section>
 
   <section class="card wash">
-    <img class="stk mark mark-l waterflower" src="st/waterflower.png" alt="" width="300" height="256">
+    <img loading="lazy" decoding="async" class="stk mark mark-l waterflower" src="st/waterflower.png" alt="" width="300" height="256">
     <div class="card-hd">
       <h2>غسلة الترميم</h2>
       <span class="chip">مرة بالأسبوع</span>
@@ -780,7 +805,7 @@ footer .dove{width:clamp(40px,12vw,54px);top:8px;inset-inline-start:50%;
   </section>
 
   <section class="card simple">
-    <img class="stk mark mark-r blossoms" src="st/blossoms.png" alt="" width="262" height="241">
+    <img loading="lazy" decoding="async" class="stk mark mark-r blossoms" src="st/blossoms.png" alt="" width="262" height="241">
     <div class="card-hd">
       <h2>الغسلة الطبيعية</h2>
       <span class="chip">مرتين بالأسبوع</span>
@@ -840,7 +865,7 @@ footer .dove{width:clamp(40px,12vw,54px);top:8px;inset-inline-start:50%;
   </section>
 
   <section class="card stock">
-    <img class="stk mark peonypink" src="st/peonypink.png" alt="" width="309" height="372">
+    <img loading="lazy" decoding="async" class="stk mark peonypink" src="st/peonypink.png" alt="" width="309" height="372">
     <div class="card-hd">
       <h2>منتجاتك</h2>
       <span class="chip">أيّها في أي شاور</span>
@@ -894,7 +919,7 @@ footer .dove{width:clamp(40px,12vw,54px);top:8px;inset-inline-start:50%;
   <section class="pane" data-pane="after">
   <div class="chapter"><span class="ch-no">الفصل الثاني والثالث</span><h2 class="ch-ttl">بعد الشاور</h2><div class="orn"><i></i></div></div>
   <section class="card after">
-    <img class="stk mark mark-r heartbub" src="st/heartbub.png" alt="" width="195" height="176">
+    <img loading="lazy" decoding="async" class="stk mark mark-r heartbub" src="st/heartbub.png" alt="" width="195" height="176">
     <div class="card-hd">
       <h2>أول ١٠ دقائق</h2>
       <span class="chip">بعد كل غسلة</span>
@@ -932,7 +957,7 @@ footer .dove{width:clamp(40px,12vw,54px);top:8px;inset-inline-start:50%;
   </section>
 
   <section class="card rest">
-    <img class="stk mark mark-l butterfly" src="st/butterfly.png" alt="" width="222" height="221">
+    <img loading="lazy" decoding="async" class="stk mark mark-l butterfly" src="st/butterfly.png" alt="" width="222" height="221">
     <div class="card-hd"><h2>كل يوم</h2></div>
     <ul class="ticks">
       <li>لا تبلّلينه أبدًا — ولا رشّة ماي</li>
@@ -945,7 +970,7 @@ footer .dove{width:clamp(40px,12vw,54px);top:8px;inset-inline-start:50%;
   </section>
 
   <section class="slab">
-    <img class="stk cosmos" src="st/cosmos.png" alt="" width="242" height="212">
+    <img loading="lazy" decoding="async" class="stk cosmos" src="st/cosmos.png" alt="" width="242" height="212">
     <div class="card-hd">
       <h2>ممنوع</h2>
       <span class="chip">٣ أشهر</span>
@@ -967,7 +992,7 @@ footer .dove{width:clamp(40px,12vw,54px);top:8px;inset-inline-start:50%;
   <section class="pane" data-pane="care">
   <div class="chapter"><span class="ch-no">الفصل الرابع</span><h2 class="ch-ttl">الصيانة</h2><div class="orn"><i></i></div></div>
   <section class="card maint">
-    <img class="stk mark mark-r peonypink" src="st/peonypink.png" alt="" width="309" height="372" style="width:clamp(34px,9vw,44px);top:-19px;bottom:auto;inset-inline-end:auto">
+    <img loading="lazy" decoding="async" class="stk mark mark-r peonypink" src="st/peonypink.png" alt="" width="309" height="372" style="width:clamp(34px,9vw,44px);top:-19px;bottom:auto;inset-inline-end:auto">
     <div class="card-hd">
       <h2>الصيانة</h2>
       <span class="chip">تقويم</span>
@@ -988,7 +1013,7 @@ footer .dove{width:clamp(40px,12vw,54px);top:8px;inset-inline-start:50%;
   </section>
 
   <section class="card paused">
-    <img class="stk mark mark-l lemon" src="st/lemon.png" alt="" width="221" height="233">
+    <img loading="lazy" decoding="async" class="stk mark mark-l lemon" src="st/lemon.png" alt="" width="221" height="233">
     <div class="card-hd">
       <h2>على الرف</h2>
       <span class="chip">ليس الآن</span>
@@ -1013,13 +1038,13 @@ footer .dove{width:clamp(40px,12vw,54px);top:8px;inset-inline-start:50%;
   </div>
 
   <div class="closing">
-    <img class="arbor" src="st/arbor.png" alt="" width="477" height="304">
+    <img loading="lazy" decoding="async" class="arbor" src="st/arbor.png" alt="" width="477" height="304">
   </div>
 
   </section>
 
   <footer>
-    <img class="stk dove" src="st/dove.png" alt="" width="219" height="246">
+    <img loading="lazy" decoding="async" class="stk dove" src="st/dove.png" alt="" width="219" height="246">
     <div id="store" style="margin-bottom:6px"></div>
     الموجود <b>يُدار ويُقصّ</b> · والقادم <b>يُبنى من الداخل</b>
   </footer>
