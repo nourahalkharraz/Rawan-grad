@@ -1,0 +1,1525 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#F4E6E2">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="شعرك">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<title>روتين شعرك</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=Amiri:wght@400;700&family=Almarai:wght@400;800&display=swap">
+
+<style>
+/*  بستان مسحور في ضوء النهار.
+    كل لون هنا مقيس من صور المرجع الخمس، لا مخمَّن: السائد فيها أخضر عميق
+    وسيج مغبّر وضباب ذهبي ووردي ترابي — مو وردي زاهي. فالصفحة ضباب شمس
+    دافئ، وعند الأطراف ظلّ أوراق أخضر، وفوق الكل فقاعات صابون تطفو ببطء
+    ورذاذ لامع. الألواح نوافذ بستان مقوّسة من ورق كريمي في الضباب،
+    و«ممنوع» هي الظلّ الأخضر العميق — أغمق ما في الصور.                */
+:root{
+  /* مقيس من الصور */
+  --haze:#F4E6E2;      /* أفتح ١٠٪ في صورة الفقاعات */
+  --haze-gold:#E6CFB4; /* هالة شمس النافورة */
+  --mist:#DCD2D4;
+  --cream:#FCF6F1;
+  --cream-2:#F6EDE6;
+  --grove:#243028;     /* أغمق ما في الصور */
+  --grove-2:#30463E;
+  --sage:#5A665B;
+  --sage-lt:#768771;
+  --blush:#C1848B;     /* بتلة الدفلى */
+  --blush-lt:#EDDCD8;
+
+  /* حبر على الكريم #FCF6F1 — كل قيمة محسوبة */
+  --ink:#2F332D;       /* 12.0 */
+  --ink-2:#5B6158;     /*  5.9 */
+  --ink-3:#6A705F;     /*  4.8 */
+  --rose:#8E4C58;      /*  5.9 */
+  --green:#3C5140;     /*  8.0 */
+  --gold:#836428;      /*  5.1 */
+
+  /* على الأخضر العميق #243028 */
+  --on-g:#FCF6F1;      /* 12.8 */
+  --gold-lt:#E3C88F;   /*  8.5 */
+  --pink-lt:#EFCCCF;   /*  9.3 */
+  --sage-pale:#C6D6C0; /*  9.0 */
+
+  /* حبر النص الواقع على خلفية الصفحة نفسها — محسوب على أغمق نقطة #BFC6B4 */
+  --on-page:#474C42;   /* 5.0 على الأخضر · 8.2 على الكريم */
+  --on-page-2:#5E471B; /* 5.0 على الأخضر · 8.2 على الكريم */
+
+  --hair:rgba(131,100,40,.30);
+  --hair-2:rgba(47,51,45,.12);
+  --rule:rgba(47,51,45,.16);
+
+  --f-disp:'Aref Ruqaa','Amiri',Georgia,serif;
+  --f-mid:'Amiri',Georgia,serif;
+  --f-body:'Almarai',system-ui,-apple-system,sans-serif;
+
+  /* ستيكر مُضاء من الخلف: هالة بيضاء + ظلّ أوراق */
+  --sun:drop-shadow(0 0 14px rgba(255,252,246,.75)) drop-shadow(0 7px 14px rgba(36,48,40,.3));
+  --panel:0 1px 2px rgba(36,48,40,.06), 0 22px 46px -24px rgba(36,48,40,.46);
+}
+
+*{box-sizing:border-box}
+:root{direction:rtl;overflow-x:hidden}
+body{
+  direction:rtl;margin:0;color:var(--ink);
+  font-family:var(--f-body);font-size:15px;line-height:1.75;
+  -webkit-text-size-adjust:100%;overflow-x:hidden;background:var(--haze);
+}
+
+/* ضوء البستان: شمس دافئة في الأعلى، ظلّ أوراق أخضر عند الحواف والأسفل */
+body::before{
+  content:'';position:fixed;inset:0;z-index:-3;background-color:var(--haze);
+  background-image:
+    radial-gradient(68% 34% at 50% -4%,  rgba(255,247,229,.95) 0%, rgba(255,247,229,0) 66%),
+    radial-gradient(48% 30% at 88% 12%,  rgba(230,207,180,.8)  0%, rgba(230,207,180,0) 62%),
+    radial-gradient(52% 30% at 8% 30%,   rgba(193,132,139,.30) 0%, rgba(193,132,139,0) 64%),
+    radial-gradient(52% 34% at 99% 52%,  rgba(90,102,91,.58)   0%, rgba(90,102,91,0)   58%),
+    radial-gradient(54% 36% at 1% 72%,   rgba(48,70,62,.60)    0%, rgba(48,70,62,0)    58%),
+    radial-gradient(48% 26% at 96% 92%,  rgba(36,48,40,.55)    0%, rgba(36,48,40,0)    60%),
+    radial-gradient(82% 32% at 50% 106%, rgba(36,48,40,.66)    0%, rgba(36,48,40,0)    62%),
+    linear-gradient(168deg,#F7EAE4 0%,#EFE2DA 34%,#DFDACE 68%,#C9CDBB 100%);
+}
+/* رذاذ لامع كما في صور النافورة — طبقتان بمقاسَي بلاط مختلفَين */
+body::after{
+  content:'';position:fixed;inset:0;z-index:-2;pointer-events:none;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='370' height='370'%3E%3Cg fill='%23FFFDF6'%3E%3Ccircle cx='41' cy='62' r='1.7' opacity='.9'/%3E%3Ccircle cx='132' cy='26' r='1' opacity='.6'/%3E%3Ccircle cx='219' cy='101' r='1.35' opacity='.75'/%3E%3Ccircle cx='311' cy='45' r='.9' opacity='.55'/%3E%3Ccircle cx='77' cy='171' r='1.2' opacity='.65'/%3E%3Ccircle cx='246' cy='194' r='1.8' opacity='.85'/%3E%3Ccircle cx='340' cy='152' r='1.1' opacity='.6'/%3E%3Ccircle cx='163' cy='249' r='1' opacity='.55'/%3E%3Ccircle cx='26' cy='288' r='1.45' opacity='.72'/%3E%3Ccircle cx='289' cy='271' r='.95' opacity='.5'/%3E%3Ccircle cx='110' cy='331' r='1.6' opacity='.82'/%3E%3Ccircle cx='228' cy='349' r='1' opacity='.55'/%3E%3C/g%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='533' height='533'%3E%3Cg fill='%23FFF6E8'%3E%3Ccircle cx='88' cy='41' r='.85' opacity='.5'/%3E%3Ccircle cx='281' cy='126' r='1.15' opacity='.6'/%3E%3Ccircle cx='452' cy='69' r='.9' opacity='.45'/%3E%3Ccircle cx='147' cy='231' r='1.4' opacity='.65'/%3E%3Ccircle cx='392' cy='289' r='.95' opacity='.5'/%3E%3Ccircle cx='52' cy='394' r='1.2' opacity='.55'/%3E%3Ccircle cx='327' cy='437' r='.85' opacity='.45'/%3E%3Ccircle cx='497' cy='361' r='1.25' opacity='.58'/%3E%3Ccircle cx='191' cy='498' r='1' opacity='.5'/%3E%3C/g%3E%3C/svg%3E");
+  background-size:370px 370px,533px 533px;
+}
+/* أشعة مائلة من أعلى اليسار، مثل ضوء النافورة */
+.rays{position:fixed;inset:-20% -30%;z-index:-1;pointer-events:none;opacity:.5;
+  background:repeating-linear-gradient(107deg,
+    rgba(255,251,238,0) 0 42px,
+    rgba(255,251,238,.34) 42px 58px,
+    rgba(255,251,238,0) 58px 128px);
+  -webkit-mask-image:radial-gradient(62% 52% at 30% 2%,#000 0%,transparent 72%);
+  mask-image:radial-gradient(62% 52% at 30% 2%,#000 0%,transparent 72%)}
+
+/* فقاعات صابون تطلع من تحت الشاشة لفوق وتتمايل — الحجم والشفافية كما هما */
+.bubbles{position:fixed;inset:0;z-index:9;pointer-events:none;overflow:hidden}
+.bubw{position:absolute;top:0;will-change:transform;animation:rise linear infinite}
+.bub{display:block;height:auto;will-change:transform;
+  filter:drop-shadow(0 0 8px rgba(255,255,255,.5));animation:sway ease-in-out infinite alternate}
+@keyframes rise{from{transform:translate3d(0,104vh,0)}to{transform:translate3d(0,-28vh,0)}}
+@keyframes sway{from{transform:translate3d(-14px,0,0) rotate(-7deg)}to{transform:translate3d(14px,0,0) rotate(7deg)}}
+.b1{inset-inline-start:7%;  animation-duration:34s;animation-delay:-4s}  .b1 .bub{width:70px;opacity:.27;animation-duration:6.4s}
+.b2{inset-inline-start:77%; animation-duration:41s;animation-delay:-19s} .b2 .bub{width:42px;opacity:.23;animation-duration:5.1s}
+.b3{inset-inline-start:3%;  animation-duration:29s;animation-delay:-11s} .b3 .bub{width:28px;opacity:.20;animation-duration:4.4s}
+.b4{inset-inline-start:86%; animation-duration:38s;animation-delay:-27s} .b4 .bub{width:56px;opacity:.24;animation-duration:7.2s}
+.b5{inset-inline-start:12%; animation-duration:31s;animation-delay:-16s} .b5 .bub{width:36px;opacity:.20;animation-duration:5.6s}
+.b6{inset-inline-start:72%; animation-duration:44s;animation-delay:-9s}  .b6 .bub{width:78px;opacity:.24;animation-duration:8.1s}
+.b7{inset-inline-start:24%; animation-duration:27s;animation-delay:-22s} .b7 .bub{width:30px;opacity:.21;animation-duration:4.8s}
+.b8{inset-inline-start:81%; animation-duration:36s;animation-delay:-31s} .b8 .bub{width:48px;opacity:.22;animation-duration:6s}
+.b9{inset-inline-start:45%; animation-duration:25s;animation-delay:-6s}  .b9 .bub{width:22px;opacity:.18;animation-duration:3.9s}
+
+.wrap{position:relative;z-index:2;max-width:600px;margin:0 auto;padding-inline:20px;
+  padding-block:8px 52px}
+
+h1,h2,h3{margin:0;line-height:1.3}
+.stk{position:absolute;pointer-events:none;user-select:none;z-index:5;
+  filter:var(--sun);max-width:100%;height:auto}
+
+/* ══ الترويسة ═════════════════════════════════════════════════════ */
+.head{position:relative;text-align:center;padding-block:clamp(164px,47vw,204px) 30px}
+.head .bow{width:clamp(126px,40vw,176px);top:-10px;inset-inline-start:50%;
+  transform:translateX(50%) rotate(-4deg)}
+.head .peonywhite{width:clamp(50px,15vw,68px);top:88px;inset-inline-start:0;
+  transform:rotate(-14deg)}
+.head .branch{width:clamp(40px,12vw,56px);top:100px;inset-inline-end:2px;
+  transform:rotate(16deg)}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:var(--f-body);
+  font-size:11px;font-weight:800;letter-spacing:.17em;color:var(--gold);
+  margin-bottom:15px}
+.eyebrow::before,.eyebrow::after{content:'';width:26px;height:1px;
+  background:linear-gradient(to right,transparent,rgba(131,100,40,.65))}
+.head h1{font-family:var(--f-disp);font-size:clamp(46px,13.5vw,68px);font-weight:700;
+  line-height:1.16;color:var(--green);
+  text-shadow:0 1px 0 rgba(255,255,255,.9),0 0 30px rgba(255,252,242,.95)}
+.head p{margin:14px auto 0;max-width:23em;color:var(--on-page);font-size:13px;
+  line-height:1.8;text-shadow:0 1px 0 rgba(255,255,255,.55)}
+
+/* ══ الأرقام الثلاثة ══════════════════════════════════════════════ */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);margin-bottom:22px;
+  border-block:1px solid var(--hair);padding-block:4px}
+.stat{text-align:center;padding:14px 4px 13px}
+.stat+.stat{border-inline-end:1px solid var(--hair-2)}
+.stat b{display:block;font-family:var(--f-mid);font-weight:400;
+  font-size:clamp(54px,16.5vw,80px);line-height:.94;color:var(--green);
+  text-shadow:0 0 26px rgba(255,253,246,.95),0 1px 0 rgba(255,255,255,.8)}
+.stat.s2 b{color:var(--rose)}
+.stat.s3 b{color:var(--gold)}
+.stat span{display:block;font-size:11px;font-weight:800;color:var(--ink);
+  margin-top:6px;text-shadow:0 1px 0 rgba(255,255,255,.6)}
+.stat small{display:block;font-size:11px;color:var(--on-page);letter-spacing:.07em}
+
+/* ══ شريط الأسبوع ═════════════════════════════════════════════════ */
+.week{display:flex;gap:5px;justify-content:center;margin-bottom:11px}
+.day{flex:1 1 0;min-width:0;text-align:center;padding:8px 2px 9px;
+  background:rgba(252,246,241,.62);border:1px solid rgba(255,255,255,.7);
+  border-radius:3px 3px 0 0}
+.day span{display:block;font-size:clamp(9.5px,2.6vw,11px);font-weight:800;
+  color:var(--on-page)}
+.day b{display:block;font-family:var(--f-mid);font-size:19px;font-weight:400;
+  color:var(--on-page);line-height:1.2}
+.day.on{background:rgba(252,246,241,.95);border-color:rgba(131,100,40,.42)}
+.day.on span,.day.on b{color:var(--gold)}
+.day.on2{background:rgba(252,246,241,.95);border-color:rgba(60,81,64,.4)}
+.day.on2 span,.day.on2 b{color:var(--green)}
+.weeknote{margin:0 0 6px;text-align:center;font-size:12px;color:var(--on-page);
+  line-height:1.8;text-shadow:0 1px 0 rgba(255,255,255,.55)}
+
+/* ══ عنوان الفصل ══════════════════════════════════════════════════ */
+.chapter{text-align:center;margin:46px 0 20px}
+.ch-no{display:block;font-family:var(--f-body);font-size:11px;font-weight:800;
+  letter-spacing:.2em;color:var(--on-page-2);margin-bottom:5px;
+  text-shadow:0 1px 0 rgba(255,255,255,.6)}
+.ch-ttl{font-family:var(--f-disp);font-size:clamp(28px,7.4vw,36px);font-weight:700;
+  color:var(--green);line-height:1.22;
+  text-shadow:0 1px 0 rgba(255,255,255,.9),0 0 24px rgba(255,253,246,.9)}
+.orn{display:flex;align-items:center;justify-content:center;gap:9px;margin-top:9px}
+.orn::before,.orn::after{content:'';width:clamp(48px,17vw,86px);height:1px;
+  background:linear-gradient(to right,transparent,rgba(131,100,40,.6))}
+.orn::after{background:linear-gradient(to left,transparent,rgba(131,100,40,.6))}
+.orn i{width:7px;height:7px;background:var(--gold);transform:rotate(45deg);
+  box-shadow:0 0 8px rgba(255,255,255,.9)}
+
+/* ══ نافذة البستان: لوح كريمي مقوّس ═══════════════════════════════ */
+.card{position:relative;background:rgba(252,246,241,.94);color:var(--ink);
+  border-radius:clamp(66px,21vw,108px) clamp(66px,21vw,108px) 7px 7px;
+  padding:clamp(34px,9vw,44px) clamp(20px,5.4vw,28px) 28px;
+  box-shadow:var(--panel);margin-bottom:26px;
+  border:1px solid rgba(255,255,255,.85)}
+.card::after{content:'';position:absolute;inset:9px;pointer-events:none;
+  border:1px solid var(--hair);
+  border-radius:clamp(57px,19vw,99px) clamp(57px,19vw,99px) 4px 4px}
+
+.card-hd{text-align:center;margin-bottom:17px}
+.card-hd h2{font-family:var(--f-disp);font-size:clamp(25px,6.4vw,31px);
+  font-weight:700;color:var(--green);line-height:1.24}
+.chip{display:inline-block;margin-top:8px;font-family:var(--f-body);font-size:11px;
+  font-weight:800;letter-spacing:.09em;color:var(--gold);
+  border-block:1px solid rgba(131,100,40,.35);padding:3px 10px}
+.simple .card-hd h2{color:var(--sage)}
+.simple .chip{color:var(--green);border-color:rgba(60,81,64,.35)}
+.after .card-hd h2{color:var(--rose)}
+.after .chip{color:var(--rose);border-color:rgba(142,76,88,.35)}
+.paused .card-hd h2{color:var(--ink-2)}
+.paused .chip{color:var(--ink-3);border-color:var(--rule)}
+.sub{color:var(--ink-2);font-size:13px;margin:0 0 20px;line-height:1.8;
+  text-align:center}
+.sub b{color:var(--ink);font-weight:800}
+
+/* ══ الخطوات ══════════════════════════════════════════════════════ */
+ol.steps{list-style:none;margin:0;padding:0;position:relative;z-index:1}
+ol.steps>li{display:grid;grid-template-columns:32px 1fr;gap:14px;
+  padding-bottom:19px;position:relative}
+ol.steps>li:not(:last-child)::before{content:'';position:absolute;
+  inset-inline-start:15.5px;top:34px;bottom:2px;width:1px;
+  background:linear-gradient(rgba(131,100,40,.32),rgba(131,100,40,0))}
+.num{width:32px;height:32px;border-radius:50%;border:1px solid rgba(131,100,40,.5);
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(252,246,241,.98);
+  font-family:var(--f-mid);font-size:17px;font-weight:700;color:var(--gold);
+  position:relative;z-index:1}
+.simple .num{border-color:rgba(60,81,64,.5);color:var(--green)}
+.after .num{border-color:rgba(142,76,88,.5);color:var(--rose)}
+.step-b h3{font-family:var(--f-mid);font-size:19px;font-weight:700;display:inline}
+.en{font-family:var(--f-body);font-weight:800;font-size:15px}
+.time{display:inline-block;margin-inline-start:8px;font-family:var(--f-body);
+  font-size:11px;font-weight:800;letter-spacing:.05em;color:var(--gold);
+  border:1px solid rgba(131,100,40,.4);border-radius:2px;padding:2px 8px;
+  vertical-align:middle}
+.step-b p{margin:3px 0 0;font-size:13px;color:var(--ink-2);line-height:1.75}
+.step-b em{font-style:normal;color:var(--rose);font-weight:700}
+.simple .step-b em{color:var(--green)}
+
+/* ══ الجرد ════════════════════════════════════════════════════════ */
+.plist{position:relative;z-index:1}
+.prow{display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:12px 0;border-bottom:1px solid var(--hair-2)}
+.prow:last-child{border-bottom:0}
+.pname{min-width:0}
+.pname b{display:block;font-size:15px;font-weight:800;line-height:1.5}
+.pname span{display:block;font-size:12px;color:var(--ink-3);line-height:1.6}
+.ptag{flex:none;font-size:11px;font-weight:800;letter-spacing:.05em;padding:3px 9px;
+  border-radius:2px;border:1px solid;white-space:nowrap}
+.t-rep{color:var(--rose);border-color:rgba(142,76,88,.4)}
+.t-nat{color:var(--green);border-color:rgba(60,81,64,.4)}
+.t-both,.t-when{color:var(--gold);border-color:rgba(131,100,40,.42)}
+
+.alt{position:relative;z-index:1;margin:18px 0 0;padding:15px 17px;
+  background:var(--cream-2);border:1px solid rgba(131,100,40,.3);border-radius:3px;
+  font-size:12px;color:var(--ink-2);line-height:1.8}
+.alt b{color:var(--ink);font-weight:800}
+.alt em{font-style:normal;color:var(--rose);font-weight:800}
+.rules{position:relative;z-index:1;margin-top:20px;padding-top:17px;
+  border-top:1px solid var(--rule);display:flex;flex-direction:column;gap:10px}
+.rules p{margin:0;font-size:12px;color:var(--ink-2);line-height:1.8}
+.rules b{color:var(--ink);font-weight:800}
+
+/* ══ القوائم ══════════════════════════════════════════════════════ */
+ul.ticks{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;
+  gap:12px;position:relative;z-index:1}
+ul.ticks li{position:relative;padding-inline-start:21px;font-size:15px;
+  line-height:1.7}
+ul.ticks li::before{content:'';position:absolute;inset-inline-start:3px;top:11px;
+  width:6px;height:6px;background:var(--gold);transform:rotate(45deg)}
+ul.ticks em{font-style:normal;color:var(--rose);font-weight:700}
+.why{display:block;color:var(--ink-3);font-size:12px;margin-top:3px}
+.paused ul.ticks li::before{background:var(--ink-3)}
+
+/* ══ الظلّ الأخضر: أغمق ما في الصور، وهو مرسى الصفحة ══════════════ */
+.slab{position:relative;background:var(--grove);color:var(--on-g);
+  border-radius:clamp(66px,21vw,108px) clamp(66px,21vw,108px) 7px 7px;
+  padding:clamp(34px,9vw,44px) clamp(20px,5.4vw,28px) 28px;margin-bottom:26px;
+  box-shadow:var(--panel)}
+.slab::before{content:'';position:absolute;inset:0;pointer-events:none;
+  border-radius:inherit;opacity:.5;
+  background:radial-gradient(72% 46% at 26% 4%,rgba(198,214,192,.22) 0%,rgba(198,214,192,0) 64%)}
+.slab::after{content:'';position:absolute;inset:9px;pointer-events:none;
+  border:1px solid rgba(227,200,143,.45);
+  border-radius:clamp(57px,19vw,99px) clamp(57px,19vw,99px) 4px 4px}
+.slab .cosmos{width:clamp(46px,13vw,60px);top:-24px;inset-inline-start:26px;
+  transform:rotate(-9deg)}
+.slab .card-hd h2{color:var(--on-g);text-shadow:none}
+.slab .chip{color:var(--gold-lt);border-color:rgba(227,200,143,.45)}
+.slab ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;
+  gap:13px;position:relative;z-index:1}
+.slab li{position:relative;padding-inline-start:27px;font-size:15px;font-weight:700}
+.slab li::before,.slab li::after{content:'';position:absolute;top:11px;
+  inset-inline-start:2px;width:14px;height:1.5px;background:var(--pink-lt)}
+.slab li::before{transform:rotate(45deg)}
+.slab li::after{transform:rotate(-45deg)}
+.avoid{position:relative;z-index:1;margin-top:20px;padding-top:16px;
+  border-top:1px solid rgba(227,200,143,.3);font-size:12px;color:var(--sage-pale);
+  line-height:1.85;text-align:center}
+.avoid b{display:block;color:var(--on-g);font-weight:800;margin-bottom:5px}
+.avoid code{font-family:var(--f-body);font-weight:800;font-size:12px;
+  color:var(--gold-lt);white-space:nowrap}
+
+
+/* ══ البوابات: خمس نوافذ مقوّسة، ستيكر فوق كل قوس — الصفحة قسم واحد في كل مرة ══ */
+.gates{position:sticky;top:0;z-index:8;display:grid;grid-template-columns:repeat(5,1fr);
+  gap:6px;padding:26px 0 10px;margin:-8px 0 22px;
+  background:linear-gradient(rgba(244,230,226,.96) 62%,rgba(244,230,226,0))}
+.gates button{position:relative;font:inherit;font-family:var(--f-body);cursor:pointer;
+  padding:22px 2px 8px;border:1px solid rgba(255,255,255,.7);
+  background:rgba(252,246,241,.55);color:var(--ink-3);
+  border-radius:40px 40px 6px 6px;-webkit-tap-highlight-color:transparent;
+  transition:background .25s,transform .25s,color .25s}
+.gates button img{position:absolute;top:-18px;inset-inline-start:50%;
+  transform:translateX(50%) rotate(-6deg);width:34px;height:auto;
+  filter:var(--sun);transition:transform .3s;pointer-events:none}
+.gates button span{display:block;font-size:11px;font-weight:800;letter-spacing:.04em}
+.gates button.on{background:rgba(252,246,241,.98);color:var(--green);
+  transform:translateY(-3px);box-shadow:var(--panel)}
+.gates button.on::after{content:'';position:absolute;inset:5px;pointer-events:none;
+  border:1px solid var(--hair);border-radius:35px 35px 3px 3px}
+.gates button.on img{transform:translateX(50%) rotate(4deg) scale(1.22)}
+.pane{display:none}
+.pane.on{display:block;animation:rise .38s ease-out}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.pane>.chapter{margin-top:8px}
+.head{padding-block:clamp(100px,28vw,124px) 6px}
+.head .bow{width:clamp(88px,25vw,112px)}
+.head h1{font-size:clamp(36px,10.5vw,52px)}
+.head p{margin-top:8px}
+.head .peonywhite{top:70px}
+.head .branch{top:80px}
+
+/* ══ السجل: رزنامة + فحص + آخر الغسلات ═══════════════════════════ */
+/* ── تنقّل الشهر ── */
+.nav{display:flex;align-items:center;justify-content:space-between;gap:10px;
+  margin-bottom:14px;position:relative;z-index:1}
+.nav button{width:38px;height:38px;flex:none;border-radius:50%;cursor:pointer;
+  border:1px solid var(--hair);background:rgba(255,255,255,.7);
+  display:grid;place-items:center;-webkit-tap-highlight-color:transparent;padding:0}
+.nav button::before{content:'';width:9px;height:9px;border-style:solid;
+  border-color:var(--green);border-width:0}
+/* السهم مرسوم لا مكتوب: المحارف ‹› ينعكس رسمها في RTL فتقلب المعنى */
+#prev::before{border-width:2px 2px 0 0;transform:translateX(-2px) rotate(45deg)}
+#next::before{border-width:0 0 2px 2px;transform:translateX(2px) rotate(45deg)}
+.nav button:disabled{opacity:.35;cursor:default}
+.nav b{font-family:var(--f-disp);font-size:20px;font-weight:700;color:var(--ink)}
+
+/* ── الشبكة ── */
+.dows,.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;
+  position:relative;z-index:1}
+.dows{margin-bottom:5px}
+.dows span{text-align:center;font-size:11px;font-weight:800;color:var(--ink-3)}
+.cell{position:relative;aspect-ratio:1;border-radius:7px;cursor:pointer;
+  border:1px solid var(--hair-2);background:rgba(255,255,255,.45);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  font-family:var(--f-mid);font-size:15px;color:var(--ink-2);
+  -webkit-tap-highlight-color:transparent;transition:transform .12s}
+.cell:active{transform:scale(.94)}
+.cell.pad{visibility:hidden;cursor:default}
+.cell.future{opacity:.4;cursor:default}
+.cell.today{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold) inset}
+.cell.sel{box-shadow:0 0 0 2px var(--green) inset;border-color:var(--green)}
+.cell.r{background:rgba(142,76,88,.16);border-color:rgba(142,76,88,.45);color:var(--rose);
+  font-weight:700}
+.cell.n{background:rgba(60,81,64,.14);border-color:rgba(60,81,64,.45);color:var(--green);
+  font-weight:700}
+.vd{font-family:var(--f-body);font-size:11px;font-weight:800;line-height:1;height:11px}
+.vd.pos{color:var(--green)} .vd.neg{color:var(--rose)} .vd.mix{color:var(--gold)}
+.ed-vd{text-align:center;font-size:12.5px;font-weight:800;margin:-6px 0 12px}
+.ed-vd.pos{color:var(--green)} .ed-vd.neg{color:var(--rose)} .ed-vd.mix{color:var(--gold)}
+.ed-vd.none{color:var(--ink-3);font-weight:700}
+.tl .vd{display:inline-block;margin-inline-start:6px}
+.dot{display:flex;gap:2px;height:5px}
+.dot i{width:5px;height:5px;border-radius:50%}
+.dot .g{background:var(--green)}
+.dot .b{background:var(--rose)}
+
+.legend{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:14px;
+  font-size:11px;color:var(--ink-2);position:relative;z-index:1}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:11px;height:11px;border-radius:4px;border:1px solid}
+.lg-r{background:rgba(142,76,88,.16);border-color:rgba(142,76,88,.45)}
+.lg-n{background:rgba(60,81,64,.14);border-color:rgba(60,81,64,.45)}
+
+/* ── محرّر اليوم ── */
+.editor{position:relative;z-index:1;margin-top:18px;padding-top:16px;
+  border-top:1px solid var(--rule)}
+.ed-date{text-align:center;font-family:var(--f-mid);font-size:17px;font-weight:700;
+  color:var(--ink);margin-bottom:12px}
+.types{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.types button{font:inherit;font-family:var(--f-body);font-size:13px;font-weight:800;
+  padding:11px 4px;border-radius:6px;cursor:pointer;border:1px solid var(--hair-2);
+  background:rgba(255,255,255,.6);color:var(--ink-2);
+  -webkit-tap-highlight-color:transparent}
+.types button[aria-pressed="true"][data-t="r"]{background:rgba(142,76,88,.18);
+  border-color:var(--rose);color:var(--rose)}
+.types button[aria-pressed="true"][data-t="n"]{background:rgba(60,81,64,.16);
+  border-color:var(--green);color:var(--green)}
+.types button[aria-pressed="true"][data-t=""]{background:rgba(47,51,45,.08);
+  border-color:var(--ink-3);color:var(--ink-2)}
+/* المتوقع بعد كل شاور: ثلاثة أعمدة — طبيعي / إيجابي / مقلق */
+.expect{margin:-6px 0 16px;padding:13px 14px;border-radius:6px;
+  background:var(--cream-2);border:1px solid var(--hair-2);font-size:12px;line-height:1.75}
+.expect h4{margin:0 0 6px;font-family:var(--f-mid);font-size:15px;font-weight:700;color:var(--ink)}
+.expect p{margin:0 0 5px;color:var(--ink-2)}
+.expect p:last-child{margin-bottom:0}
+.expect b{font-weight:800}
+.expect .ok{color:var(--green)} .expect .nb{color:var(--gold)} .expect .no{color:var(--rose)}
+.grp{margin-bottom:14px}
+.grp h3{font-family:var(--f-body);font-size:11px;font-weight:800;letter-spacing:.1em;
+  margin-bottom:8px}
+.grp.good h3{color:var(--green)}
+.grp.bad h3{color:var(--rose)}
+.tags{display:flex;flex-wrap:wrap;gap:7px}
+.tags button{font:inherit;font-family:var(--f-body);font-size:12px;font-weight:700;
+  padding:7px 12px;border-radius:999px;cursor:pointer;border:1px solid var(--hair-2);
+  background:rgba(255,255,255,.62);color:var(--ink-2);
+  -webkit-tap-highlight-color:transparent;line-height:1.4}
+.good .tags button[aria-pressed="true"]{background:rgba(60,81,64,.16);
+  border-color:var(--green);color:var(--green)}
+.bad .tags button[aria-pressed="true"]{background:rgba(142,76,88,.16);
+  border-color:var(--rose);color:var(--rose)}
+textarea{width:100%;font:inherit;font-family:var(--f-body);font-size:13px;
+  color:var(--ink);background:rgba(255,255,255,.7);border:1px solid var(--hair-2);
+  border-radius:6px;padding:10px 12px;resize:vertical;min-height:62px;line-height:1.7}
+textarea::placeholder{color:var(--ink-3)}
+.saved{text-align:center;font-size:11px;font-weight:700;color:var(--ink-3);margin-top:12px;
+  min-height:1.4em}
+.saved.ok{color:var(--green)}
+.saved.warn{color:var(--gold)}
+
+/* ── الفحص ── */
+.verdict{position:relative;z-index:1;border-radius:8px;padding:16px 17px;margin-bottom:14px;
+  border:1px solid}
+.verdict h3{font-family:var(--f-disp);font-size:20px;font-weight:700;margin-bottom:5px}
+.verdict p{margin:0;font-size:13px;line-height:1.8;color:var(--ink-2)}
+.v-ok{background:rgba(60,81,64,.09);border-color:rgba(60,81,64,.4)}
+.v-ok h3{color:var(--green)}
+.v-warn{background:rgba(131,100,40,.1);border-color:rgba(131,100,40,.45)}
+.v-warn h3{color:var(--gold)}
+.v-act{background:rgba(142,76,88,.1);border-color:rgba(142,76,88,.45)}
+.v-act h3{color:var(--rose)}
+.v-none{background:rgba(47,51,45,.05);border-color:var(--hair-2)}
+.v-none h3{color:var(--ink-2)}
+
+.bars{position:relative;z-index:1;margin:16px 0 4px}
+.bar{margin-bottom:11px}
+.bar .lab{display:flex;justify-content:space-between;font-size:11px;font-weight:800;
+  margin-bottom:4px}
+.bar .lab span:last-child{font-family:var(--f-mid);font-size:13px}
+.bar .track{height:7px;border-radius:99px;background:rgba(47,51,45,.09);overflow:hidden}
+.bar .fill{height:100%;border-radius:99px;transition:width .35s}
+.bar.p .lab{color:var(--rose)} .bar.p .fill{background:var(--rose)}
+.bar.m .lab{color:var(--gold)} .bar.m .fill{background:var(--gold)}
+.bar.i .lab{color:var(--green)} .bar.i .fill{background:var(--green)}
+
+.notes{position:relative;z-index:1;margin-top:16px;padding-top:15px;
+  border-top:1px solid var(--rule);display:flex;flex-direction:column;gap:9px}
+.notes p{margin:0;font-size:12px;line-height:1.75;color:var(--ink-2)}
+.notes b{color:var(--ink);font-weight:800}
+.notes .sig{color:var(--rose);font-weight:800}
+
+/* ── الملخص ── */
+.sums{display:grid;grid-template-columns:repeat(3,1fr);
+  border-block:1px solid var(--hair);margin-bottom:22px}
+.sum{text-align:center;padding:14px 4px 13px}
+.sum+.sum{border-inline-end:1px solid var(--hair-2)}
+.sum b{display:block;font-family:var(--f-mid);font-weight:400;
+  font-size:clamp(40px,12vw,58px);line-height:.95;color:var(--green);
+  text-shadow:0 0 22px rgba(255,253,246,.95)}
+.sum.s2 b{color:var(--rose)} .sum.s3 b{color:var(--gold)}
+.sum span{display:block;font-size:11px;font-weight:800;color:var(--ink);margin-top:5px}
+.sum small{display:block;font-size:11px;color:var(--on-page)}
+
+.timeline{position:relative;z-index:1;display:flex;flex-direction:column;gap:10px}
+.tl{display:grid;grid-template-columns:62px 1fr;gap:11px;align-items:start;
+  padding-bottom:10px;border-bottom:1px solid var(--hair-2)}
+.tl:last-child{border-bottom:0;padding-bottom:0}
+.tl .d{font-family:var(--f-mid);font-size:13px;color:var(--ink-3);padding-top:2px}
+.tl .k{font-size:12px;font-weight:800;margin-bottom:3px}
+.tl .k.r{color:var(--rose)} .tl .k.n{color:var(--green)}
+.tl .s{font-size:12px;color:var(--ink-2);line-height:1.7}
+.tl .s em{font-style:normal;color:var(--rose);font-weight:700}
+.tl .s .gd{color:var(--green);font-weight:700}
+.empty{text-align:center;font-size:13px;color:var(--ink-3);padding:6px 0}
+
+
+
+/* ══ للمبتدئة: كل خطوة فيها الكمية والمكان والوقت كسطور منفصلة ══ */
+.how{margin:7px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:4px}
+.how li{display:block;font-size:12px;color:var(--ink-2);line-height:1.7;padding-inline-start:16px;position:relative}
+.how li::before{content:'';position:absolute;inset-inline-start:2px;top:9px;width:5px;height:5px;
+  border-radius:50%;background:var(--gold)}
+.how b{color:var(--ink);font-weight:800}
+.how em{font-style:normal;color:var(--rose);font-weight:700}
+.prep{margin-bottom:24px}
+.prep ul.ticks li{font-size:14px}
+.gloss{display:grid;grid-template-columns:1fr;gap:0;position:relative;z-index:1}
+.gloss div{padding:10px 0;border-bottom:1px solid var(--hair-2);font-size:13px;line-height:1.7;color:var(--ink-2)}
+.gloss div:last-child{border-bottom:0}
+.gloss b{display:block;color:var(--ink);font-weight:800;font-size:14px}
+
+
+/* ── نسخة احتياطية (خارج claude: السجل على الجوال فقط) ── */
+.backup{position:relative;z-index:1;margin-top:18px;padding-top:14px;border-top:1px solid var(--rule);
+  display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.backup button{font:inherit;font-family:var(--f-body);font-size:12px;font-weight:800;
+  padding:8px 14px;border-radius:999px;cursor:pointer;border:1px solid var(--hair);
+  background:rgba(255,255,255,.7);color:var(--green);-webkit-tap-highlight-color:transparent}
+.backup p{flex-basis:100%;margin:4px 0 0;font-size:11px;color:var(--ink-3);line-height:1.7}
+
+/* ══ الرافعتان ════════════════════════════════════════════════════ */
+.levers{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:4px}
+@media (max-width:520px){.levers{grid-template-columns:1fr}}
+.lever{position:relative;background:rgba(252,246,241,.78);
+  border:1px solid rgba(255,255,255,.8);border-radius:3px;padding:19px 18px 17px;
+  text-align:center;box-shadow:0 10px 26px -18px rgba(36,48,40,.5);
+  border-top:2px solid rgba(60,81,64,.5)}
+.lever h3{font-family:var(--f-disp);font-size:19px;font-weight:700;
+  color:var(--green);margin-bottom:6px}
+.lever p{margin:0;font-size:12px;color:var(--on-page);line-height:1.8}
+
+/* ══ الختام ═══════════════════════════════════════════════════════ */
+.closing{display:flex;justify-content:center;margin-top:40px}
+.closing img{width:clamp(168px,48vw,232px);transform:rotate(-2deg);
+  filter:drop-shadow(0 0 26px rgba(255,255,255,.7)) drop-shadow(0 14px 28px rgba(36,48,40,.34))}
+footer{position:relative;text-align:center;color:var(--on-page);font-size:12px;
+  line-height:2.1;padding-top:66px;margin-top:4px;
+  text-shadow:0 1px 0 rgba(255,255,255,.55)}
+footer b{color:var(--green);font-weight:800}
+footer a{color:var(--green);font-weight:800;text-decoration:none;
+  border-bottom:1px solid rgba(60,81,64,.45);padding-bottom:1px}
+footer .dove{width:clamp(40px,12vw,54px);top:8px;inset-inline-start:50%;
+  transform:translateX(50%) rotate(-6deg)}
+
+/* ══ ستيكرات الأقواس ══════════════════════════════════════════════ */
+.mark{width:clamp(30px,8.5vw,40px);top:-17px;z-index:6}
+.mark-r{inset-inline-start:clamp(34px,12vw,62px);transform:rotate(-12deg)}
+.mark-l{inset-inline-end:clamp(34px,12vw,62px);transform:rotate(11deg)}
+.mark.butterfly{width:clamp(36px,10vw,48px);top:-21px}
+.mark.peonypink{width:clamp(44px,12vw,58px);top:auto;bottom:-20px;
+  inset-inline-end:22px;transform:rotate(7deg)}
+
+@media (max-width:400px){
+  .head{padding-block:132px 24px}
+  .chapter{margin:38px 0 18px}
+  .b1 .bub,.b6 .bub{width:54px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="rays"></div>
+<div class="bubbles" aria-hidden="true">
+  <span class="bubw b1"><img class="bub" src="st/bubble.png" alt="" width="194" height="194"></span>
+  <span class="bubw b2"><img class="bub" src="st/bubble.png" alt="" width="194" height="194"></span>
+  <span class="bubw b3"><img class="bub" src="st/bubble.png" alt="" width="194" height="194"></span>
+  <span class="bubw b4"><img class="bub" src="st/bubble.png" alt="" width="194" height="194"></span>
+  <span class="bubw b5"><img class="bub" src="st/bubble.png" alt="" width="194" height="194"></span>
+  <span class="bubw b6"><img class="bub" src="st/bubble.png" alt="" width="194" height="194"></span>
+  <span class="bubw b7"><img class="bub" src="st/bubble.png" alt="" width="194" height="194"></span>
+  <span class="bubw b8"><img class="bub" src="st/bubble.png" alt="" width="194" height="194"></span>
+  <span class="bubw b9"><img class="bub" src="st/bubble.png" alt="" width="194" height="194"></span>
+</div>
+
+<div class="wrap">
+
+  <header class="head">
+    <img class="stk bow" src="st/bow.png" alt="" width="282" height="326">
+    <img class="stk peonywhite" src="st/peonywhite.png" alt="" width="268" height="276">
+    <img class="stk branch" src="st/branch.png" alt="" width="235" height="255">
+    <span class="eyebrow">بعد الكيراتين والصبغة</span>
+    <h1>روتين شعرك</h1>
+    <p>كل شي فيه من اللي عندك أصلًا. لا منتج جديد، ولا بروتين زيادة.</p>
+  </header>
+
+  <nav class="gates" aria-label="الأقسام">
+    <button type="button" data-pane="log"><img src="st/heartbub.png" alt="" width="195" height="176"><span>اليوم</span></button>
+    <button type="button" data-pane="check"><img src="st/waterflower.png" alt="" width="300" height="256"><span>الفحص</span></button>
+    <button type="button" data-pane="shower"><img src="st/bubble.png" alt="" width="194" height="194"><span>الشاور</span></button>
+    <button type="button" data-pane="after"><img src="st/butterfly.png" alt="" width="222" height="221"><span>بعده</span></button>
+    <button type="button" data-pane="care"><img src="st/bowheart.png" alt="" width="255" height="284"><span>الصيانة</span></button>
+  </nav>
+
+  <section class="pane" data-pane="log">
+  <section class="card">
+    <img class="stk" style="width:34px;top:-15px;inset-inline-end:44px;transform:rotate(10deg)"
+         src="st/waterflower.png" alt="" width="300" height="256">
+    <div class="card-hd"><h2 id="monTitle">الرزنامة</h2></div>
+
+    <div class="nav">
+      <button id="prev" type="button" aria-label="الشهر السابق"></button>
+      <b id="monLabel"></b>
+      <button id="next" type="button" aria-label="الشهر التالي"></button>
+    </div>
+
+    <div class="dows">
+      <span>أحد</span><span>إثن</span><span>ثلا</span><span>أرب</span>
+      <span>خمي</span><span>جمع</span><span>سبت</span>
+    </div>
+    <div class="grid" id="grid"></div>
+
+    <div class="legend">
+      <span><i class="lg-r"></i> ترميم</span>
+      <span><i class="lg-n"></i> طبيعي</span>
+      <span><b style="color:var(--green)">✓</b> إيجابي</span>
+      <span><b style="color:var(--gold)">~</b> مختلط</span>
+      <span><b style="color:var(--rose)">✗</b> سلبي</span>
+    </div>
+
+    <div class="editor" id="editor" hidden>
+      <div class="ed-date" id="edDate"></div>
+      <div class="ed-vd" id="edVd" hidden></div>
+      <div class="types">
+        <button type="button" data-t="r">شاور ترميم</button>
+        <button type="button" data-t="n">شاور طبيعي</button>
+        <button type="button" data-t="">امسحي</button>
+      </div>
+      <div class="expect" id="expect" hidden></div>
+      <div class="grp good">
+        <h3>لاحظتِ تحسّن</h3>
+        <div class="tags" id="tagsGood"></div>
+      </div>
+      <div class="grp bad">
+        <h3>لاحظتِ شي يقلق</h3>
+        <div class="tags" id="tagsBad"></div>
+      </div>
+      <textarea id="note" rows="2" placeholder="ملاحظة بكلمتين (اختياري)"></textarea>
+      <div class="saved" id="saved"></div>
+    </div>
+    <div class="backup">
+      <button type="button" id="bkCopy">انسخي نسخة احتياطية</button>
+      <button type="button" id="bkRestore">استرجاع</button>
+      <p>السجل محفوظ على هذا الجوال فقط. انسخي النسخة والصقيها بملاحظاتك كل فترة — مسح بيانات المتصفح يمسحها.</p>
+    </div>
+  </section>
+
+  </section>
+
+  <section class="pane" data-pane="check">
+  <div class="chapter"><span class="ch-no">آخر ٢٨ يوم</span><h2 class="ch-ttl">الفحص</h2><div class="orn"><i></i></div></div>
+  <div class="sums">
+    <div class="sum s1"><b id="sumW">٠</b><span>غسلات</span><small id="sumWs">هذا الشهر</small></div>
+    <div class="sum s2"><b id="sumR">٠</b><span>ترميم</span><small>من ٤ بالشهر</small></div>
+    <div class="sum s3"><b id="sumC">٠</b><span>أيام</span><small>بلا إشارة سلبية</small></div>
+  </div>
+
+  <section class="card">
+    <img class="stk" style="width:36px;top:-16px;inset-inline-start:44px;transform:rotate(-11deg)"
+         src="st/heartbub.png" alt="" width="195" height="176">
+    <div class="card-hd">
+      <h2>الفحص</h2>
+      <span class="chip">آخر ٢٨ يوم</span>
+    </div>
+    <div id="verdicts"></div>
+    <div class="bars" id="bars"></div>
+    <div class="notes" id="explain"></div>
+  </section>
+
+  <section class="card">
+    <img class="stk" style="width:34px;top:-15px;inset-inline-end:44px;transform:rotate(9deg)"
+         src="st/blossoms.png" alt="" width="262" height="241">
+    <div class="card-hd">
+      <h2>آخر الغسلات</h2>
+      <span class="chip">بالترتيب</span>
+    </div>
+    <div class="timeline" id="timeline"></div>
+  </section>
+
+
+  </section>
+
+  <section class="pane" data-pane="shower">
+  <div class="chapter"><span class="ch-no">الفصل الأول</span><h2 class="ch-ttl">الشاور</h2><div class="orn"><i></i></div></div>
+  <div class="stats">
+    <div class="stat s1"><b>١</b><span>شاور ترميم</span><small>بالأسبوع</small></div>
+    <div class="stat s2"><b>٢</b><span>شاور طبيعي</span><small>بالأسبوع</small></div>
+    <div class="stat s3"><b>٤</b><span>أيام بلا ماء</span><small>الباقي</small></div>
+  </div>
+
+  <div class="week">
+    <div class="day on"><span>ترميم</span><b>١</b></div>
+    <div class="day"><span>راحة</span><b>٢</b></div>
+    <div class="day"><span>راحة</span><b>٣</b></div>
+    <div class="day on2"><span>طبيعي</span><b>٤</b></div>
+    <div class="day"><span>راحة</span><b>٥</b></div>
+    <div class="day on2"><span>طبيعي</span><b>٦</b></div>
+    <div class="day"><span>راحة</span><b>٧</b></div>
+  </div>
+  <p class="weeknote">ثلاث غسلات بالأسبوع هو السقف. حرّكي الأيام حسب جدولك،<br>
+    بس لا تلصقين غسلتين ورا بعض.</p>
+
+  <section class="card prep">
+    <div class="card-hd">
+      <h2>قبل ما تدخلين</h2>
+      <span class="chip">مرة وحدة تجهّزينه</span>
+    </div>
+    <ul class="ticks">
+      <li><b>قميص قطني قديم نظيف</b> — بدل المنشفة. المنشفة العادية خشنة على شعرك.</li>
+      <li><b>مشط واسع الأسنان</b> — المسافة بين السن والسن قدّ عرض إصبع تقريبًا. مو فرشاة.</li>
+      <li><b>مؤقت</b> — ساعة الجوال. «دقيقتان» و«٥ دقائق» أرقام حقيقية مو تقدير.</li>
+      <li><b>ربطتان مرتخيتان</b> — لتقسيم الشعر أربعة أقسام وقت الماسك.</li>
+      <li><b>ماي فاتر</b> — تحسّينه على يدك دافي شوي، مو حار.</li>
+    </ul>
+  </section>
+
+  <section class="card wash">
+    <img class="stk mark mark-l waterflower" src="st/waterflower.png" alt="" width="300" height="256">
+    <div class="card-hd">
+      <h2>غسلة الترميم</h2>
+      <span class="chip">مرة بالأسبوع</span>
+    </div>
+    <p class="sub">بالترتيب من ١ إلى ٥. لا تقفزين خطوة ولا تبدّلين الترتيب.</p>
+
+    <ol class="steps">
+      <li><span class="num">١</span>
+        <div class="step-b">
+          <h3><span class="en">K18 Peptide Prep Detox</span> — شامبو</h3>
+          <p>يشيل التراكم عشان الماسك اللي بعده يدخل الشعرة.</p>
+          <ul class="how">
+            <li><b>الماي:</b> فاتر. <em>مو حار</em> — الحار يفتح قشرة الشعرة ويزيد التكسّر.</li>
+            <li><b>الكمية:</b> ابدئي بحبة لوز. الشعر الكثيف أو الطويل ياخذ <b>حبة جوز</b> — هذا طبيعي.</li>
+            <li><b>رغّيه أول:</b> بكفّك مع شوي ماي، افركي كفّينك لين ترغي. الرغوة هي اللي تتوزع، مو الجل.</li>
+            <li><b>وين:</b> على <b>الفروة</b> (الجلد تحت الشعر) و<b>الجذور</b> (أول ٢–٣ سم) فقط — ٤ مناطق: قدام، ورا، يمين، يسار.</li>
+            <li><b>لو ما وصل للكل:</b> زيدي ماي أول، وبعدين نصّ كمية ثانية على الناقص فقط.</li>
+            <li><b>كيف:</b> أطراف الأصابع لا الأظافر، حركة دائرية لطيفة دقيقة وحدة.</li>
+            <li><b>«رغوة وحدة» يعني:</b> تغسلين مرة وحدة بس، ما تعيدين الشامبو.</li>
+            <li><b>الأطوال:</b> لا شامبو ولا فرك — الرغوة تنزل عليها مع الشطف وهذا كافي.</li>
+            <li><b>الشطف:</b> لين ما تختفي الرغوة كاملة. <em>لا بلسم بعده.</em></li>
+          </ul>
+        </div></li>
+      <li><span class="num">٢</span>
+        <div class="step-b">
+          <h3>اعصريه بقميص قطني</h3>
+          <p>الماسك يحتاج شعر «معصور» — رطب بس ما ينقّط.</p>
+          <ul class="how">
+            <li><b>كيف:</b> امسكي الشعر بين كفّينك بالقميص واضغطي من فوق لتحت، مثل ما تعصرين إسفنجة برفق.</li>
+            <li><b>ممنوع:</b> الفرك، اللفّ فوق الراس، الشدّ، والمنشفة العادية (خشنة).</li>
+            <li><b>جاهز لما:</b> ما ينزل ماي لو ضغطتي، لكن الشعر باقي رطب.</li>
+          </ul>
+        </div></li>
+      <li><span class="num">٣</span>
+        <div class="step-b">
+          <h3><span class="en">L'Oréal Absolut Repair Molecular</span> — ماسك<span class="time">دقيقتان</span></h3>
+          <p>هذا هو «الترميم». ببتيد واحد بالشاور — لا K18 معه ولا ماسك ثاني فوقه.</p>
+          <ul class="how">
+            <li><b>قسّمي ٤ أقسام:</b> خط من الجبهة لورا الراس (يمين/يسار)، وخط من أذن لأذن (قدام/ورا). اربطي ٣ واشتغلي على واحد.</li>
+            <li><b>الكمية لكل قسم:</b> قدّ حبة الجوز.</li>
+            <li><b>وين:</b> من نصّ الطول إلى الأطراف. <em>لا يقرب الفروة</em> — ما تحتاجه وتصير دهنية.</li>
+            <li><b>كيف:</b> افردي الماسك بين كفّينك، ومرّريه على القسم من آخر الشعر وطالعة لفوق.</li>
+            <li><b>المشط الواسع:</b> مشّطي آخر ٥ سم أول، ثم اطلعي شوي شوي. لو علق، فكّيه بأصابعك — <em>لا تشدين.</em></li>
+            <li><b>الوقت:</b> شغّلي مؤقت دقيقتين من لما تخلصين آخر قسم.</li>
+            <li><b>الشطف:</b> ماي فاتر لين ما يصير الشعر «ناعم بلا زلق». وهذي آخر خطوة داخل الحمام.</li>
+          </ul>
+        </div></li>
+      <li><span class="num">٤</span>
+        <div class="step-b">
+          <h3><span class="en">Glaze Milk</span> — حليب</h3>
+          <p>بعد ما تطلعين من الحمام.</p>
+          <ul class="how">
+            <li><b>أول:</b> اعصريه بالقميص مرة ثانية.</li>
+            <li><b>الكمية:</b> ٤ بخّات (بخّة = ضغطة وحدة على الرشاش).</li>
+            <li><b>وين:</b> من نصّ الطول للأطراف. لا الجذور.</li>
+            <li><b>كيف:</b> بخّي وافردي بأصابعك.</li>
+          </ul>
+        </div></li>
+      <li><span class="num">٥</span>
+        <div class="step-b">
+          <h3><span class="en">Sérum Chroma</span> — سيروم</h3>
+          <p>يقفل فوق الحليب ويعطي الانزلاق للتمشيط.</p>
+          <ul class="how">
+            <li><b>الكمية:</b> ٣ ضغطات على كفّك، افركي كفّينك ببعض.</li>
+            <li><b>وين:</b> الأطراف وآخر ثلث الشعر.</li>
+            <li><b>بعدها:</b> المشط الواسع من الأطراف لفوق. <em>هذي آخر مرة تمشطينه وهو مبلول.</em></li>
+          </ul>
+        </div></li>
+    </ol>
+    <p class="alt"><b>لو رجعتِ K18 (بعد القصّ):</b> بدّلي الخطوة ٣ به — كبسة لكل قسم، ٤ دقائق بلا شطف، ثم Kérastase ٥ دقائق فوقه واشطفي الكل، وكمّلي ٤ و٥. <em>K18 وL'Oréal ما ينحطون بنفس الشاور.</em></p>
+  </section>
+
+  <section class="card simple">
+    <img class="stk mark mark-r blossoms" src="st/blossoms.png" alt="" width="262" height="241">
+    <div class="card-hd">
+      <h2>الغسلة الطبيعية</h2>
+      <span class="chip">مرتين بالأسبوع</span>
+    </div>
+    <p class="sub">خفيفة ومرطّبة فقط. <b>بلا أي شي فيه ببتيد أو بروتين</b> — ذاك يوم الترميم بس.<br>
+      <b>الترطيب هنا = Kérastase (الخطوة ٣)</b> + الحليب والسيروم. ما فيه بلسم منفصل عمدًا — بلسم فوق ماسك يثقّل شعرك.</p>
+
+    <ol class="steps">
+      <li><span class="num">١</span>
+        <div class="step-b">
+          <h3><span class="en">Horsetail</span> — شامبو (أو Glycolic Gloss)</h3>
+          <p>نفس طريقة الشامبو بالترميم بالضبط. Horsetail أخفّ على الشعرة؛ لو الفروة حكّت منه، Glycolic Gloss.</p>
+          <ul class="how">
+            <li><b>الماي:</b> فاتر.</li>
+            <li><b>الكمية:</b> ابدئي بحبة لوز؛ الكثيف/الطويل حبة جوز. رغّيه بكفّك مع شوي ماي أول.</li>
+            <li><b>وين:</b> الفروة والجذور فقط، ٤ مناطق، رغوة وحدة، أطراف الأصابع. لو ما وصل: ماي أول ثم نصّ كمية على الناقص.</li>
+            <li><b>الأطوال:</b> الاثنين فيهم سلفات — <em>لا تفركينها أبدًا</em>، الشطف يكفيها. وتجاهلي «اتركيه دقيقتين» اللي على عبوة Horsetail.</li>
+            <li><b>لا تستعملين:</b> شامبو Molecular هنا — فيه أحماض أمينية (عائلة البروتين).</li>
+          </ul>
+        </div></li>
+      <li><span class="num">٢</span>
+        <div class="step-b">
+          <h3>اعصريه بقميص قطني</h3>
+          <p>ضغط من فوق لتحت بين كفّينك. لا فرك ولا لفّ. جاهز لما ما ينقّط.</p>
+        </div></li>
+      <li><span class="num">٣</span>
+        <div class="step-b">
+          <h3><span class="en">Kérastase Gloss Absolu</span> — ماسك<span class="time">٥ دقائق</span></h3>
+          <p>ترطيب وتغليف. مو ترميم — وهذا المطلوب اليوم.</p>
+          <ul class="how">
+            <li><b>الكمية:</b> قدّ حبتين جوز لكل الشعر.</li>
+            <li><b>وين:</b> من نصّ الطول للأطراف. <em>بعيد عن الفروة.</em></li>
+            <li><b>كيف:</b> افرديه بكفّينك من الأطراف لفوق، ثم المشط الواسع من الأطراف.</li>
+            <li><b>الوقت:</b> مؤقت ٥ دقائق. <em>مو أكثر</em> — الزيادة تثقّل الشعر.</li>
+            <li><b>الشطف:</b> فاتر، لين ما يروح الزلق.</li>
+          </ul>
+        </div></li>
+      <li><span class="num">٤</span>
+        <div class="step-b">
+          <h3><span class="en">Glaze Milk</span> ثم <span class="en">Sérum</span></h3>
+          <p>برّا الحمام، بعد عصرة ثانية بالقميص.</p>
+          <ul class="how">
+            <li><b>الحليب:</b> ٤ بخّات من نصّ الطول للأطراف.</li>
+            <li><b>السيروم:</b> ٣ ضغطات على الأطراف وآخر الثلث.</li>
+            <li><b>بعدها:</b> مشط واسع من الأطراف لفوق — آخر تمشيطة على المبلول.</li>
+          </ul>
+        </div></li>
+    </ol>
+    <p class="alt"><b>شعرك أشقر رمادي — التونر (Olaplex No.4P):</b> كل أسبوعين، في غسلة طبيعية، مكان Horsetail. قدّ حبة الجوز مخفّفة بكفّينك — التوزيع المتساوي مهم وإلا يطلع اللون مبقّع — على الفروة، والرغوة تنزل على الأطوال <em>بالعصر بين الكفّين لا بالفرك</em>. أول مرة <em>دقيقة وحدة</em> بالمؤقت وشوفي اللون بضوء النهار — المسامي يمسك البنفسجي بسرعة. بعدها ٢–٣ دقائق، <em>ما تتعدّين ٣</em>. اشطفي، ثم Kérastase ٥ دقائق إلزامي. مو يوم الترميم، ومو كل غسلة.</p>
+    <p class="alt"><b>لو حسّيتيه ناشف بعدها — حسب النوع:</b><br>
+      <b>قشّ وخشن ويتكسّر</b> = بروتين زائد → أشّري «إحساس قشّ»، والترميم الجاي يصير غسلة طبيعية (أسبوع بلا ببتيد).<br>
+      <b>ناشف بس ناعم وهايش</b> = ترطيب ناقص → المرة الجاية Kérastase ٧ دقائق بدل ٥ (مرة وحدة)، وسيروم ٤ ضغطات.<br>
+      <b>الفروة تشدّ والجذور ناشفة</b> = الشامبو → نصّ الكمية، أو خفّفيه بشوي ماي بكفّك.<br>
+      <em>ما تسوينه:</em> ماسك Elvive، بلسم فوق الماسك، زيت قبل الحليب، أو غسلة ثانية. ولو مو متأكدة: اختبار الخصلة بالصيانة يفصل.</p>
+    <p class="alt"><b>لو احتجتِ ثالثة:</b> زيدي <em>غسلة طبيعية</em> — ولا تزيدين الترميم أبدًا.
+      وخلّي بين كل غسلتين يوم على الأقل. لو السبب دهون الفروة: <b>Elvive Hyaluron Pure</b> على الجذور فقط، ما يلمس الأطوال.</p>
+  </section>
+
+  <section class="card stock">
+    <img class="stk mark peonypink" src="st/peonypink.png" alt="" width="309" height="372">
+    <div class="card-hd">
+      <h2>منتجاتك</h2>
+      <span class="chip">أيّها في أي شاور</span>
+    </div>
+
+    <div class="plist">
+      <div class="prow"><div class="pname"><b>K18 Peptide Prep Detox</b><span>منظّف عميق · يوم الترميم فقط، قبل الماسك · <b>بهتان اللون ٢/٣</b></span></div><span class="ptag t-rep">ترميم</span></div>
+      <div class="prow"><div class="pname"><b>Absolut Repair Molecular شامبو</b><span>بديل Detox على يوم الترميم لو حسّيتيه جفّف · مو للطبيعية · <b>بهتان اللون ١/٣</b></span></div><span class="ptag t-rep">ترميم</span></div>
+      <div class="prow"><div class="pname"><b>L'Oréal Absolut Repair Molecular</b><span>دقيقتان ثم اشطفي · الببتيد الوحيد بالشاور · <b>بهتان اللون ٠/٣</b></span></div><span class="ptag t-rep">ترميم</span></div>
+      <div class="prow"><div class="pname"><b>Horsetail (Kuwait Shop)</b><span>الغسلة الطبيعية · بلا بروتين ✓ بلا سيليكون ✓ · SLES · فيه مادة حافظة قد تهيّج الفروة — لو حكّت ارجعي لـGlycolic Gloss · <b>بهتان اللون ١/٣</b></span></div><span class="ptag t-nat">طبيعية</span></div>
+      <div class="prow"><div class="pname"><b>Elvive Glycolic Gloss</b><span>احتياط الغسلة الطبيعية · بلا بروتين ✓ · SLS+SLES وأمودايميثيكون — فروة فقط، وDetox يشيل تراكمه · <b>بهتان اللون ٢/٣</b></span></div><span class="ptag t-nat">طبيعية</span></div>
+      <div class="prow"><div class="pname"><b>Elvive Hyaluron Pure</b><span>منقّي للفروة الدهنية · الجذور فقط · بس لو احتجتِ غسلة ثالثة · <b>بهتان اللون ٢/٣</b></span></div><span class="ptag t-when">عند الحاجة</span></div>
+      <div class="prow"><div class="pname"><b>Olaplex No.4P</b><span>تونر بنفسجي · بلا سلفات ✓ بلا بروتين ✓ · كل أسبوعين مكان Horsetail · أول مرة دقيقة، الحد ٣ · Kérastase بعده إلزامي · <b>بهتان اللون ٠/٣</b> (يرجّع الرمادي)</span></div><span class="ptag t-when">كل أسبوعين</span></div>
+      <div class="prow"><div class="pname"><b>Kérastase Gloss Absolu</b><span>ماسك ٥ دقائق · الأطوال والأطراف · <b>بهتان اللون ٠/٣</b></span></div><span class="ptag t-nat">طبيعية</span></div>
+      <div class="prow"><div class="pname"><b>Glaze Milk</b><span>٤ بخّات على المبلول · لا يُشطف · <b>بهتان اللون ٠/٣</b></span></div><span class="ptag t-both">الاثنتان</span></div>
+      <div class="prow"><div class="pname"><b>Sérum Chroma</b><span>٣ ضغطات فوق الحليب · وعلى الجاف للمعة · <b>بهتان اللون ٠/٣</b></span></div><span class="ptag t-both">الاثنتان</span></div>
+    </div>
+
+    <div class="rules">
+      <p><b>ما يخترق قبل ما يغلّف</b> — ماسك الببتيد يدخل الشعرة، فيحتاجها عارية. لهذا بلا بلسم قبله، والحليب والسيروم بعده.</p>
+      <p><b>مائي قبل زيتي</b> — الحليب ينتشر ويعطي الانزلاق، والسيروم يقفل فوقه. لا العكس.</p>
+      <p><b>لا تخلطين الشاورين</b> — شعرك مشبع بروتين، والببتيد مرة بالأسبوع هو السقف.</p>
+      <p><b>«بهتان اللون ٠–٣»</b> — ولا منتج عندك <em>يغيّر</em> اللون (ما فيه صبغة ولا أكسجين). الرقم تقدير من المكوّنات لخطر بهتان الصبغة مع الوقت، مو قياس: ٠ ماسك وليف-إن · ١ شامبو بلا سلفات أو سلفات واحد · ٢ سلفاتان أو منظّف عميق. وعلى الأطوال كلها تقريبًا ٠ لأن الشامبو على الفروة فقط. الماي الحار والشمس يبهّتون أكثر من كل هذي.</p>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-hd">
+      <h2>الكلمات اللي بالصفحة</h2>
+      <span class="chip">قاموس</span>
+    </div>
+    <div class="gloss">
+      <div><b>الفروة</b> الجلد اللي تحت الشعر. الشامبو لها هي.</div>
+      <div><b>الجذور</b> أول ٢–٣ سم من الشعرة عند الفروة.</div>
+      <div><b>الأطوال</b> باقي الشعرة من الجذور لتحت. هذي اللي تتقطّع، وهذي اللي ياخذها الماسك.</div>
+      <div><b>الأطراف</b> آخر ٥ سم. الأقدم والأضعف — أول شي يتقطّع.</div>
+      <div><b>رغوة وحدة</b> غسلة شامبو وحدة، ما تعيدينها.</div>
+      <div><b>من الأطراف لفوق</b> تبدئين بآخر الشعر وتطلعين شوي شوي. لو بدأتي من فوق تجرّين العقد لتحت وتقطّعين.</div>
+      <div><b>معصور</b> شعر رطب ما ينقّط ماي. مو مقطّر ومو ناشف.</div>
+      <div><b>ببتيد / أحماض أمينية / بروتين</b> عائلة وحدة: مواد «تقوّي» الشعرة من داخلها. شعرك مشبع منها بسبب الكيراتين، فالزيادة تخلّيه قشّ يتكسّر. لهذا مرة بالأسبوع بس.</div>
+      <div><b>ترطيب / تغليف</b> ماسك يليّن ويغلّف من برّا (Kérastase). ما يقوّي، بس يخلّي الشعرة مرنة ما تنكسر.</div>
+      <div><b>تراكم</b> طبقة من السيليكون والزيوت والمعادن تلتصق بالشعرة مع الوقت وتمنع الماسك يدخل. Detox يشيلها.</div>
+      <div><b>مسامي</b> شعر قشرته مفتوحة يشرب الماي بسرعة ويطلّعها بسرعة — حالة شعرك بعد الكيراتين والصبغة.</div>
+      <div><b>مشبع بروتين</b> الكيراتين اللي سويتيه رصّ بروتين على الشعرة وقفله بالحرارة. فأي بروتين زيادة = تكسّر أكثر.</div>
+    </div>
+  </section>
+
+
+  </section>
+
+  <section class="pane" data-pane="after">
+  <div class="chapter"><span class="ch-no">الفصل الثاني والثالث</span><h2 class="ch-ttl">بعد الشاور</h2><div class="orn"><i></i></div></div>
+  <section class="card after">
+    <img class="stk mark mark-r heartbub" src="st/heartbub.png" alt="" width="195" height="176">
+    <div class="card-hd">
+      <h2>أول ١٠ دقائق</h2>
+      <span class="chip">بعد كل غسلة</span>
+    </div>
+    <p class="sub">هنا يتقرّر شكل الشعرة لين الغسلة الجاية — الشعرة المبلولة أضعف ما تكون.</p>
+
+    <ol class="steps">
+      <li><span class="num">١</span>
+        <div class="step-b">
+          <h3>اعصريه بقميص قطني</h3>
+          <p>ضغط بالكفّين من فوق لتحت. <em>لا فرك، ولا لفّة منشفة فوق الراس</em> — الشدّ يكسر من عند الجذر.</p>
+        </div></li>
+      <li><span class="num">٢</span>
+        <div class="step-b">
+          <h3>مشط واسع وهو مبلول</h3>
+          <p>بعد الحليب والسيروم، خصلة خصلة <em>من الأطراف لفوق</em>. وهذي آخر مرة تمشطينه مبلول.</p>
+        </div></li>
+      <li><span class="num">٣</span>
+        <div class="step-b">
+          <h3>هواء حتى ٨٠٪</h3>
+          <p>مفرود على كتفج، بلا ربطة وبلا لفّ. الربطة على المبلول تطبع انكسار يبقى.</p>
+        </div></li>
+      <li><span class="num">٤</span>
+        <div class="step-b">
+          <h3>سشوار بارد للباقي<span class="time">آخر ٢٠٪</span></h3>
+          <p>لما يكون الشعر شبه ناشف وباقي رطوبة خفيفة.</p>
+          <ul class="how">
+            <li><b>الدرجة:</b> الزر البارد (❄ أو الأزرق). لو ما فيه، أقل حرارة وأقل سرعة.</li>
+            <li><b>المسافة:</b> شبر بين السشوار والشعر.</li>
+            <li><b>الاتجاه:</b> الهواء من فوق لتحت مع اتجاه الشعرة، مو عكسها.</li>
+            <li><em>ولا تنامين وشعرك مبلول.</em></li>
+          </ul>
+        </div></li>
+    </ol>
+  </section>
+
+  <section class="card rest">
+    <img class="stk mark mark-l butterfly" src="st/butterfly.png" alt="" width="222" height="221">
+    <div class="card-hd"><h2>كل يوم</h2></div>
+    <ul class="ticks">
+      <li>لا تبلّلينه أبدًا — ولا رشّة ماي</li>
+      <li>مشط واسع مرة أو مرتين، <em>من الأطراف لفوق</em></li>
+      <li><span class="en">Sérum</span> على الأطراف الجافة لو تبين لمعة</li>
+      <li>كيس وسادة ساتان</li>
+      <li>ربطة مرتخية بسكرنشي ساتان — وبدّلي مكانها</li>
+      <li>بعد الرياضة: جفّفي الفروة بالبارد، لا تغسلينه</li>
+    </ul>
+  </section>
+
+  <section class="slab">
+    <img class="stk cosmos" src="st/cosmos.png" alt="" width="242" height="212">
+    <div class="card-hd">
+      <h2>ممنوع</h2>
+      <span class="chip">٣ أشهر</span>
+    </div>
+    <ul>
+      <li>صبغة</li>
+      <li>كيراتين أو «بروتين» صالون</li>
+      <li>مكواة وسشوار حار</li>
+      <li>بيض وزبادي وحنّاء</li>
+    </ul>
+    <div class="avoid">
+      <b>واقري المكوّنات — لو فيها:</b>
+      <code>Keratin</code> · <code>Hydrolyzed protein</code> · <code>Amino acids</code> · <code>Collagen</code>
+    </div>
+  </section>
+
+  </section>
+
+  <section class="pane" data-pane="care">
+  <div class="chapter"><span class="ch-no">الفصل الرابع</span><h2 class="ch-ttl">الصيانة</h2><div class="orn"><i></i></div></div>
+  <section class="card maint">
+    <img class="stk mark mark-r bowheart" src="st/bowheart.png" alt="" width="255" height="284">
+    <div class="card-hd">
+      <h2>الصيانة</h2>
+      <span class="chip">تقويم</span>
+    </div>
+    <p class="sub">هذي اللي تنقل شعرك من «ما يتدهور» إلى «يتحسّن».</p>
+
+    <div class="plist">
+      <div class="prow"><div class="pname"><b>اغسلي كيس الوسادة</b><span>وشيكي أسنان المشط — لو فيها خشونة بدّليه</span></div><span class="ptag t-when">كل أسبوع</span></div>
+      <div class="prow"><div class="pname"><b>اختبار الخصلة المبلولة</b><span>خذي شعرة طايحة وبلّليها. امسكي طرفيها وشدّي بلطف: تتمدّد شوي وترجع = تمام · تتمدّد وما ترجع (تظل مطاطة) = تحتاج بروتين · تنقطع فورًا بلا تمدّد = بروتين زايد، ترطيب أكثر</span></div><span class="ptag t-when">كل أسبوعين</span></div>
+      <div class="prow"><div class="pname"><b>تدليك الفروة</b><span>٣ دقائق على الجاف قبل الشاور · بأطراف الأصابع لا الأظافر</span></div><span class="ptag t-when">قبل كل غسلة</span></div>
+      <div class="prow"><div class="pname"><b>صوّري شعرك بنفس الإضاءة</b><span>العين ما تلاحظ التحسّن اليومي — الصورة تلاحظه</span></div><span class="ptag t-when">كل شهر</span></div>
+      <div class="prow"><div class="pname"><b>قصّ الأطراف</b><span>دَستِنج: نصف سنتي من الأطراف فقط · بلا تغيير القصّة</span></div><span class="ptag t-when">٦–٨ أسابيع</span></div>
+    </div>
+
+    <div class="rules">
+      <p><b>الأسبوعان الأولان مو مقياس</b> — اللي انكسر انكسر. اللي تقيسينه هو الشعر الطالع بعدين.</p>
+    </div>
+  </section>
+
+  <section class="card paused">
+    <img class="stk mark mark-l lemon" src="st/lemon.png" alt="" width="221" height="233">
+    <div class="card-hd">
+      <h2>على الرف</h2>
+      <span class="chip">ليس الآن</span>
+    </div>
+    <ul class="ticks">
+      <li><span class="en">K18 Leave-in</span> — L'Oréal ياخذ مكانه الحين: يُشطف، ويغطي كامل.
+        <span class="why">يرجع بعد القصّ لما يثبت الشعر — تبادلين بينهم، مو مع بعض.</span></li>
+      <li><span class="en">Elvive</span> ماسك جوجوبا — ثقيل على شعر متكسّر الآن.
+        <span class="why">ارجعي له بعد القصّ، لما يثبت الشعر ويطول — ماسك ترطيب ممتاز للكثيف الجاف.</span></li>
+    </ul>
+  </section>
+
+  <div class="levers">
+    <div class="lever">
+      <h3>قصّي الأطراف</h3>
+      <p>أسرع مكسب. التقصّف يصعد لأعلى لو تركتيه.</p>
+    </div>
+    <div class="lever">
+      <h3>افحصي الفيريتين</h3>
+      <p>هو اللي يحدّد سمك الشعر القادم — لا أي ماسك.</p>
+    </div>
+  </div>
+
+  <div class="closing">
+    <img class="arbor" src="st/arbor.png" alt="" width="477" height="304">
+  </div>
+
+  </section>
+
+  <footer>
+    <img class="stk dove" src="st/dove.png" alt="" width="219" height="246">
+    <div id="store" style="margin-bottom:6px"></div>
+    الموجود <b>يُدار ويُقصّ</b> · والقادم <b>يُبنى من الداخل</b>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+'use strict';
+
+/* ══ الوسوم — مفصّلة على حالتك: كيراتين ثم صبغة بيومين، شعر مشبع بروتين
+      يتقطّع وهو مبلول، ونقص حديد سنوات. فكل وسم محسوب على محور. ══ */
+var GOOD = [
+  {k:'comb',  t:'مشّطت بلا تقطّع'},
+  {k:'stretch',t:'الخصلة المبلولة تتمدّد وترجع'},
+  {k:'ends',  t:'الأطراف أنعم'},
+  {k:'shine', t:'لمعة أوضح'},
+  {k:'tangle',t:'تشابك أقل'},
+  {k:'shed',  t:'تساقط أقل بالمشط'}
+];
+var BAD = [
+  {k:'snapwet', t:'تقطّع وهو مبلول',            p:2, m:0},
+  {k:'snapfast',t:'الخصلة تنقطع فورًا بلا تمدّد', p:3, m:0},
+  {k:'straw',   t:'إحساس قشّ وخشونة',           p:2, m:0},
+  {k:'frizz',   t:'هيشان',                      p:1, m:1},
+  {k:'limp',    t:'ثقيل ومرتخي ودهني',          p:0, m:3},
+  {k:'greasy',  t:'يتدهّن بسرعة',                p:0, m:2},
+  {k:'root',    t:'تساقط من الجذر (بصيلة بيضا)', p:0, m:0},
+  {k:'scalp',   t:'حكة أو قشرة بالفروة',         p:0, m:0},
+  {k:'brass',   t:'اللون قلب أصفر أو نحاسي',      p:0, m:0}
+];
+var EXPECT = {
+  r: '<h4>بعد شاور الترميم — شنو المفروض تحسّين</h4>'
+    +'<p><b class="nb">طبيعي ولا يقلق:</b> الشعر يحس «أشدّ» وأقل مرونة، ولمعة أقل من الغسلة الطبيعية، وممكن يبان جاف شوي — لأن ما فيه ماسك ترطيب. التمشيط أسهل بسبب الحليب والسيروم لا بسبب الماسك.</p>'
+    +'<p><b class="ok">إيجابي:</b> تقطّع أقل وأنتِ تمشّطين، وبعد يومين على الجاف الخصلة المبلولة تتمدّد وترجع.</p>'
+    +'<p><b class="no">مقلق — أشّريه:</b> إحساس قشّ وخشونة واضحة، تشابك أكثر من قبل الشاور، أو الخصلة تنقطع فورًا. هذي بروتين زائد، مو «الترميم يشتغل».</p>'
+    +'<p><b>متى تحكمين:</b> مو نفس اليوم. بعد ٢٤–٤٨ ساعة على الجاف.</p>',
+  n: '<h4>بعد الشاور الطبيعي — شنو المفروض تحسّين</h4>'
+    +'<p><b class="nb">طبيعي:</b> نعومة وانزلاق ولمعة، وملمس أكثر ليونة من يوم الترميم. هذا أثر Kérastase وما يعني إن الشعرة تقوّت.</p>'
+    +'<p><b class="ok">إيجابي:</b> تشابك أقل، أطراف أنعم، وتقطّع أقل بالتمشيط.</p>'
+    +'<p><b class="no">مقلق — أشّريه:</b> ثقل وارتخاء ودهنية بنفس اليوم (تغليف زائد — الماسك قرب الجذور أو أكثر من ٥ دقائق)، أو نفس التقطّع وهو مبلول (المشكلة مو ترطيب — ارجعي للفحص).</p>'
+    +'<p><b>تذكّري:</b> ولا شاور يرجّع اللي انكسر. اللي تقيسينه هو: هل التكسّر الجديد وقف؟</p>'
+};
+var BADMAP = {}; BAD.forEach(function(x){ BADMAP[x.k]=x; });
+var GOODMAP = {}; GOOD.forEach(function(x){ GOODMAP[x.k]=x; });
+
+/* حكم كل شاور على حدة: ✓ إيجابي · ✗ سلبي · ~ مختلط */
+function verdictFor(e){
+  if(!e || !e.t) return null;
+  var g=(e.g||[]).length, bw=0, bn=0;
+  (e.b||[]).forEach(function(k){ var x=BADMAP[k]; if(!x) return; bn++;
+    bw += (k==='root')?3 : (k==='scalp'||k==='brass')?1 : (x.p+x.m); });
+  if(!g && !bn) return {c:'none', s:'', t:'بلا ملاحظات — أشّري اللي حسّيتيه'};
+  if(bn===0) return {c:'pos', s:'✓', t:'نتيجة إيجابية — ولا إشارة مقلقة'};
+  if(bw>=3 || g===0) return {c:'neg', s:'✗', t:'نتيجة سلبية — الإشارات المقلقة تغلب'};
+  return {c:'mix', s:'~', t:'مختلطة — فيه تحسّن وفيه إشارة تستاهل متابعة'};
+}
+var MON = ['يناير','فبراير','مارس','أبريل','مايو','يونيو',
+           'يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+var AR = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
+function ar(n){ return String(n).replace(/\d/g,function(d){return AR[+d];}); }
+
+function key(d){
+  return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);
+}
+function parse(k){ var p=k.split('-'); return new Date(+p[0],+p[1]-1,+p[2],12,0,0); }
+function daysBetween(a,b){ return Math.round((b-a)/86400000); }
+
+var today = new Date(); today.setHours(12,0,0,0);
+var TODAY = key(today);
+var view = new Date(today.getFullYear(), today.getMonth(), 1);
+var selected = null;
+
+/* ══ التخزين ══ */
+var LS='rawan-hair-log-v1';
+var store = {};          /* date -> {t, g:[], b:[], n} */
+var docRef = null;
+var mode = 'local';
+
+function localLoad(){
+  try{ store = JSON.parse(localStorage.getItem(LS)||'{}') || {}; }catch(e){ store = {}; }
+}
+function localSave(){
+  try{ localStorage.setItem(LS, JSON.stringify(store)); }catch(e){}
+}
+
+var writing=false, pendingWrite=false;
+function persist(){
+  localSave();
+  if(!docRef){ flash('محفوظ على هالجهاز فقط','warn'); return; }
+  if(writing){ pendingWrite=true; return; }
+  writing=true;
+  docRef.set({ v:1, days:store, updated:new Date().toISOString() }).then(function(){
+    writing=false; flash('محفوظ ✓','ok');
+    if(pendingWrite){ pendingWrite=false; persist(); }
+  }).catch(function(e){
+    writing=false; pendingWrite=false;
+    flash('ما انحفظ على الحساب — محفوظ على هالجهاز','warn');
+  });
+}
+var flashT=null;
+function flash(msg,cls){
+  var el=document.getElementById('saved');
+  el.textContent=msg; el.className='saved '+(cls||'');
+  clearTimeout(flashT);
+  flashT=setTimeout(function(){ el.textContent=''; el.className='saved'; },2600);
+}
+
+function storeLine(){
+  var el=document.getElementById('store');
+  el.textContent = mode==='db'
+    ? 'محفوظ على حسابك — يفتح من أي جهاز'
+    : 'محفوظ على هذا المتصفح فقط';
+}
+
+function boot(){
+  localLoad();
+  render();
+  var w = window.claude;
+  if(!w || typeof w.use!=='function'){ storeLine(); return; }
+  w.use('db').then(function(db){
+    if(!db){ storeLine(); return; }
+    docRef = db.doc('log/washes');
+    mode='db'; storeLine();
+    docRef.onSnapshot(function(snap){
+      if(snap.exists){
+        var d = snap.data();
+        if(d && d.days && typeof d.days==='object'){
+          /* اللقطة مجمّدة — لازم نسخة قابلة للتعديل */
+          store = JSON.parse(JSON.stringify(d.days)); localSave(); render(); }
+      } else if(Object.keys(store).length){
+        persist();   /* أول مرة: ارفعي اللي على الجهاز */
+      }
+    }, function(){ mode='local'; docRef=null; storeLine(); });
+  }).catch(function(){ storeLine(); });
+}
+
+/* ══ الرزنامة ══ */
+function render(){
+  var y=view.getFullYear(), m=view.getMonth();
+  document.getElementById('monLabel').textContent = MON[m]+' '+ar(y);
+  document.getElementById('monTitle').textContent = 'الرزنامة';
+
+  var nx=document.getElementById('next');
+  nx.disabled = (y>today.getFullYear() || (y===today.getFullYear() && m>=today.getMonth()));
+
+  var first=new Date(y,m,1), n=new Date(y,m+1,0).getDate();
+  var lead=first.getDay();               /* 0 = الأحد */
+  var g=document.getElementById('grid');
+  g.textContent='';
+  var i, cell;
+  for(i=0;i<lead;i++){
+    cell=document.createElement('div'); cell.className='cell pad'; g.appendChild(cell);
+  }
+  for(i=1;i<=n;i++){
+    var d=new Date(y,m,i,12,0,0), k=key(d), e=store[k];
+    cell=document.createElement('button');
+    cell.type='button';
+    cell.className='cell'+(e&&e.t?' '+e.t:'')+(k===TODAY?' today':'')+(k===selected?' sel':'');
+    if(d>today){ cell.className+=' future'; cell.disabled=true; }
+    cell.dataset.k=k;
+    var num=document.createElement('span'); num.textContent=ar(i); cell.appendChild(num);
+    var v=verdictFor(e);
+    var vd=document.createElement('span'); vd.className='vd'+(v?' '+v.c:'');
+    vd.textContent = v? v.s : '';
+    cell.appendChild(vd);
+    cell.addEventListener('click',function(){ select(this.dataset.k); });
+    g.appendChild(cell);
+  }
+  drawEditor();
+  analyse();
+  timeline();
+  summary();
+}
+
+function select(k){
+  selected = (selected===k) ? null : k;
+  render();
+  if(selected){
+    var ed=document.getElementById('editor');
+    setTimeout(function(){ ed.scrollIntoView({behavior:'smooth',block:'nearest'}); },60);
+  }
+}
+
+function entry(k){
+  if(Object.isFrozen(store)) store = JSON.parse(JSON.stringify(store));
+  if(!store[k]) store[k]={t:'',g:[],b:[],n:''};
+  var e=store[k];
+  if(!Array.isArray(e.g)) e.g=[];
+  if(!Array.isArray(e.b)) e.b=[];
+  if(typeof e.n!=='string') e.n='';
+  return e;
+}
+function clean(k){
+  var e=store[k];
+  if(e && !e.t && !e.g.length && !e.b.length && !e.n.trim()) delete store[k];
+}
+
+function drawEditor(){
+  var ed=document.getElementById('editor');
+  if(!selected){ ed.hidden=true; return; }
+  ed.hidden=false;
+  var d=parse(selected);
+  document.getElementById('edDate').textContent =
+    ar(d.getDate())+' '+MON[d.getMonth()]+(selected===TODAY?' — اليوم':'');
+  var vv=verdictFor(store[selected]), evd=document.getElementById('edVd');
+  if(vv){ evd.hidden=false; evd.className='ed-vd '+vv.c; evd.textContent=(vv.s?vv.s+' ':'')+vv.t; }
+  else { evd.hidden=true; }
+  var e = store[selected] || {t:'',g:[],b:[],n:''};
+
+  var tb=ed.querySelectorAll('.types button');
+  Array.prototype.forEach.call(tb,function(b){
+    /* «امسحي» ليست خيارًا محفوظًا، فلا تظهر مضغوطة على يوم فاضي */
+    b.setAttribute('aria-pressed', String(!!e.t && e.t===b.dataset.t));
+    if(b.dataset.t===''){ b.disabled = !e.t; b.style.opacity = e.t? '1':'.42'; }
+    b.onclick=function(){
+      var en=entry(selected);
+      en.t = b.dataset.t;
+      if(!en.t){ en.g=[]; en.b=[]; en.n=''; }
+      clean(selected); persist(); render();
+    };
+  });
+
+  var ex=document.getElementById('expect');
+  if(e.t && EXPECT[e.t]){ ex.innerHTML=EXPECT[e.t]; ex.hidden=false; } else { ex.hidden=true; }
+
+  fillTags('tagsGood', GOOD, e.g||[], 'g');
+  fillTags('tagsBad',  BAD,  e.b||[], 'b');
+
+  var ta=document.getElementById('note');
+  ta.value = e.n||'';
+  ta.oninput=function(){ noteTimer(); };
+}
+var nT=null;
+function noteTimer(){
+  clearTimeout(nT);
+  nT=setTimeout(function(){
+    if(!selected) return;
+    var en=entry(selected);
+    en.n=document.getElementById('note').value;
+    clean(selected); persist();
+  },600);
+}
+
+function fillTags(id, list, on, field){
+  var box=document.getElementById(id);
+  box.textContent='';
+  list.forEach(function(item){
+    var b=document.createElement('button');
+    b.type='button'; b.textContent=item.t;
+    b.setAttribute('aria-pressed', String(on.indexOf(item.k)>-1));
+    b.onclick=function(){
+      var en=entry(selected), arr=en[field];
+      var ix=arr.indexOf(item.k);
+      if(ix>-1) arr.splice(ix,1); else arr.push(item.k);
+      clean(selected); persist(); render();
+    };
+    box.appendChild(b);
+  });
+}
+
+/* ══ الفحص ══ */
+function recent(days){
+  var out=[], k;
+  for(k in store){
+    if(!store.hasOwnProperty(k)) continue;
+    var diff = daysBetween(parse(k), today);
+    if(diff>=0 && diff<days) out.push({k:k, d:diff, e:store[k]});
+  }
+  out.sort(function(a,b){ return a.d-b.d; });
+  return out;
+}
+
+function analyse(){
+  var V=document.getElementById('verdicts');
+  var B=document.getElementById('bars');
+  var X=document.getElementById('explain');
+  V.textContent=''; B.textContent=''; X.textContent='';
+
+  var win = recent(28).filter(function(r){ return r.e.t; });
+  var w7  = win.filter(function(r){ return r.d<7; });
+
+  if(win.length<3){
+    V.appendChild(verdict('v-none','لسّا ما فيه بيانات كافية',
+      'سجّلي ٣ غسلات على الأقل وأنا أبدأ أقرأ. الفحص يقارن إشارات البروتين الزائد بإشارات الترطيب الناقص، ويفصل إشارة الجذر لأنها حديد لا منتجات.'));
+    return;
+  }
+
+  /* نقاط المحورين */
+  var P=0, M=0, root=0, scalp=0, brass=0, good=0, badAny=0;
+  win.forEach(function(r){
+    (r.e.b||[]).forEach(function(k){
+      var s=BADMAP[k]; if(!s) return;
+      badAny++;
+      P+=s.p; M+=s.m;
+      if(k==='root') root++;
+      if(k==='scalp') scalp++;
+      if(k==='brass') brass++;
+    });
+    good += (r.e.g||[]).length;
+  });
+
+  var rep7 = w7.filter(function(r){ return r.e.t==='r'; }).length;
+  var all7 = w7.length;
+  var rep28 = win.filter(function(r){ return r.e.t==='r'; }).length;
+
+  /* غسلتان ورا بعض */
+  var back2back=0, i;
+  var ks = win.map(function(r){ return r.d; }).sort(function(a,b){return a-b;});
+  for(i=1;i<ks.length;i++) if(ks[i]-ks[i-1]===1) back2back++;
+
+  /* أشرطة */
+  var maxAx = Math.max(P, M, 8);
+  B.appendChild(bar('p','إشارات بروتين زائد', P, maxAx));
+  B.appendChild(bar('m','إشارات ترطيب ناقص أو تغليف زائد', M, maxAx));
+  B.appendChild(bar('i','إشارات تحسّن', good, Math.max(good, badAny, 8)));
+
+  /* الحكم الأول: الجذر — محور مستقل تمامًا */
+  if(root>=2){
+    V.appendChild(verdict('v-act','التساقط من الجذر مو من المنتجات',
+      'أشّرتِ «تساقط من الجذر» '+ar(root)+' مرات. الشعرة اللي تطيح ببصيلة بيضا طلعت كاملة من الجراب — هذا «تيلوجين» — يعني الشعرة ما انكسرت، بل طاحت كاملة من جذرها لأن دورتها انتهت مبكّر. وأقرب سبب في حالتك هو مخزون الحديد مو الماسكات. لا تغيّرين شي بالروتين لهذا العرض: اسحبي فيريتين + CBC.'));
+  }
+
+  /* المحور الأساسي */
+  if(P >= M+3){
+    V.appendChild(verdict('v-act','بروتين زائد — وقّفي الببتيد أسبوعين',
+      'مجموع إشارات البروتين '+ar(P)+' مقابل '+ar(M)+' للترطيب. شعرك أصلًا مشبع من الكيراتين، وهذي الإشارات تقول إنه تشبّع أكثر. لأسبوعين: احذفي L\'Oréal Molecular (وK18 لو رجّعتيه) تمامًا، وخلّي شاور الترميم = Kérastase ماسك ١٠ دقائق فقط. رجّعي الببتيد بعدها بجلسة وحدة.'));
+  } else if(M >= P+3){
+    V.appendChild(verdict('v-warn','ترطيب زائد أو تغليف متراكم',
+      'مجموع إشارات الترطيب '+ar(M)+' مقابل '+ar(P)+' للبروتين. الشعر ثقيل ومرتخي يعني الماسك والزيت متراكمين. قلّلي Kérastase لخمس دقائق وابعديه عن الجذور، وخفّفي السيروم لضغطتين، وخلّي جلسة ترميم واحدة برجعها مكانها.'));
+  } else if(badAny===0 && good>=4){
+    V.appendChild(verdict('v-ok','الروتين ماشي — لا تغيّرين شي',
+      'ولا إشارة سلبية بآخر ٢٨ يوم، و'+ar(good)+' إشارة تحسّن. أخطر شي الحين هو إنك تضيفين منتج جديد. كمّلي بنفس التوزيع.'));
+  } else if(P>0 || M>0){
+    V.appendChild(verdict('v-warn','متوازن، بس فيه إشارات',
+      'المحوران متقاربان ('+ar(P)+' مقابل '+ar(M)+'). يعني المشكلة مو بنوع المنتج بل غالبًا بالتعامل الميكانيكي: التمشيط وهو مبلول، والربطة، والتجفيف. راجعي «أول ١٠ دقائق» بصفحة الروتين قبل ما تغيّرين أي منتج.'));
+  } else {
+    V.appendChild(verdict('v-ok','مستقر','ما فيه إشارات تستدعي تغيير. كمّلي وسجّلي.'));
+  }
+
+  /* التكرار */
+  if(rep7>1){
+    V.appendChild(verdict('v-act','ترميمان في أسبوع واحد',
+      'سجّلتِ '+ar(rep7)+' جلسات ترميم بآخر ٧ أيام. السقف واحدة. هذا أسرع طريق لتشبّع البروتين اللي أنتِ أصلًا فيه.'));
+  }
+  if(all7>3){
+    V.appendChild(verdict('v-warn','غسلات أكثر من السقف',
+      ar(all7)+' غسلات بآخر ٧ أيام والسقف ٣. كل غسلة وقت تبليل، والشعرة المبلولة أضعف ما تكون.'));
+  }
+
+  /* الشرح */
+  var x=[];
+  x.push('<p><b>كيف يُحسب:</b> كل إشارة سلبية لها وزن على محور واحد. «الخصلة تنقطع فورًا» تساوي ٣ نقاط بروتين لأنها أوضح اختبار عندك، و«ثقيل ومرتخي» تساوي ٣ ترطيب. الفرق ٣ نقاط فأكثر هو اللي يحرّك التوصية.</p>');
+  if(back2back>0) x.push('<p><span class="sig">'+ar(back2back)+' مرة</span> غسلتِ يومين ورا بعض. خلّي بينهما يوم على الأقل.</p>');
+  x.push('<p><b>آخر ٢٨ يوم:</b> '+ar(win.length)+' غسلة، منها '+ar(rep28)+' ترميم.</p>');
+  if(scalp>=2) x.push('<p><span class="sig">الفروة</span> — أشّرتِ حكة أو قشرة '+ar(scalp)+' مرات. هذي فروة لا شعرة: ما تنحل بماسك الأطراف.</p>');
+  if(brass>=1) x.push('<p><span class="sig">اللون</span> — أشّرتِ «قلب أصفر/نحاسي» '+ar(brass)+' مرة. هذا بهتان التونر الرمادي، مو منتج غيّر اللون. الحل: ماسك بنفسجي كل أسبوعين على الأطوال (بلا بروتين)، وDetox أسبوعي لنحاس الماي، وماي فاتر.</p>');
+  if(root===1) x.push('<p>أشّرتِ «تساقط من الجذر» مرة وحدة — مو كافية لحكم. لو تكررت، الفحص يرفعها لتوصية الفيريتين.</p>');
+  X.innerHTML = x.join('');
+}
+
+function verdict(cls,h,p){
+  var d=document.createElement('div'); d.className='verdict '+cls;
+  var t=document.createElement('h3'); t.textContent=h;
+  var b=document.createElement('p'); b.textContent=p;
+  d.appendChild(t); d.appendChild(b); return d;
+}
+function bar(cls,label,val,max){
+  var d=document.createElement('div'); d.className='bar '+cls;
+  var l=document.createElement('div'); l.className='lab';
+  var a=document.createElement('span'); a.textContent=label;
+  var c=document.createElement('span'); c.textContent=ar(val);
+  l.appendChild(a); l.appendChild(c);
+  var tr=document.createElement('div'); tr.className='track';
+  var f=document.createElement('div'); f.className='fill';
+  f.style.width = Math.min(100, max? (val/max*100):0)+'%';
+  tr.appendChild(f); d.appendChild(l); d.appendChild(tr); return d;
+}
+
+/* ══ آخر الغسلات ══ */
+function timeline(){
+  var T=document.getElementById('timeline'); T.textContent='';
+  var rows = recent(3650).filter(function(r){ return r.e.t; }).slice(0,8);
+  if(!rows.length){
+    var e=document.createElement('div'); e.className='empty';
+    e.textContent='ما سجّلتِ ولا غسلة بعد.'; T.appendChild(e); return;
+  }
+  rows.forEach(function(r){
+    var d=parse(r.k);
+    var row=document.createElement('div'); row.className='tl';
+    var dd=document.createElement('div'); dd.className='d';
+    dd.textContent = ar(d.getDate())+' '+MON[d.getMonth()].slice(0,4);
+    var bd=document.createElement('div');
+    var k=document.createElement('div'); k.className='k '+r.e.t;
+    k.textContent = r.e.t==='r'?'شاور ترميم':'شاور طبيعي';
+    var vr=verdictFor(r.e);
+    if(vr && vr.s){ var vb=document.createElement('span'); vb.className='vd '+vr.c; vb.textContent=vr.s; k.appendChild(vb); }
+    bd.appendChild(k);
+    var parts=[];
+    (r.e.g||[]).forEach(function(g){ if(GOODMAP[g]) parts.push('<span class="gd">'+GOODMAP[g].t+'</span>'); });
+    (r.e.b||[]).forEach(function(b){ if(BADMAP[b]) parts.push('<em>'+BADMAP[b].t+'</em>'); });
+    if(r.e.n && r.e.n.trim()) parts.push(escapeHtml(r.e.n.trim()));
+    var s=document.createElement('div'); s.className='s';
+    s.innerHTML = parts.length ? parts.join(' · ') : '<span style="color:var(--ink-3)">بلا ملاحظات</span>';
+    bd.appendChild(s);
+    row.appendChild(dd); row.appendChild(bd);
+    T.appendChild(row);
+  });
+}
+function escapeHtml(s){
+  return s.replace(/[&<>"']/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+
+/* ══ الملخص ══ */
+function summary(){
+  var y=view.getFullYear(), m=view.getMonth();
+  var w=0,r=0,k;
+  for(k in store){
+    if(!store.hasOwnProperty(k)) continue;
+    var d=parse(k);
+    if(d.getFullYear()===y && d.getMonth()===m && store[k].t){
+      w++; if(store[k].t==='r') r++;
+    }
+  }
+  document.getElementById('sumW').textContent=ar(w);
+  document.getElementById('sumR').textContent=ar(r);
+  document.getElementById('sumWs').textContent=MON[m];
+
+  /* أيام متتالية بلا إشارة سلبية، من اليوم للوراء */
+  var streak=0, cur=new Date(today), keys=Object.keys(store).filter(function(k){return store[k].t;});
+  var first = keys.length ? parse(keys.sort()[0]) : null;
+  var span = first ? daysBetween(first,today)+1 : 0;
+  for(var i=0;i<span;i++){
+    var kk=key(cur), e=store[kk];
+    if(e && e.b && e.b.length) break;
+    streak++;
+    cur.setDate(cur.getDate()-1);
+  }
+  document.getElementById('sumC').textContent=ar(streak);
+}
+
+document.getElementById('prev').onclick=function(){
+  view=new Date(view.getFullYear(),view.getMonth()-1,1); selected=null; render();
+};
+document.getElementById('next').onclick=function(){
+  view=new Date(view.getFullYear(),view.getMonth()+1,1); selected=null; render();
+};
+
+boot();
+})();
+
+/* ══ نسخة احتياطية ══ */
+(function(){
+  var K='rawan-hair-log-v1';
+  var c=document.getElementById('bkCopy'), r=document.getElementById('bkRestore');
+  if(!c||!r) return;
+  c.onclick=function(){
+    var txt=localStorage.getItem(K)||'{}';
+    var done=function(){ c.textContent='انتسخت ✓'; setTimeout(function(){c.textContent='انسخي نسخة احتياطية';},2000); };
+    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(done,function(){ window.prompt('انسخي هذا النص:',txt); }); }
+    else window.prompt('انسخي هذا النص:',txt);
+  };
+  r.onclick=function(){
+    var txt=window.prompt('الصقي النسخة هنا:'); if(!txt) return;
+    try{
+      var inc=JSON.parse(txt); if(!inc||typeof inc!=='object') throw 0;
+      var cur=JSON.parse(localStorage.getItem(K)||'{}');
+      /* الاسترجاع يضيف ولا يمسح */
+      for(var k in inc){ if(inc.hasOwnProperty(k) && !cur[k]) cur[k]=inc[k]; }
+      localStorage.setItem(K,JSON.stringify(cur));
+      location.reload();
+    }catch(e){ window.alert('النص مو نسخة صحيحة.'); }
+  };
+})();
+if('serviceWorker' in navigator){ window.addEventListener('load',function(){ navigator.serviceWorker.register('./sw.js').catch(function(){}); }); }
+
+
+/* ══ البوابات ══ */
+(function(){
+  var PK='rawan-hair-pane';
+  var btns=document.querySelectorAll('.gates button'), panes=document.querySelectorAll('.pane');
+  function show(id,push){
+    var ok=false;
+    Array.prototype.forEach.call(panes,function(p){ var on=p.dataset.pane===id; p.classList.toggle('on',on); if(on) ok=true; });
+    if(!ok){ id='log'; Array.prototype.forEach.call(panes,function(p){ p.classList.toggle('on',p.dataset.pane===id); }); }
+    Array.prototype.forEach.call(btns,function(b){ b.classList.toggle('on',b.dataset.pane===id); b.setAttribute('aria-current', b.dataset.pane===id?'page':'false'); });
+    try{ localStorage.setItem(PK,id); }catch(e){}
+    if(push){ try{ history.replaceState(null,'','#'+id); }catch(e){} window.scrollTo({top:0,behavior:'smooth'}); }
+  }
+  Array.prototype.forEach.call(btns,function(b){ b.addEventListener('click',function(){ show(b.dataset.pane,true); }); });
+  var start=(location.hash||'').slice(1); if(!start){ try{ start=localStorage.getItem(PK)||'log'; }catch(e){ start='log'; } }
+  show(start,false);
+})();
+
+</script>
+</html>
