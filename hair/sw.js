@@ -1,7 +1,7 @@
 /* عامل الخدمة.
    القاعدة: الصفحة نفسها من الشبكة أولًا (عشان أي تحديث يوصلك فورًا)،
    والأصول الثابتة من المخزون أولًا (عشان السرعة). وبدون إنترنت: كل شي من المخزون. */
-const CACHE = 'hair-v3';
+const CACHE = 'hair-v4';
 const CORE = ['./','./index.html','./manifest.webmanifest',
               './icon-192.png','./icon-512.png','./icon-maskable.png',
               './st/bow.png','./st/bubble.png','./st/peonywhite.png','./st/branch.png',
@@ -10,7 +10,12 @@ const CORE = ['./','./index.html','./manifest.webmanifest',
               './st/arbor.png','./st/dove.png',
               './gen/garden.jpg','./gen/sparkle.jpg','./gen/bub1.png','./gen/bub2.png',
               './gen/bub3.png','./gen/bub4.png','./gen/bub5.png','./gen/bub6.png',
-              './apple-touch-icon.png'];
+              './apple-touch-icon.png',
+              './fonts/ArefRuqaa-700-arabic.woff2','./fonts/ArefRuqaa-700-latin.woff2',
+              './fonts/Amiri-400-arabic.woff2','./fonts/Amiri-400-latin.woff2',
+              './fonts/Amiri-700-arabic.woff2','./fonts/Amiri-700-latin.woff2',
+              './fonts/Almarai-400-arabic.woff2','./fonts/Almarai-400-latin.woff2',
+              './fonts/Almarai-800-arabic.woff2','./fonts/Almarai-800-latin.woff2'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE)
@@ -32,18 +37,19 @@ self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
 
   if (isPage(e.request)) {
-    /* الشبكة أولًا: تحديثاتك تظهر بلا أي خطوة يدوية */
+    /* المخزون أولًا: الصفحة تفتح فورًا. وبالخلفية نجيب النسخة الجديدة
+       فتظهر من الفتحة الجاية — أسرع فتح مقابل تأخير تحديث بفتحة وحدة. */
     e.respondWith(
-      fetch(e.request)
-        .then(res => {
-          /* لا تخزّني ردًّا فاشلًا مكان الصفحة — بيصير هو نسخة «بدون إنترنت» */
+      caches.match('./index.html').then(hit => {
+        const net = fetch(e.request).then(res => {
           if (res && res.ok) {
             const copy = res.clone();
             caches.open(CACHE).then(c => c.put('./index.html', copy)).catch(()=>{});
           }
           return res;
-        })
-        .catch(() => caches.match('./index.html').then(hit => hit || caches.match('./')))
+        }).catch(() => hit);
+        return hit || net;
+      })
     );
     return;
   }
