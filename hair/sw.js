@@ -1,7 +1,7 @@
 /* عامل الخدمة.
    القاعدة: الصفحة نفسها من الشبكة أولًا (عشان أي تحديث يوصلك فورًا)،
    والأصول الثابتة من المخزون أولًا (عشان السرعة). وبدون إنترنت: كل شي من المخزون. */
-const CACHE = 'hair-v12';
+const CACHE = 'hair-v13';
 const CORE = ['./','./index.html','./manifest.webmanifest',
               './icon-192.png','./icon-512.png','./icon-maskable.png',
               './st/bow.png','./st/bubble.png','./st/peonywhite.png','./st/branch.png',
@@ -17,6 +17,8 @@ const CORE = ['./','./index.html','./manifest.webmanifest',
               './gen/bub15.png','./gen/bub16.png',
               './gen/bub17.png','./gen/bub18.png',
               './gen/bub19.png','./gen/bub20.png',
+              './gen/bub21.png','./gen/bub22.png','./gen/bub23.png','./gen/bub24.png',
+              './gen/bub25.png','./gen/bub26.png','./gen/bub27.png',
 
               './apple-touch-icon.png',
               './fonts/ArefRuqaa-700-arabic.woff2','./fonts/ArefRuqaa-700-latin.woff2',
