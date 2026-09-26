@@ -1,7 +1,7 @@
 /* عامل الخدمة.
    القاعدة: الصفحة نفسها من الشبكة أولًا (عشان أي تحديث يوصلك فورًا)،
    والأصول الثابتة من المخزون أولًا (عشان السرعة). وبدون إنترنت: كل شي من المخزون. */
-const CACHE = 'hair-v10';
+const CACHE = 'hair-v11';
 const CORE = ['./','./index.html','./manifest.webmanifest',
               './icon-192.png','./icon-512.png','./icon-maskable.png',
               './st/bow.png','./st/bubble.png','./st/peonywhite.png','./st/branch.png',
@@ -10,6 +10,14 @@ const CORE = ['./','./index.html','./manifest.webmanifest',
               './st/arbor.png','./st/dove.png',
               './gen/garden.jpg','./gen/bub1.png','./gen/bub2.png',
               './gen/bub3.png','./gen/bub4.png','./gen/bub5.png','./gen/bub6.png',
+              './gen/bub7.png','./gen/bub8.png',
+              './gen/bub9.png','./gen/bub10.png',
+              './gen/bub11.png','./gen/bub12.png',
+              './gen/bub13.png','./gen/bub14.png',
+              './gen/bub15.png','./gen/bub16.png',
+              './gen/bub17.png','./gen/bub18.png',
+              './gen/bub19.png','./gen/bub20.png',
+
               './apple-touch-icon.png',
               './fonts/ArefRuqaa-700-arabic.woff2','./fonts/ArefRuqaa-700-latin.woff2',
               './fonts/Amiri-400-arabic.woff2','./fonts/Amiri-400-latin.woff2',
