@@ -1,7 +1,7 @@
 /* عامل الخدمة.
    القاعدة: الصفحة نفسها من الشبكة أولًا (عشان أي تحديث يوصلك فورًا)،
    والأصول الثابتة من المخزون أولًا (عشان السرعة). وبدون إنترنت: كل شي من المخزون. */
-const CACHE = 'hair-v14';
+const CACHE = 'hair-v15';
 const CORE = ['./','./index.html','./manifest.webmanifest',
               './icon-192.png','./icon-512.png','./icon-maskable.png',
               './st/bow.png','./st/bubble.png','./st/peonywhite.png','./st/branch.png',
