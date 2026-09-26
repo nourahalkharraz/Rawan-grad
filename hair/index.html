@@ -540,7 +540,9 @@ textarea::placeholder{color:var(--ink-3)}
 .gloss b{display:block;color:var(--ink);font-weight:800;font-size:14px}
 
 
-/* ── نسخة احتياطية (خارج claude: السجل على الجوال فقط) ── */
+
+
+/* ── نسخة احتياطية ونقل ── */
 .backup{position:relative;z-index:1;margin-top:18px;padding-top:14px;border-top:1px solid var(--rule);
   display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .backup button{font:inherit;font-family:var(--f-body);font-size:12px;font-weight:800;
@@ -722,9 +724,10 @@ footer .dove{width:clamp(40px,12vw,54px);top:8px;inset-inline-start:50%;
       <div class="saved" id="saved"></div>
     </div>
     <div class="backup">
+      <button type="button" id="bkLink">رابط ينقل سجلّي للجوال</button>
       <button type="button" id="bkCopy">انسخي نسخة احتياطية</button>
       <button type="button" id="bkRestore">استرجاع</button>
-      <p>السجل محفوظ على هذا الجوال فقط. انسخي النسخة والصقيها بملاحظاتك كل فترة — مسح بيانات المتصفح يمسحها.</p>
+      <p id="bkNote"></p>
     </div>
   </section>
 
@@ -1216,7 +1219,7 @@ function storeLine(){
   var el=document.getElementById('store');
   el.textContent = mode==='db'
     ? 'محفوظ على حسابك — يفتح من أي جهاز'
-    : 'محفوظ على هذا المتصفح فقط';
+    : 'محفوظ على هذا المتصفح فقط — سفاري والأيقونة مخزنان منفصلان';
 }
 
 function boot(){
@@ -1557,29 +1560,55 @@ document.getElementById('next').onclick=function(){
 boot();
 })();
 
-/* ══ نسخة احتياطية ══ */
+/* ══ نسخة احتياطية ونقل بين الصفحات ══
+   السجل يعيش في مكانين لا يتكلمان: صفحة claude تحفظ على حسابك، وصفحة GitHub
+   تحفظ على المتصفح فقط — وسفاري وأيقونة الشاشة الرئيسية مخزنان منفصلان.
+   فالنقل يمر برابط يحمل السجل نفسه (#import=…) أو بنسخة تُلصق.            */
 (function(){
-  var K='rawan-hair-log-v1';
-  var c=document.getElementById('bkCopy'), r=document.getElementById('bkRestore');
-  if(!c||!r) return;
-  c.onclick=function(){
-    var txt=localStorage.getItem(K)||'{}';
-    var done=function(){ c.textContent='انتسخت ✓'; setTimeout(function(){c.textContent='انسخي نسخة احتياطية';},2000); };
-    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(done,function(){ window.prompt('انسخي هذا النص:',txt); }); }
-    else window.prompt('انسخي هذا النص:',txt);
-  };
-  r.onclick=function(){
-    var txt=window.prompt('الصقي النسخة هنا:'); if(!txt) return;
+  var K='rawan-hair-log-v1', GH='https://nourahalkharraz.github.io/Rawan-grad/hair/';
+  var onGH = location.href.indexOf('github.io')>-1;
+  function cur(){ try{ return JSON.parse(localStorage.getItem(K)||'{}')||{}; }catch(e){ return {}; } }
+  function mergeInto(inc){
+    var c=cur(), n=0;
+    for(var k in inc){ if(inc.hasOwnProperty(k) && !c[k] && inc[k] && inc[k].t){ c[k]=inc[k]; n++; } }
+    localStorage.setItem(K,JSON.stringify(c)); return n;
+  }
+  /* استيراد من الرابط */
+  var m=/[#&]import=([^&]+)/.exec(location.hash||'');
+  if(m){
     try{
-      var inc=JSON.parse(txt); if(!inc||typeof inc!=='object') throw 0;
-      var cur=JSON.parse(localStorage.getItem(K)||'{}');
-      /* الاسترجاع يضيف ولا يمسح */
-      for(var k in inc){ if(inc.hasOwnProperty(k) && !cur[k]) cur[k]=inc[k]; }
-      localStorage.setItem(K,JSON.stringify(cur));
-      location.reload();
-    }catch(e){ window.alert('النص مو نسخة صحيحة.'); }
+      var json=decodeURIComponent(escape(atob(m[1].replace(/-/g,'+').replace(/_/g,'/'))));
+      var n=mergeInto(JSON.parse(json));
+      history.replaceState(null,'',location.pathname+'#log');
+      window.alert(n? 'انضاف '+n+' يوم لسجلّك على هالجهاز.' : 'السجل موجود أصلًا — ما فيه جديد.');
+      location.reload(); return;
+    }catch(e){ window.alert('الرابط ما فيه نسخة صحيحة.'); }
+  }
+  var note=document.getElementById('bkNote');
+  if(note) note.textContent = onGH
+    ? 'هذي الصفحة تحفظ على هذا المتصفح فقط — وسفاري وأيقونة الشاشة الرئيسية مخزنان منفصلان. «رابط ينقل سجلّي» يفتحينه في المكان اللي تبين السجل فيه.'
+    : 'سجلّك هنا محفوظ على حسابك. لنقله لصفحة الجوال: «رابط ينقل سجلّي» ثم افتحيه هناك.';
+  var lk=document.getElementById('bkLink'), c=document.getElementById('bkCopy'), r=document.getElementById('bkRestore');
+  function flashBtn(b,t){ var o=b.textContent; b.textContent=t; setTimeout(function(){ b.textContent=o; },2200); }
+  function toClip(txt,b,done){
+    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(function(){flashBtn(b,done);},function(){ window.prompt('انسخي:',txt); }); }
+    else window.prompt('انسخي:',txt);
+  }
+  if(lk) lk.onclick=function(){
+    var json=JSON.stringify(cur());
+    var b64=btoa(unescape(encodeURIComponent(json))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+    var url=GH+'#import='+b64;
+    if(navigator.share){ navigator.share({title:'سجل شعرك',url:url}).catch(function(){ toClip(url,lk,'انتسخ الرابط ✓'); }); }
+    else toClip(url,lk,'انتسخ الرابط ✓');
+  };
+  if(c) c.onclick=function(){ toClip(JSON.stringify(cur()),c,'انتسخت ✓'); };
+  if(r) r.onclick=function(){
+    var txt=window.prompt('الصقي النسخة هنا:'); if(!txt) return;
+    try{ var n=mergeInto(JSON.parse(txt)); location.reload(); }catch(e){ window.alert('النص مو نسخة صحيحة.'); }
   };
 })();
+
+
 if('serviceWorker' in navigator){ window.addEventListener('load',function(){ navigator.serviceWorker.register('./sw.js').catch(function(){}); }); }
 
 
