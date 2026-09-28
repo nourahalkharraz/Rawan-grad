@@ -532,6 +532,43 @@ textarea::placeholder{color:var(--ink-3)}
   border-radius:50%;background:var(--gold)}
 .how b{color:var(--ink);font-weight:800}
 .how em{font-style:normal;color:var(--rose);font-weight:700}
+
+/* ══ خطوات أوضح: خلاصة + حقائق + تفاصيل مطوية ═══════════════════ */
+.flow{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px 0;margin:0 0 14px}
+.flow+.flow{margin-top:-8px}
+.flow em{font-style:normal;font-size:10.5px;font-weight:800;color:var(--ink-3);margin-inline-end:7px;min-width:4.6em;text-align:end}
+.flow span{font-size:11px;font-weight:800;color:var(--gold);background:rgba(255,255,255,.72);border:1px solid rgba(131,100,40,.4);border-radius:999px;padding:4px 8px;white-space:nowrap;line-height:1.3}
+.simple .flow span{color:var(--green);border-color:rgba(60,81,64,.3)}
+.flow span small{font-size:10px;font-weight:800;color:var(--rose);margin-inline-start:4px}
+.flow i{width:11px;height:1px;background:rgba(60,81,64,.4);position:relative;margin:0 1px}
+.flow i::after{content:'';position:absolute;left:-1px;top:-3px;width:6px;height:6px;border-left:1px solid rgba(60,81,64,.65);border-bottom:1px solid rgba(60,81,64,.65);transform:rotate(45deg)}
+.facts{display:flex;flex-wrap:wrap;gap:5px;margin:8px 0 0}
+.facts span{font-size:11.5px;font-weight:700;color:var(--ink-2);background:rgba(60,81,64,.07);border-radius:8px;padding:4px 9px;line-height:1.45}
+.facts span b{color:var(--ink);font-weight:800;margin-inline-end:4px}
+.facts .t{color:var(--rose);background:rgba(142,76,88,.09);font-weight:800}
+details.more{margin-top:7px}
+details.more>summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:800;color:var(--green);padding:3px 0;-webkit-tap-highlight-color:transparent}
+details.more>summary::-webkit-details-marker{display:none}
+details.more>summary::before{content:'';width:6px;height:6px;border-left:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(-45deg) translateY(-1px);transition:transform .2s}
+details.more[open]>summary::before{transform:rotate(135deg) translateY(-1px)}
+details.more[open]>summary{color:var(--ink-3)}
+details.more>p{margin:8px 0 0;font-size:13px;color:var(--ink-2);line-height:1.75}
+.allbtn{position:relative;z-index:1;display:block;margin:-8px auto 18px;font:inherit;font-family:var(--f-body);font-size:11.5px;font-weight:800;letter-spacing:.04em;color:var(--ink-3);background:none;border:1px dashed rgba(60,81,64,.35);border-radius:999px;padding:6px 14px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+ol.steps>li.brk{display:block;padding:0 0 18px;text-align:center}
+ol.steps>li.brk::before{display:none}
+ol.steps>li.brk span{display:inline-block;font-size:12px;font-weight:800;color:var(--rose);background:rgba(142,76,88,.08);border-radius:999px;padding:6px 14px;line-height:1.5}
+details.fold{position:relative;z-index:1}
+details.fold>summary{list-style:none;cursor:pointer;display:block;-webkit-tap-highlight-color:transparent}
+details.fold>summary::-webkit-details-marker{display:none}
+details.fold>summary .card-hd{margin-bottom:0}
+details.fold[open]>summary .card-hd{margin-bottom:17px}
+details.fold .chip .c-open{display:none}
+details.fold[open] .chip .c-open{display:inline}
+details.fold[open] .chip .c-shut{display:none}
+details.cases{margin-top:14px;padding-top:14px;border-top:1px solid var(--hair-2)}
+details.cases .card-hd h2{font-size:21px}
+details.cases[open]>summary .card-hd{margin-bottom:2px}
+details.cases .alt{margin-top:12px}
 .prep{margin-bottom:24px}
 .prep ul.ticks li{font-size:14px}
 .gloss{display:grid;grid-template-columns:1fr;gap:0;position:relative;z-index:1}
@@ -783,150 +820,189 @@ footer .dove{width:clamp(40px,12vw,54px);top:8px;inset-inline-start:50%;
     بس لا تلصقين غسلتين ورا بعض.</p>
 
   <section class="card prep">
-    <div class="card-hd">
-      <h2>قبل ما تدخلين</h2>
-      <span class="chip">مرة وحدة تجهّزينه</span>
-    </div>
-    <ul class="ticks">
-      <li><b>قميص قطني قديم نظيف</b> — بدل المنشفة. المنشفة العادية خشنة على شعرك.</li>
-      <li><b>مقص شعر صغير</b> — للدستنج بالبيت كل ٦ أسابيع، مو مقص ورق.</li>
-      <li><b>مشط واسع الأسنان</b> — المسافة بين السن والسن قدّ عرض إصبع تقريبًا. مو فرشاة.</li>
-      <li><b>مؤقت</b> — ساعة الجوال. «دقيقتان» و«٥ دقائق» أرقام حقيقية مو تقدير.</li>
-      <li><b>ربطتان مرتخيتان</b> — لتقسيم الشعر أربعة أقسام وقت الماسك.</li>
-      <li><b>ماي فاتر</b> — تحسّينه على يدك دافي شوي، مو حار.</li>
-    </ul>
+    <details class="fold">
+      <summary>
+        <div class="card-hd">
+          <h2>قبل ما تدخلين</h2>
+          <span class="chip">٦ أشياء تجهّزينها مرة وحدة · <span class="c-shut">اضغطي تشوفينها</span><span class="c-open">اضغطي تقفلينها</span></span>
+        </div>
+      </summary>
+      <ul class="ticks">
+        <li><b>قميص قطني قديم نظيف</b> — بدل المنشفة. المنشفة العادية خشنة على شعرك.</li>
+        <li><b>مقص شعر صغير</b> — للدستنج بالبيت كل ٦ أسابيع، مو مقص ورق.</li>
+        <li><b>مشط واسع الأسنان</b> — المسافة بين السن والسن قدّ عرض إصبع تقريبًا. مو فرشاة.</li>
+        <li><b>مؤقت</b> — ساعة الجوال. «دقيقتان» و«٥ دقائق» أرقام حقيقية مو تقدير.</li>
+        <li><b>ربطتان مرتخيتان</b> — لتقسيم الشعر أربعة أقسام وقت الماسك.</li>
+        <li><b>ماي فاتر</b> — تحسّينه على يدك دافي شوي، مو حار.</li>
+      </ul>
+    </details>
   </section>
 
   <section class="card wash">
     <img loading="lazy" decoding="async" class="stk mark mark-l waterflower" src="st/waterflower.png" alt="" width="300" height="256">
     <div class="card-hd">
       <h2>غسلة العناية العميقة</h2>
-      <span class="chip">مرة بالأسبوع</span>
+      <span class="chip">مرة بالأسبوع · بلا بروتين</span>
     </div>
-    <p class="sub">بالترتيب من ١ إلى ٥. <b>بلا بروتين حاليًا</b> — شعرك يقشّ منه، فالببتيد موقوف لين يقول اختبار الخصلة غير ذلك.</p>
+    <div class="flow"><em>داخل الحمام</em><span>شامبو</span><i></i><span>عصر</span><i></i><span>ماسك<small>١٠ د</small></span></div>
+    <div class="flow"><em>برّا</em><span>حليب</span><i></i><span>سيروم</span></div>
+    <p class="sub">١ إلى ٣ داخل الحمام، و٤ و٥ برّا. تحت كل خطوة: الكمية، وين، وكم. و«التفاصيل» لو بغيتي الشرح خطوة خطوة.</p>
+    <button type="button" class="allbtn" data-all>افتحي كل التفاصيل</button>
 
     <ol class="steps">
       <li><span class="num">١</span>
         <div class="step-b">
           <h3><span class="en">K18 Peptide Prep Detox</span> — شامبو</h3>
-          <p>يشيل التراكم عشان الماسك اللي بعده يدخل الشعرة.</p>
-          <ul class="how">
-            <li><b>الماي:</b> فاتر. <em>مو حار</em> — الحار يفتح قشرة الشعرة ويزيد التكسّر.</li>
-            <li><b>الكمية:</b> ابدئي بحبة لوز. الشعر الكثيف أو الطويل ياخذ <b>حبة جوز</b> — هذا طبيعي.</li>
-            <li><b>رغّيه أول:</b> بكفّك مع شوي ماي، افركي كفّينك لين ترغي. الرغوة هي اللي تتوزع، مو الجل.</li>
-            <li><b>وين:</b> على <b>الفروة</b> (الجلد تحت الشعر) و<b>الجذور</b> (أول ٢–٣ سم) فقط — ٤ مناطق: قدام، ورا، يمين، يسار.</li>
-            <li><b>لو ما وصل للكل:</b> زيدي ماي أول، وبعدين نصّ كمية ثانية على الناقص فقط.</li>
-            <li><b>كيف:</b> أطراف الأصابع لا الأظافر، حركة دائرية لطيفة دقيقة وحدة.</li>
-            <li><b>«رغوة وحدة» يعني:</b> تغسلين مرة وحدة بس، ما تعيدين الشامبو.</li>
-            <li><b>الأطوال:</b> لا شامبو ولا فرك — الرغوة تنزل عليها مع الشطف وهذا كافي.</li>
-            <li><b>الشطف:</b> لين ما تختفي الرغوة كاملة. <em>لا بلسم بعده.</em></li>
-          </ul>
+          <div class="facts"><span><b>الكمية</b>حبة لوز — الكثيف حبة جوز</span><span><b>وين</b>الفروة والجذور فقط</span><span class="t">رغوة وحدة · بلا بلسم</span></div>
+          <details class="more"><summary>التفاصيل</summary>
+            <p>يشيل التراكم عشان الماسك اللي بعده يدخل الشعرة.</p>
+            <ul class="how">
+              <li><b>الماي:</b> فاتر. <em>مو حار</em> — الحار يفتح قشرة الشعرة ويزيد التكسّر.</li>
+              <li><b>الكمية:</b> ابدئي بحبة لوز. الشعر الكثيف أو الطويل ياخذ <b>حبة جوز</b> — هذا طبيعي.</li>
+              <li><b>رغّيه أول:</b> بكفّك مع شوي ماي، افركي كفّينك لين ترغي. الرغوة هي اللي تتوزع، مو الجل.</li>
+              <li><b>وين:</b> على <b>الفروة</b> (الجلد تحت الشعر) و<b>الجذور</b> (أول ٢–٣ سم) فقط — ٤ مناطق: قدام، ورا، يمين، يسار.</li>
+              <li><b>لو ما وصل للكل:</b> زيدي ماي أول، وبعدين نصّ كمية ثانية على الناقص فقط.</li>
+              <li><b>كيف:</b> أطراف الأصابع لا الأظافر، حركة دائرية لطيفة دقيقة وحدة.</li>
+              <li><b>«رغوة وحدة» يعني:</b> تغسلين مرة وحدة بس، ما تعيدين الشامبو.</li>
+              <li><b>الأطوال:</b> لا شامبو ولا فرك — الرغوة تنزل عليها مع الشطف وهذا كافي.</li>
+              <li><b>الشطف:</b> لين ما تختفي الرغوة كاملة. <em>لا بلسم بعده.</em></li>
+            </ul>
+          </details>
         </div></li>
       <li><span class="num">٢</span>
         <div class="step-b">
           <h3>اعصريه بقميص قطني</h3>
-          <p>الماسك يحتاج شعر «معصور» — رطب بس ما ينقّط.</p>
-          <ul class="how">
-            <li><b>كيف:</b> امسكي الشعر بين كفّينك بالقميص واضغطي من فوق لتحت، مثل ما تعصرين إسفنجة برفق.</li>
-            <li><b>ممنوع:</b> الفرك، اللفّ فوق الراس، الشدّ، والمنشفة العادية (خشنة).</li>
-            <li><b>جاهز لما:</b> ما ينزل ماي لو ضغطتي، لكن الشعر باقي رطب.</li>
-          </ul>
+          <div class="facts"><span><b>كيف</b>ضغط من فوق لتحت بين كفّينك</span><span><b>جاهز لما</b>رطب وما ينقّط</span><span class="t">لا فرك · لا لفّ</span></div>
+          <details class="more"><summary>التفاصيل</summary>
+            <p>الماسك يحتاج شعر «معصور» — رطب بس ما ينقّط.</p>
+            <ul class="how">
+              <li><b>كيف:</b> امسكي الشعر بين كفّينك بالقميص واضغطي من فوق لتحت، مثل ما تعصرين إسفنجة برفق.</li>
+              <li><b>ممنوع:</b> الفرك، اللفّ فوق الراس، الشدّ، والمنشفة العادية (خشنة).</li>
+              <li><b>جاهز لما:</b> ما ينزل ماي لو ضغطتي، لكن الشعر باقي رطب.</li>
+            </ul>
+          </details>
         </div></li>
       <li><span class="num">٣</span>
         <div class="step-b">
           <h3><span class="en">Kérastase Gloss Absolu</span> — ماسك<span class="time">١٠ دقائق</span></h3>
-          <p>ترطيب عميق. اليوم الوحيد اللي ياخذ ١٠ دقائق بدل ٥.</p>
-          <ul class="how">
-            <li><b>قسّمي ٤ أقسام:</b> خط من الجبهة لورا الراس، وخط من أذن لأذن. اربطي ٣ واشتغلي على واحد.</li>
-            <li><b>الكمية لكل قسم:</b> قدّ حبة الجوز.</li>
-            <li><b>وين:</b> من نصّ الطول إلى الأطراف. <em>لا يقرب الفروة.</em></li>
-            <li><b>كيف:</b> افرديه بكفّينك على القسم من آخر الشعر وطالعة لفوق، ثم المشط الواسع من الأطراف — لو علق فكّيه بأصابعك، <em>لا تشدين.</em></li>
-            <li><b>الوقت:</b> مؤقت ١٠ دقائق من لما تخلصين آخر قسم. غطاء شاور لو عندك.</li>
-            <li><b>الشطف:</b> ماي فاتر لين ما يصير الشعر «ناعم بلا زلق». آخر خطوة داخل الحمام.</li>
-          </ul>
+          <div class="facts"><span><b>الكمية</b>حبة جوز لكل قسم — ٤ أقسام</span><span><b>وين</b>من نصّ الطول للأطراف</span><span class="t">مؤقت ١٠ دقائق</span></div>
+          <details class="more"><summary>التفاصيل</summary>
+            <p>ترطيب عميق. اليوم الوحيد اللي ياخذ ١٠ دقائق بدل ٥.</p>
+            <ul class="how">
+              <li><b>قسّمي ٤ أقسام:</b> خط من الجبهة لورا الراس، وخط من أذن لأذن. اربطي ٣ واشتغلي على واحد.</li>
+              <li><b>الكمية لكل قسم:</b> قدّ حبة الجوز.</li>
+              <li><b>وين:</b> من نصّ الطول إلى الأطراف. <em>لا يقرب الفروة.</em></li>
+              <li><b>كيف:</b> افرديه بكفّينك على القسم من آخر الشعر وطالعة لفوق، ثم المشط الواسع من الأطراف — لو علق فكّيه بأصابعك، <em>لا تشدين.</em></li>
+              <li><b>الوقت:</b> مؤقت ١٠ دقائق من لما تخلصين آخر قسم. غطاء شاور لو عندك.</li>
+              <li><b>الشطف:</b> ماي فاتر لين ما يصير الشعر «ناعم بلا زلق». آخر خطوة داخل الحمام.</li>
+            </ul>
+          </details>
+        </div></li>
+      <li class="brk"><span>طلعتي من الحمام؟ عصرة ثانية بالقميص، وبعدين:</span></li>
       <li><span class="num">٤</span>
         <div class="step-b">
           <h3><span class="en">Glaze Milk</span> — حليب</h3>
-          <p>بعد ما تطلعين من الحمام.</p>
-          <ul class="how">
-            <li><b>أول:</b> اعصريه بالقميص مرة ثانية.</li>
-            <li><b>الكمية:</b> ٤ بخّات (بخّة = ضغطة وحدة على الرشاش).</li>
-            <li><b>وين:</b> من نصّ الطول للأطراف. لا الجذور.</li>
-            <li><b>كيف:</b> بخّي وافردي بأصابعك.</li>
-          </ul>
+          <div class="facts"><span><b>الكمية</b>٤ بخّات</span><span><b>وين</b>من نصّ الطول للأطراف</span><span class="t">لا يُشطف</span></div>
+          <details class="more"><summary>التفاصيل</summary>
+            <ul class="how">
+              <li><b>الكمية:</b> ٤ بخّات (بخّة = ضغطة وحدة على الرشاش).</li>
+              <li><b>وين:</b> من نصّ الطول للأطراف. لا الجذور.</li>
+              <li><b>كيف:</b> بخّي وافردي بأصابعك.</li>
+            </ul>
+          </details>
         </div></li>
       <li><span class="num">٥</span>
         <div class="step-b">
           <h3><span class="en">Sérum Chroma</span> — سيروم</h3>
-          <p>يقفل فوق الحليب ويعطي الانزلاق للتمشيط.</p>
-          <ul class="how">
-            <li><b>الكمية:</b> ٣ ضغطات على كفّك، افركي كفّينك ببعض.</li>
-            <li><b>وين:</b> الأطراف وآخر ثلث الشعر.</li>
-            <li><b>بعدها:</b> المشط الواسع من الأطراف لفوق. <em>هذي آخر مرة تمشطينه وهو مبلول.</em></li>
-          </ul>
+          <div class="facts"><span><b>الكمية</b>٣ ضغطات</span><span><b>وين</b>الأطراف وآخر الثلث</span><span class="t">بعده المشط الواسع — آخر تمشيطة</span></div>
+          <details class="more"><summary>التفاصيل</summary>
+            <p>يقفل فوق الحليب ويعطي الانزلاق للتمشيط.</p>
+            <ul class="how">
+              <li><b>الكمية:</b> ٣ ضغطات على كفّك، افركي كفّينك ببعض.</li>
+              <li><b>وين:</b> الأطراف وآخر ثلث الشعر.</li>
+              <li><b>بعدها:</b> المشط الواسع من الأطراف لفوق. <em>هذي آخر مرة تمشطينه وهو مبلول.</em></li>
+            </ul>
+          </details>
         </div></li>
     </ol>
-    <p class="alt"><b>متى يرجع الببتيد (L'Oréal Molecular):</b> لما اختبار الخصلة المبلولة يطلع <em>تتمدّد وما ترجع</em> — يعني البروتين السطحي انغسل وصار فيه مجال. وقتها بدّلي الخطوة ٣ به: دقيقتان ثم اشطفي، مرة بالأسبوع، وراقبي القشّ. غالبًا بعد ٤–٨ أسابيع.</p>
+    <details class="fold cases">
+      <summary><div class="card-hd"><h2>متى يرجع الببتيد؟</h2><span class="chip">L'Oréal Molecular — موقوف حاليًا · <span class="c-shut">اضغطي</span><span class="c-open">اقفلي</span></span></div></summary>
+      <p class="alt"><b>متى يرجع الببتيد (L'Oréal Molecular):</b> لما اختبار الخصلة المبلولة يطلع <em>تتمدّد وما ترجع</em> — يعني البروتين السطحي انغسل وصار فيه مجال. وقتها بدّلي الخطوة ٣ به: دقيقتان ثم اشطفي، مرة بالأسبوع، وراقبي القشّ. غالبًا بعد ٤–٨ أسابيع.</p>
+    </details>
   </section>
 
   <section class="card simple">
     <img loading="lazy" decoding="async" class="stk mark mark-r blossoms" src="st/blossoms.png" alt="" width="262" height="241">
     <div class="card-hd">
       <h2>الغسلة الطبيعية</h2>
-      <span class="chip">مرتين بالأسبوع</span>
+      <span class="chip">مرتين بالأسبوع · بلا بروتين</span>
     </div>
-    <p class="sub">خفيفة ومرطّبة فقط. <b>بلا أي شي فيه ببتيد أو بروتين</b> — والببتيد موقوف حاليًا بكل الغسلات، مو بس هنا.<br>
-      <b>الترطيب هنا = Kérastase (الخطوة ٣)</b> + الحليب والسيروم. ما فيه بلسم منفصل عمدًا — بلسم فوق ماسك يثقّل شعرك.</p>
+    <div class="flow"><em>داخل الحمام</em><span>شامبو</span><i></i><span>عصر</span><i></i><span>ماسك<small>٥ د</small></span></div>
+    <div class="flow"><em>برّا</em><span>حليب</span><i></i><span>سيروم</span></div>
+    <p class="sub">نفس حركات العناية العميقة، بس شامبو أخفّ وماسك ٥ دقائق. ما فيه بلسم منفصل عمدًا — بلسم فوق ماسك يثقّل شعرك.</p>
+    <button type="button" class="allbtn" data-all>افتحي كل التفاصيل</button>
 
     <ol class="steps">
       <li><span class="num">١</span>
         <div class="step-b">
           <h3><span class="en">Horsetail</span> — شامبو (أو Glycolic Gloss)</h3>
-          <p>نفس طريقة الشامبو بالعناية العميقة بالضبط. Horsetail أخفّ على الشعرة؛ لو الفروة حكّت منه، Glycolic Gloss.</p>
-          <ul class="how">
-            <li><b>الماي:</b> فاتر.</li>
-            <li><b>الكمية:</b> ابدئي بحبة لوز؛ الكثيف/الطويل حبة جوز. رغّيه بكفّك مع شوي ماي أول.</li>
-            <li><b>وين:</b> الفروة والجذور فقط، ٤ مناطق، رغوة وحدة، أطراف الأصابع. لو ما وصل: ماي أول ثم نصّ كمية على الناقص.</li>
-            <li><b>الأطوال:</b> الاثنين فيهم سلفات — <em>لا تفركينها أبدًا</em>، الشطف يكفيها. وتجاهلي «اتركيه دقيقتين» اللي على عبوة Horsetail.</li>
-            <li><b>لا تستعملين:</b> شامبو Molecular هنا — فيه أحماض أمينية (عائلة البروتين).</li>
-          </ul>
+          <div class="facts"><span><b>الكمية</b>حبة لوز — الكثيف حبة جوز</span><span><b>وين</b>الفروة والجذور فقط</span><span class="t">رغوة وحدة · لا فرك للأطوال</span></div>
+          <details class="more"><summary>التفاصيل</summary>
+            <p>نفس طريقة الشامبو بالعناية العميقة بالضبط. Horsetail أخفّ على الشعرة؛ لو الفروة حكّت منه، Glycolic Gloss.</p>
+            <ul class="how">
+              <li><b>الماي:</b> فاتر.</li>
+              <li><b>الكمية:</b> ابدئي بحبة لوز؛ الكثيف/الطويل حبة جوز. رغّيه بكفّك مع شوي ماي أول.</li>
+              <li><b>وين:</b> الفروة والجذور فقط، ٤ مناطق، رغوة وحدة، أطراف الأصابع. لو ما وصل: ماي أول ثم نصّ كمية على الناقص.</li>
+              <li><b>الأطوال:</b> الاثنين فيهم سلفات — <em>لا تفركينها أبدًا</em>، الشطف يكفيها. وتجاهلي «اتركيه دقيقتين» اللي على عبوة Horsetail.</li>
+              <li><b>لا تستعملين:</b> شامبو Molecular هنا — فيه أحماض أمينية (عائلة البروتين).</li>
+            </ul>
+          </details>
         </div></li>
       <li><span class="num">٢</span>
         <div class="step-b">
           <h3>اعصريه بقميص قطني</h3>
-          <p>ضغط من فوق لتحت بين كفّينك. لا فرك ولا لفّ. جاهز لما ما ينقّط.</p>
+          <div class="facts"><span><b>كيف</b>ضغط من فوق لتحت بين كفّينك</span><span><b>جاهز لما</b>رطب وما ينقّط</span><span class="t">لا فرك · لا لفّ</span></div>
         </div></li>
       <li><span class="num">٣</span>
         <div class="step-b">
           <h3><span class="en">Kérastase Gloss Absolu</span> — ماسك<span class="time">٥ دقائق</span></h3>
-          <p>ترطيب وتغليف. ما فيه بروتين — وهذا المطلوب اليوم.</p>
-          <ul class="how">
-            <li><b>الكمية:</b> قدّ حبتين جوز لكل الشعر.</li>
-            <li><b>وين:</b> من نصّ الطول للأطراف. <em>بعيد عن الفروة.</em></li>
-            <li><b>كيف:</b> افرديه بكفّينك من الأطراف لفوق، ثم المشط الواسع من الأطراف.</li>
-            <li><b>الوقت:</b> مؤقت ٥ دقائق. <em>مو أكثر</em> — الزيادة تثقّل الشعر.</li>
-            <li><b>الشطف:</b> فاتر، لين ما يروح الزلق.</li>
-          </ul>
+          <div class="facts"><span><b>الكمية</b>حبتين جوز لكل الشعر</span><span><b>وين</b>من نصّ الطول للأطراف</span><span class="t">مؤقت ٥ دقائق — مو أكثر</span></div>
+          <details class="more"><summary>التفاصيل</summary>
+            <p>ترطيب وتغليف. ما فيه بروتين — وهذا المطلوب اليوم.</p>
+            <ul class="how">
+              <li><b>الكمية:</b> قدّ حبتين جوز لكل الشعر.</li>
+              <li><b>وين:</b> من نصّ الطول للأطراف. <em>بعيد عن الفروة.</em></li>
+              <li><b>كيف:</b> افرديه بكفّينك من الأطراف لفوق، ثم المشط الواسع من الأطراف.</li>
+              <li><b>الوقت:</b> مؤقت ٥ دقائق. <em>مو أكثر</em> — الزيادة تثقّل الشعر.</li>
+              <li><b>الشطف:</b> فاتر، لين ما يروح الزلق.</li>
+            </ul>
+          </details>
         </div></li>
+      <li class="brk"><span>طلعتي من الحمام؟ عصرة ثانية بالقميص، وبعدين:</span></li>
       <li><span class="num">٤</span>
         <div class="step-b">
           <h3><span class="en">Glaze Milk</span> ثم <span class="en">Sérum</span></h3>
-          <p>برّا الحمام، بعد عصرة ثانية بالقميص.</p>
-          <ul class="how">
-            <li><b>الحليب:</b> ٤ بخّات من نصّ الطول للأطراف.</li>
-            <li><b>السيروم:</b> ٣ ضغطات على الأطراف وآخر الثلث.</li>
-            <li><b>بعدها:</b> مشط واسع من الأطراف لفوق — آخر تمشيطة على المبلول.</li>
-          </ul>
+          <div class="facts"><span><b>الحليب</b>٤ بخّات من نصّ الطول للأطراف</span><span><b>السيروم</b>٣ ضغطات على الأطراف</span><span class="t">بعده المشط الواسع — آخر تمشيطة</span></div>
+          <details class="more"><summary>التفاصيل</summary>
+            <ul class="how">
+              <li><b>الحليب:</b> ٤ بخّات من نصّ الطول للأطراف.</li>
+              <li><b>السيروم:</b> ٣ ضغطات على الأطراف وآخر الثلث.</li>
+              <li><b>بعدها:</b> مشط واسع من الأطراف لفوق — آخر تمشيطة على المبلول.</li>
+            </ul>
+          </details>
         </div></li>
     </ol>
-    <p class="alt"><b>شعرك أشقر رمادي — التونر (Olaplex No.4P):</b> كل أسبوعين، في غسلة طبيعية، مكان Horsetail. قدّ حبة الجوز مخفّفة بكفّينك — التوزيع المتساوي مهم وإلا يطلع اللون مبقّع — على الفروة، والرغوة تنزل على الأطوال <em>بالعصر بين الكفّين لا بالفرك</em>. أول مرة <em>دقيقة وحدة</em> بالمؤقت وشوفي اللون بضوء النهار — المسامي يمسك البنفسجي بسرعة. بعدها ٢–٣ دقائق، <em>ما تتعدّين ٣</em>. اشطفي، ثم Kérastase ٥ دقائق إلزامي. مو يوم العناية العميقة، ومو كل غسلة.</p>
-    <p class="alt"><b>لو حسّيتيه ناشف بعدها — حسب النوع:</b><br>
-      <b>قشّ وخشن ويتكسّر</b> = بروتين زائد (فايض الكيراتين القديم، مو منتج جديد) → أشّري «إحساس قشّ»، وشيكي إن ولا منتج فيه Keratin/Amino acids/Peptide لمس شعرك، والغسلة الجاية عناية عميقة (Kérastase ١٠ دقائق).<br>
-      <b>ناشف بس ناعم وهايش</b> = ترطيب ناقص → المرة الجاية Kérastase ٧ دقائق بدل ٥ (مرة وحدة)، وسيروم ٤ ضغطات.<br>
-      <b>الفروة تشدّ والجذور ناشفة</b> = الشامبو → نصّ الكمية، أو خفّفيه بشوي ماي بكفّك.<br>
-      <em>ما تسوينه:</em> ماسك Elvive، بلسم فوق الماسك، زيت قبل الحليب، أو غسلة ثانية. ولو مو متأكدة: اختبار الخصلة بالصيانة يفصل.</p>
-    <p class="alt"><b>لو احتجتِ ثالثة:</b> زيدي <em>غسلة طبيعية</em> — ولا تزيدين العناية العميقة أبدًا.
-      وخلّي بين كل غسلتين يوم على الأقل. لو السبب دهون الفروة: <b>Elvive Hyaluron Pure</b> على الجذور فقط، ما يلمس الأطوال.</p>
+    <details class="fold cases">
+      <summary><div class="card-hd"><h2>حالات خاصة</h2><span class="chip">التونر · لو ناشف بعدها · غسلة ثالثة · <span class="c-shut">اضغطي</span><span class="c-open">اقفلي</span></span></div></summary>
+      <p class="alt"><b>شعرك أشقر رمادي — التونر (Olaplex No.4P):</b> كل أسبوعين، في غسلة طبيعية، مكان Horsetail. قدّ حبة الجوز مخفّفة بكفّينك — التوزيع المتساوي مهم وإلا يطلع اللون مبقّع — على الفروة، والرغوة تنزل على الأطوال <em>بالعصر بين الكفّين لا بالفرك</em>. أول مرة <em>دقيقة وحدة</em> بالمؤقت وشوفي اللون بضوء النهار — المسامي يمسك البنفسجي بسرعة. بعدها ٢–٣ دقائق، <em>ما تتعدّين ٣</em>. اشطفي، ثم Kérastase ٥ دقائق إلزامي. مو يوم العناية العميقة، ومو كل غسلة.</p>
+      <p class="alt"><b>لو حسّيتيه ناشف بعدها — حسب النوع:</b><br>
+        <b>قشّ وخشن ويتكسّر</b> = بروتين زائد (فايض الكيراتين القديم، مو منتج جديد) → أشّري «إحساس قشّ»، وشيكي إن ولا منتج فيه Keratin/Amino acids/Peptide لمس شعرك، والغسلة الجاية عناية عميقة (Kérastase ١٠ دقائق).<br>
+        <b>ناشف بس ناعم وهايش</b> = ترطيب ناقص → المرة الجاية Kérastase ٧ دقائق بدل ٥ (مرة وحدة)، وسيروم ٤ ضغطات.<br>
+        <b>الفروة تشدّ والجذور ناشفة</b> = الشامبو → نصّ الكمية، أو خفّفيه بشوي ماي بكفّك.<br>
+        <em>ما تسوينه:</em> ماسك Elvive، بلسم فوق الماسك، زيت قبل الحليب، أو غسلة ثانية. ولو مو متأكدة: اختبار الخصلة بالصيانة يفصل.</p>
+      <p class="alt"><b>لو احتجتِ ثالثة:</b> زيدي <em>غسلة طبيعية</em> — ولا تزيدين العناية العميقة أبدًا.
+        وخلّي بين كل غسلتين يوم على الأقل. لو السبب دهون الفروة: <b>Elvive Hyaluron Pure</b> على الجذور فقط، ما يلمس الأطوال.</p>
+    </details>
   </section>
 
   <section class="card stock">
@@ -957,10 +1033,13 @@ footer .dove{width:clamp(40px,12vw,54px);top:8px;inset-inline-start:50%;
   </section>
 
   <section class="card">
+    <details class="fold">
+    <summary>
     <div class="card-hd">
       <h2>الكلمات اللي بالصفحة</h2>
-      <span class="chip">قاموس</span>
+      <span class="chip">قاموس · <span class="c-shut">اضغطي تفتحينه</span><span class="c-open">اضغطي تقفلينه</span></span>
     </div>
+    </summary>
     <div class="gloss">
       <div><b>الفروة</b> الجلد اللي تحت الشعر. الشامبو لها هي.</div>
       <div><b>الجذور</b> أول ٢–٣ سم من الشعرة عند الفروة.</div>
@@ -975,6 +1054,7 @@ footer .dove{width:clamp(40px,12vw,54px);top:8px;inset-inline-start:50%;
       <div><b>مسامي</b> شعر قشرته مفتوحة يشرب الماي بسرعة ويطلّعها بسرعة — حالة شعرك بعد الكيراتين والصبغة.</div>
       <div><b>مشبع بروتين</b> الكيراتين اللي سويتيه رصّ بروتين على الشعرة وقفله بالحرارة. فأي بروتين زيادة = تكسّر أكثر.</div>
     </div>
+    </details>
   </section>
 
 
@@ -1629,6 +1709,22 @@ if('serviceWorker' in navigator){ window.addEventListener('load',function(){ nav
   Array.prototype.forEach.call(btns,function(b){ b.addEventListener('click',function(){ show(b.dataset.pane,true); }); });
   var start=(location.hash||'').slice(1); if(!start){ try{ start=localStorage.getItem(PK)||'log'; }catch(e){ start='log'; } }
   show(start,false);
+})();
+
+/* «افتحي كل التفاصيل» لكل بطاقة غسلة */
+(function(){
+  Array.prototype.forEach.call(document.querySelectorAll('[data-all]'),function(btn){
+    var card=btn.closest('.card'); if(!card) return;
+    var ds=card.querySelectorAll('details.more');
+    function sync(){
+      var open=0; Array.prototype.forEach.call(ds,function(d){ if(d.open) open++; });
+      var all=ds.length && open===ds.length;
+      btn.textContent=all?'اقفلي كل التفاصيل':'افتحي كل التفاصيل'; btn.dataset.state=all?'open':'shut';
+    }
+    btn.addEventListener('click',function(){ var to=btn.dataset.state!=='open'; Array.prototype.forEach.call(ds,function(d){ d.open=to; }); sync(); });
+    Array.prototype.forEach.call(ds,function(d){ d.addEventListener('toggle',sync); });
+    sync();
+  });
 })();
 
 </script>
