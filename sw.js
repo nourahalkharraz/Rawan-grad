@@ -1,7 +1,7 @@
 /* عامل خدمة «شلونج» — نطاقه الموقع كله عشان التنقل بين الأقسام يبقى داخل التطبيق،
    لكنه يخزّن صفحة «شلونج» وأصولها فقط. صفحات الشعر ومِران لها عوامل خدمتها الخاصة
    (نطاقها أضيق فهي اللي تخدمها)، ودعوة التخرج تمرّ للشبكة كما هي. */
-const CACHE = 'me-v2';
+const CACHE = 'me-v3';
 const CORE = ['./me/','./me/index.html','./me/manifest.webmanifest',
               './me/icon-192.png','./me/icon-512.png','./me/icon-maskable.png','./me/apple-touch-icon.png',
               './hair/gen/garden.jpg','./hair/st/heartbub.png','./hair/st/peonywhite.png','./hair/st/branch.png',
