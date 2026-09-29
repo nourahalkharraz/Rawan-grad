@@ -72,6 +72,44 @@ main{display:flex;flex-direction:column;gap:14px;margin-top:14px}
 .tile.soon .k{color:var(--ink-3)}
 .note{background:rgba(142,76,88,.08);border-radius:16px;padding:14px 16px;font-size:12.5px;line-height:1.8;color:var(--ink-2)}
 .note b{color:var(--rose);font-weight:800}
+/* ══ محلات لازم أزورها ═══════════════════════════════════════════ */
+.card{position:relative;background:var(--cream);border-radius:30px 30px 20px 20px;padding:22px 18px 18px;box-shadow:0 10px 26px rgba(60,81,64,.12)}
+.card::after{content:'';position:absolute;inset:8px;border:1px solid var(--hair);border-radius:24px 24px 14px 14px;pointer-events:none}
+.card>*{position:relative;z-index:1}
+.card .k{display:block;font-size:11px;font-weight:800;letter-spacing:.12em;color:var(--gold)}
+.card .t{display:block;font-family:var(--f-disp);font-size:27px;font-weight:700;line-height:1.3;color:var(--green);margin:2px 0 2px}
+.card .s{display:block;font-size:12.5px;color:var(--ink-2);margin-bottom:12px}
+.addshop{display:flex;flex-direction:column;gap:7px;margin-bottom:12px}
+.addshop .row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:7px}
+.addshop input,.addshop select{width:100%;min-width:0;font:inherit;font-size:14px;color:var(--ink);background:rgba(255,255,255,.75);
+  border:1px solid rgba(60,81,64,.25);border-radius:12px;padding:10px 12px;-webkit-appearance:none;appearance:none}
+.addshop select{background-image:linear-gradient(45deg,transparent 50%,var(--ink-3) 50%),linear-gradient(135deg,var(--ink-3) 50%,transparent 50%);
+  background-position:calc(12px) 50%,calc(12px + 5px) 50%;background-size:5px 5px;background-repeat:no-repeat;padding-inline-start:26px}
+.addshop input::placeholder{color:var(--ink-3)}
+.addshop button{font:inherit;font-size:13px;font-weight:800;letter-spacing:.04em;color:#fff;background:var(--green);border:0;border-radius:999px;padding:11px 16px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.addshop button:active{opacity:.85}
+.filters{display:flex;gap:6px;margin-bottom:10px}
+.filters button{font:inherit;font-size:11.5px;font-weight:800;color:var(--ink-3);background:none;border:1px solid rgba(60,81,64,.22);border-radius:999px;padding:5px 12px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.filters button.on{color:var(--green);border-color:rgba(60,81,64,.5);background:rgba(255,255,255,.7)}
+.shoplist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.shop{background:rgba(255,255,255,.62);border:1px solid rgba(60,81,64,.14);border-radius:16px;padding:11px 13px}
+.shop.done{opacity:.62}
+.shop.done .nm{text-decoration:line-through;text-decoration-color:rgba(142,76,88,.6)}
+.shop .nm{font-size:15.5px;font-weight:800;color:var(--ink)}
+.shop .chip{display:inline-block;margin-inline-start:6px;font-size:10.5px;font-weight:800;letter-spacing:.04em;border-radius:999px;padding:2px 8px;vertical-align:middle;
+  color:var(--gold);background:rgba(131,100,40,.1)}
+.shop .chip.c2{color:var(--rose);background:rgba(142,76,88,.1)}
+.shop .chip.c3{color:var(--green);background:rgba(60,81,64,.1)}
+.shop .chip.c4{color:#6E5A8C;background:rgba(110,90,140,.12)}
+.shop .chip.c5{color:#4E6E8C;background:rgba(78,110,140,.12)}
+.shop .chip.c6{color:var(--ink-3);background:rgba(119,130,111,.14)}
+.shop .meta{display:block;font-size:12px;color:var(--ink-2);line-height:1.6;margin-top:2px}
+.shop .meta em{font-style:normal;color:var(--ink-3)}
+.shop .acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.shop .ib{font:inherit;font-size:11.5px;font-weight:800;color:var(--green);background:rgba(255,255,255,.8);border:1px solid rgba(60,81,64,.28);border-radius:999px;padding:5px 11px;text-decoration:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.shop .ib.danger{color:var(--rose);border-color:rgba(142,76,88,.3)}
+.shop .ib.warn{color:#fff;background:var(--rose);border-color:var(--rose)}
+.empty{margin:4px 0 0;font-size:12.5px;color:var(--ink-3);text-align:center}
 footer{margin-top:22px;text-align:center;font-size:11.5px;color:var(--ink-2)}
 </style>
 <body>
@@ -108,6 +146,35 @@ footer{margin-top:22px;text-align:center;font-size:11.5px;color:var(--ink-2)}
     </div>
     <section class="note" id="moveNote" hidden>
       <b>سجلاتك القديمة ما ظهرت هنا؟</b> الآيفون يعطي كل أيقونة مخزنًا لحاله. من الأيقونة القديمة: الصيانة ← «نسخة احتياطية» وانسخي النص، ثم هنا بنفس الصفحة: الصيانة ← «استيراد» والصقيه. مرة وحدة بس.
+    </section>
+    <section class="card shops" id="shops">
+      <span class="k">طلعة تجديد</span>
+      <b class="t">محلات لازم أزورها</b>
+      <span class="s" id="shopCount">قائمتك أنتِ: ملابس، إكسسوارات، أو أيًا كان. تنحفظ على هالجهاز.</span>
+      <form class="addshop" id="shopForm" autocomplete="off">
+        <input name="name" placeholder="اسم المحل" maxlength="40" required>
+        <div class="row">
+          <select name="cat" aria-label="التصنيف">
+            <option value="1">ملابس</option>
+            <option value="2">إكسسوارات</option>
+            <option value="3">أحذية وشنط</option>
+            <option value="4">عناية وجمال</option>
+            <option value="5">بيت</option>
+            <option value="6">غيره</option>
+          </select>
+          <input name="place" placeholder="وين؟ مول أو منطقة" maxlength="30">
+        </div>
+        <input name="note" placeholder="شنو أبي منه؟ (اختياري)" maxlength="80">
+        <input name="link" placeholder="رابط إنستغرام أو الموقع (اختياري)" inputmode="url" maxlength="200">
+        <button type="submit">ضيفيه للقائمة</button>
+      </form>
+      <div class="filters" id="shopFilters">
+        <button type="button" data-f="todo" class="on">باقي</button>
+        <button type="button" data-f="done">زرتها</button>
+        <button type="button" data-f="all">الكل</button>
+      </div>
+      <ul class="shoplist" id="shopList"></ul>
+      <p class="empty" id="shopEmpty">ما فيه محلات بعد — ضيفي أول محل من فوق.</p>
     </section>
   </main>
   <footer>كل قسم يفتح داخل «شلونج»، وروابطه القديمة تشتغل مثل ما هي.</footer>
@@ -153,6 +220,63 @@ footer{margin-top:22px;text-align:center;font-size:11.5px;color:var(--ink-2)}
   Array.prototype.forEach.call(document.querySelectorAll('[data-go]'),function(a){
     a.addEventListener('click',function(){ try{ sessionStorage.setItem('shl','1'); }catch(e){} });
   });
+})();
+
+/* ══ محلات لازم أزورها ══ */
+(function(){
+  var K='shl-shops-v1', CATS={1:'ملابس',2:'إكسسوارات',3:'أحذية وشنط',4:'عناية وجمال',5:'بيت',6:'غيره'};
+  var AR='٠١٢٣٤٥٦٧٨٩'; function ar(n){ return String(n).replace(/\d/g,function(d){ return AR[+d]; }); }
+  function today(){ var d=new Date(); return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2); }
+  function load(){ try{ var a=JSON.parse(localStorage.getItem(K)||'[]'); return Array.isArray(a)?a:[]; }catch(e){ return []; } }
+  function save(){ try{ localStorage.setItem(K,JSON.stringify(items)); }catch(e){} }
+  function esc(t){ return String(t).replace(/[&<>"']/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function safeUrl(u){ u=String(u||'').trim(); if(!u) return ''; if(!/^https?:\/\//i.test(u)) u='https://'+u; try{ var x=new URL(u); return (x.protocol==='https:'||x.protocol==='http:')?x.href:''; }catch(e){ return ''; } }
+  var items=load(), filter='todo';
+  var list=document.getElementById('shopList'), empty=document.getElementById('shopEmpty'), count=document.getElementById('shopCount'), form=document.getElementById('shopForm');
+
+  function render(){
+    var todo=items.filter(function(i){ return !i.done; }).length, done=items.length-todo;
+    count.textContent = items.length ? ('باقي '+ar(todo)+' · زرتي '+ar(done)) : 'قائمتك أنتِ: ملابس، إكسسوارات، أو أيًا كان. تنحفظ على هالجهاز.';
+    var show=items.filter(function(i){ return filter==='all' || (filter==='done'?!!i.done:!i.done); });
+    list.innerHTML=show.map(function(i){
+      var maps='https://maps.apple.com/?q='+encodeURIComponent(i.name+(i.place?' '+i.place:'')+' Kuwait');
+      var meta=[i.place?('<em>وين:</em> '+esc(i.place)):'', i.note?('<em>أبي:</em> '+esc(i.note)):'', i.done?('<em>زرتيها</em> '+ar(i.done)):''].filter(Boolean).join(' · ');
+      return '<li class="shop'+(i.done?' done':'')+'" data-id="'+i.id+'">'
+        +'<div><span class="nm">'+esc(i.name)+'</span><span class="chip c'+i.cat+'">'+(CATS[i.cat]||'غيره')+'</span>'
+        +(meta?'<span class="meta">'+meta+'</span>':'')+'</div>'
+        +'<div class="acts">'
+        +'<a class="ib" href="'+maps+'" target="_blank" rel="noopener">الخريطة</a>'
+        +(i.link?'<a class="ib" href="'+esc(i.link)+'" target="_blank" rel="noopener">الرابط</a>':'')
+        +(i.done?'<button type="button" class="ib" data-act="undo">رجّعيها للقائمة</button>':'<button type="button" class="ib" data-act="done">زرتها ✓</button>')
+        +'<button type="button" class="ib danger" data-act="del">حذف</button>'
+        +'</div></li>';
+    }).join('');
+    empty.hidden = show.length>0;
+    empty.textContent = items.length ? (filter==='done'?'ما زرتي ولا محل بعد.':'خلّصتي القائمة كلها ✓') : 'ما فيه محلات بعد — ضيفي أول محل من فوق.';
+  }
+
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    var name=form.name.value.trim(); if(!name) return;
+    items.unshift({ id:Date.now().toString(36), name:name, cat:form.cat.value, place:form.place.value.trim(), note:form.note.value.trim(), link:safeUrl(form.link.value), added:today(), done:'' });
+    save(); form.reset(); filter='todo'; syncFilters(); render();
+  });
+  var armed=null, armT=null;
+  list.addEventListener('click',function(e){
+    var b=e.target.closest('[data-act]'); if(!b) return;
+    var li=b.closest('.shop'), id=li&&li.dataset.id, it=items.filter(function(i){ return i.id===id; })[0]; if(!it) return;
+    var act=b.dataset.act;
+    if(act==='done'){ it.done=today(); save(); render(); }
+    else if(act==='undo'){ it.done=''; save(); render(); }
+    else if(act==='del'){
+      if(armed!==id){ armed=id; b.textContent='متأكدة؟ اضغطي مرة ثانية'; b.classList.add('warn'); clearTimeout(armT); armT=setTimeout(function(){ armed=null; render(); },3000); return; }
+      clearTimeout(armT); armed=null; items=items.filter(function(i){ return i.id!==id; }); save(); render();
+    }
+  });
+  var fb=document.querySelectorAll('#shopFilters button');
+  function syncFilters(){ Array.prototype.forEach.call(fb,function(b){ b.classList.toggle('on',b.dataset.f===filter); }); }
+  Array.prototype.forEach.call(fb,function(b){ b.addEventListener('click',function(){ filter=b.dataset.f; syncFilters(); render(); }); });
+  render();
 })();
 
 /* الخطوط قبل الكلام */
