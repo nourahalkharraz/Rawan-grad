@@ -3252,5 +3252,20 @@ if('serviceWorker' in navigator && (location.protocol==='https:'||LOCAL) && wind
   addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 }
 </script>
+<style>
+/* زر الرجوع لـ«شلونج» — يظهر بس لما الصفحة تنفتح من داخله */
+.homepill{position:fixed;z-index:30;bottom:calc(12px + env(safe-area-inset-bottom));inset-inline-start:50%;transform:translateX(50%);
+  display:inline-flex;align-items:center;gap:7px;text-decoration:none;font-family:'Almarai',system-ui,sans-serif;font-size:12px;font-weight:800;letter-spacing:.06em;
+  color:#3C5140;background:rgba(252,246,241,.96);border:1px solid rgba(60,81,64,.35);border-radius:999px;padding:8px 15px;
+  box-shadow:0 6px 18px rgba(60,81,64,.18);-webkit-tap-highlight-color:transparent}
+.homepill::before{content:'';width:6px;height:6px;border-top:1.5px solid currentColor;border-right:1.5px solid currentColor;transform:rotate(45deg)}
+.homepill[hidden]{display:none}
+</style>
+<a class="homepill" href="../me/" hidden>شلونج</a>
+<script>
+(function(){ var p=document.querySelector('.homepill'); if(!p) return;
+  var from=false; try{ from=sessionStorage.getItem('shl')==='1'; }catch(e){}
+  if(from || /\/me\//.test(document.referrer||'')) p.hidden=false; })();
+</script>
 </body>
 </html>

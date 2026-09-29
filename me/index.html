@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#F4E6E2">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="شلونج">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<title>شلونج</title>
+<script>document.documentElement.classList.add('fl');</script>
+<link rel="preload" href="../hair/fonts/ArefRuqaa-700-arabic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../hair/fonts/Almarai-400-arabic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../hair/fonts/Almarai-800-arabic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../hair/fonts/Amiri-700-arabic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../hair/gen/garden.jpg" as="image">
+<style>
+/* نفس خطوط صفحة الشعر، من نفس الملفات — ما ترسم الصفحة الكلام لين توصل */
+@font-face{font-family:'Almarai';font-weight:400;font-display:block;src:url(../hair/fonts/Almarai-400-arabic.woff2) format('woff2');unicode-range:U+0600-06FF,U+0750-077F,U+FB50-FDFF,U+FE70-FEFF}
+@font-face{font-family:'Almarai';font-weight:400;font-display:block;src:url(../hair/fonts/Almarai-400-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+2000-206F}
+@font-face{font-family:'Almarai';font-weight:800;font-display:block;src:url(../hair/fonts/Almarai-800-arabic.woff2) format('woff2');unicode-range:U+0600-06FF,U+0750-077F,U+FB50-FDFF,U+FE70-FEFF}
+@font-face{font-family:'Almarai';font-weight:800;font-display:block;src:url(../hair/fonts/Almarai-800-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+2000-206F}
+@font-face{font-family:'Amiri';font-weight:400;font-display:block;src:url(../hair/fonts/Amiri-400-arabic.woff2) format('woff2');unicode-range:U+0600-06FF,U+0750-077F,U+FB50-FDFF,U+FE70-FEFF}
+@font-face{font-family:'Amiri';font-weight:700;font-display:block;src:url(../hair/fonts/Amiri-700-arabic.woff2) format('woff2');unicode-range:U+0600-06FF,U+0750-077F,U+FB50-FDFF,U+FE70-FEFF}
+@font-face{font-family:'Aref Ruqaa';font-weight:700;font-display:block;src:url(../hair/fonts/ArefRuqaa-700-arabic.woff2) format('woff2');unicode-range:U+0600-06FF,U+0750-077F,U+FB50-FDFF,U+FE70-FEFF}
+</style>
+<style>
+:root{
+  --ink:#2F3A2A;--ink-2:#4E5A48;--ink-3:#77826F;
+  --green:#3C5140;--sage:#6B8266;--gold:#836428;--rose:#8E4C58;
+  --cream:rgba(252,246,241,.94);--hair:rgba(131,100,40,.28);--haze:#F4E6E2;
+  --f-disp:'Aref Ruqaa','Geeza Pro',serif;--f-mid:'Amiri','Geeza Pro',serif;--f-body:'Almarai','Geeza Pro',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{background:var(--haze)}
+html.fl .wrap{visibility:hidden}
+body{direction:rtl;margin:0;color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.75;
+  -webkit-text-size-adjust:100%;overflow-x:hidden;background:var(--haze);min-height:100vh}
+.bg{position:fixed;inset:0;z-index:0;background:url(../hair/gen/garden.jpg) center top/cover no-repeat;pointer-events:none}
+.bg::after{content:'';position:absolute;inset:0;background:linear-gradient(rgba(244,230,226,.05),rgba(244,230,226,.35) 60%,rgba(244,230,226,.7))}
+.wrap{position:relative;z-index:1;max-width:520px;margin:0 auto;padding:0 16px calc(28px + env(safe-area-inset-bottom))}
+.stk{position:absolute;pointer-events:none;user-select:none;z-index:2;height:auto}
+.head{position:relative;text-align:center;padding:calc(110px + env(safe-area-inset-top)) 0 18px}
+.head .hero{width:clamp(88px,24vw,112px);top:calc(4px + env(safe-area-inset-top));inset-inline-start:50%;transform:translateX(50%) rotate(-4deg);filter:drop-shadow(0 6px 10px rgba(60,81,64,.18))}
+.head .peony{width:clamp(48px,14vw,62px);top:calc(48px + env(safe-area-inset-top));inset-inline-start:2px;transform:rotate(-14deg)}
+.head .branch{width:clamp(40px,12vw,52px);top:calc(56px + env(safe-area-inset-top));inset-inline-end:4px;transform:rotate(16deg)}
+.eyebrow{display:block;font-size:11px;font-weight:800;letter-spacing:.14em;color:var(--green);opacity:.85}
+h1{font-family:var(--f-disp);font-size:clamp(46px,13vw,64px);font-weight:700;line-height:1.1;margin:2px 0 4px;color:var(--green);
+  text-shadow:0 1px 0 rgba(255,255,255,.7)}
+.date{margin:0;font-family:var(--f-mid);font-size:16px;color:var(--ink-2)}
+main{display:flex;flex-direction:column;gap:14px;margin-top:14px}
+.tile{position:relative;display:block;text-decoration:none;color:var(--ink);background:var(--cream);
+  border-radius:30px 30px 20px 20px;padding:22px 20px 18px;box-shadow:0 10px 26px rgba(60,81,64,.12);
+  -webkit-tap-highlight-color:transparent;transition:transform .12s}
+.tile::after{content:'';position:absolute;inset:8px;border:1px solid var(--hair);border-radius:24px 24px 14px 14px;pointer-events:none}
+.tile:active{transform:scale(.985)}
+.tile .stk{width:58px;top:-16px;inset-inline-end:14px;transform:rotate(8deg);filter:drop-shadow(0 4px 6px rgba(60,81,64,.18))}
+.tile .k{display:block;font-size:11px;font-weight:800;letter-spacing:.12em;color:var(--gold)}
+.tile.miran .k{color:var(--rose)}
+.tile .t{display:block;font-family:var(--f-disp);font-size:27px;font-weight:700;line-height:1.3;color:var(--green);margin:2px 0 6px}
+.tile .s{display:block;font-size:13px;color:var(--ink-2);line-height:1.7;min-height:1.7em}
+.tile .s b{color:var(--ink);font-weight:800}
+.tile .s em{font-style:normal;color:var(--rose);font-weight:800}
+.tile .go{display:inline-block;margin-top:10px;font-size:11.5px;font-weight:800;letter-spacing:.06em;color:var(--green);
+  border:1px solid rgba(60,81,64,.35);border-radius:999px;padding:5px 14px}
+.tile.soon{background:rgba(252,246,241,.62);box-shadow:none}
+.tile.soon::after{border-style:dashed}
+.tile.soon .t{color:var(--ink-3);font-size:22px}
+.tile.soon .k{color:var(--ink-3)}
+.note{background:rgba(142,76,88,.08);border-radius:16px;padding:14px 16px;font-size:12.5px;line-height:1.8;color:var(--ink-2)}
+.note b{color:var(--rose);font-weight:800}
+footer{margin-top:22px;text-align:center;font-size:11.5px;color:var(--ink-2)}
+</style>
+<body>
+<div class="bg" aria-hidden="true"></div>
+<div class="wrap">
+  <header class="head">
+    <img class="stk hero" src="../hair/st/heartbub.png" alt="" width="195" height="176">
+    <img class="stk peony" src="../hair/st/peonywhite.png" alt="" width="268" height="276">
+    <img class="stk branch" src="../hair/st/branch.png" alt="" width="235" height="255">
+    <span class="eyebrow" id="greet">صباح الخير</span>
+    <h1>شلونج؟</h1>
+    <p class="date" id="date">—</p>
+  </header>
+
+  <main>
+    <a class="tile hair" href="../hair/#log" data-go>
+      <img class="stk" src="../hair/st/bubble.png" alt="" width="194" height="194">
+      <span class="k">شعرك</span>
+      <b class="t">روتين الشعر والرزنامة</b>
+      <span class="s" id="hairS">—</span>
+      <span class="go">افتحي</span>
+    </a>
+    <a class="tile miran" href="../miran/" data-go>
+      <img class="stk" src="../hair/st/butterfly.png" alt="" width="222" height="221">
+      <span class="k">مِران</span>
+      <b class="t">تمارين الذهن اليومية</b>
+      <span class="s" id="miranS">—</span>
+      <span class="go">افتحي</span>
+    </a>
+    <div class="tile soon">
+      <span class="k">قريبًا</span>
+      <b class="t">دفتر ياسمين وألداكتون</b>
+      <span class="s">بانتظار قرارك عشان أبنيه.</span>
+    </div>
+    <section class="note" id="moveNote" hidden>
+      <b>سجلاتك القديمة ما ظهرت هنا؟</b> الآيفون يعطي كل أيقونة مخزنًا لحاله. من الأيقونة القديمة: الصيانة ← «نسخة احتياطية» وانسخي النص، ثم هنا بنفس الصفحة: الصيانة ← «استيراد» والصقيه. مرة وحدة بس.
+    </section>
+  </main>
+  <footer>كل قسم يفتح داخل «شلونج»، وروابطه القديمة تشتغل مثل ما هي.</footer>
+</div>
+
+<script>
+(function(){
+  var AR='٠١٢٣٤٥٦٧٨٩';
+  function ar(n){ return String(n).replace(/\d/g,function(d){ return AR[+d]; }); }
+  function key(d){ return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2); }
+  function daysAgo(k){ var p=k.split('-'), d=new Date(+p[0],+p[1]-1,+p[2],12), t=new Date(); t.setHours(12,0,0,0); return Math.round((t-d)/86400000); }
+  function ago(n){ if(n<=0) return 'اليوم'; if(n===1) return 'أمس'; if(n===2) return 'قبل يومين'; if(n<=10) return 'قبل '+ar(n)+' أيام'; return 'قبل '+ar(n)+' يوم'; }
+  function get(k){ try{ return JSON.parse(localStorage.getItem(k)||'null'); }catch(e){ return null; } }
+
+  /* التحية والتاريخ */
+  var h=new Date().getHours();
+  document.getElementById('greet').textContent = h<12?'صباح الخير':'مساء الخير';
+  try{ document.getElementById('date').textContent = new Date().toLocaleDateString('ar-KW',{weekday:'long',day:'numeric',month:'long'}); }
+  catch(e){ document.getElementById('date').textContent = key(new Date()); }
+
+  var missing=0;
+
+  /* الشعر: آخر غسلة وعدد هالأسبوع */
+  var hs=document.getElementById('hairS'), store=get('rawan-hair-log-v1')||{};
+  var keys=Object.keys(store).filter(function(k){ return store[k]&&store[k].t; }).sort();
+  if(!keys.length){ hs.textContent='ما فيه سجل غسلات على هالجهاز بعد.'; missing++; }
+  else{
+    var last=keys[keys.length-1], n=daysAgo(last), type=store[last].t==='r'?'عناية عميقة':'طبيعية';
+    var week=keys.filter(function(k){ var d=daysAgo(k); return d>=0&&d<7; }).length;
+    hs.innerHTML='آخر غسلة <b>'+type+'</b> · '+ago(n)+' — آخر ٧ أيام: <b>'+ar(week)+'</b> من ٣'+(week>=3?' <em>— وصلتي السقف</em>':'');
+  }
+
+  /* مِران: اليوم وآخر مرة */
+  var ms=document.getElementById('miranS'), S=get('miran.v1')||{}, days=S.days||{};
+  var today=key(new Date()), doneToday=Object.keys(days[today]||{}).length;
+  var active=Object.keys(days).filter(function(k){ return days[k]&&Object.keys(days[k]).length; }).sort();
+  if(doneToday>0){ ms.innerHTML='اليوم: <b>'+ar(doneToday)+'</b> '+(doneToday===1?'تمرين':'تمارين')+' ✓'; }
+  else if(active.length){ ms.innerHTML='ما بدأتي اليوم. آخر تمرين '+ago(daysAgo(active[active.length-1]))+'.'; }
+  else { ms.textContent='ما فيه سجل تمارين على هالجهاز بعد.'; missing++; }
+  if(missing) document.getElementById('moveNote').hidden=false;
+
+  /* علامة إن الفتح جاي من شلونج — عشان زر الرجوع يظهر هناك */
+  Array.prototype.forEach.call(document.querySelectorAll('[data-go]'),function(a){
+    a.addEventListener('click',function(){ try{ sessionStorage.setItem('shl','1'); }catch(e){} });
+  });
+})();
+
+/* الخطوط قبل الكلام */
+(function(){
+  var h=document.documentElement, done=false;
+  function reveal(){ if(done) return; done=true; h.classList.remove('fl'); }
+  var t=setTimeout(reveal,2500);
+  if(document.fonts && document.fonts.load){
+    Promise.all([
+      document.fonts.load('700 1em "Aref Ruqaa"','شلونج'),
+      document.fonts.load('400 1em "Almarai"','شلونج'),
+      document.fonts.load('800 1em "Almarai"','شلونج'),
+      document.fonts.load('400 1em "Amiri"','١٢٣ شلونج'),
+      document.fonts.load('700 1em "Amiri"','١٢٣')
+    ]).then(function(){ clearTimeout(t); reveal(); }, function(){ clearTimeout(t); reveal(); });
+  } else reveal();
+})();
+
+if('serviceWorker' in navigator){ window.addEventListener('load',function(){ navigator.serviceWorker.register('../sw.js',{scope:'../'}).catch(function(){}); }); }
+</script>
+</html>
